@@ -1,0 +1,87 @@
+# Last Session Summary
+
+- Latest session: Optimized performance by removing the unused `framer-motion` dependency to reduce bundle size for the Excel sidebar. Achieved 100% Quality Assurance (QA) PASS with zero ESLint errors and consistent Prettier formatting. Implemented "Final Polish" enhancements, including an overhaul of the AppShell with a glassy BrandMark and responsive stats grid, and a complete revamp of the Toast system with Dark Mode support and visual progress bars.
+- Synchronized global vertical gaps across the entire taskpane (44px visual gap between sections) and unified panel padding (py-4) to fix inconsistent white space throughout the application in `styles.css`.
+- Enhanced all interactive elements with tactile feedback (scaling, hover translations, and refined shadow transitions) for a premium "Pro" software experience.
+- Overhauled "Workflow Section" and "Project Status" (Current Shape) sections with premium glassmorphism, professional step markers, and brand-colored icons (Sky/Emerald) in `WorkflowStepper.tsx` and `App.tsx`.
+- Overhauled "Viewer Pane" with a premium document preview container (deep dark background, 2.5rem corners), glassy metadata cards with icon-driven headers (Sparkles/FileText), and a professional icon-driven empty state in `ViewerPane.tsx`.
+- Overhauled "Templates Section" with premium glassmorphism, fixing non-standard Dark Mode backgrounds (replaced solid gray with glassy cards) and upgrading inputs in `TemplateLibraryPanel.tsx`.
+- Overhauled "Step 4: Results Panel" with color-coded confidence scores, professional evidence inspection cards (Sky/Emerald themes), and a refined information hierarchy in `ResultsPanel.tsx`.
+- Upgraded "Step 3: Match Configuration" with a full custom checkbox system, icon-driven section headers, glassmorphism containers, and a redesigned action footer with a glowing status indicator in `MatchConfigPanel.tsx`.
+- Overhauled "Step 2: Document Library" with premium aesthetics and glassmorphism, fixing non-standard Dark Mode backgrounds and restacking upload cards vertically in `DocumentLibraryPanel.tsx`.
+- Upgraded the "Step 1: Selection Panel" with a custom-styled checkbox system, refined header card contrast, and a professional icon-driven empty state in `SelectionPanel.tsx`.
+- Overhauled the Excel Diagnostics panel with premium aesthetics, fixing non-standard background colors in Dark Mode and grouping metrics into logical, icon-driven sections in `DiagnosticsPanel.tsx`.
+- Enhanced the "Live Activity" empty state with a professional layout and icon-driven hierarchy in `ActivityPanel.tsx`.
+- Standardized layout spacing across the task pane and improved visual depth for stats boxes using refined shadows and borders in `AppShell.tsx` and `styles.css`.
+- Fixed the theme toggle double-click issue in `ThemeToggle.tsx` by ensuring every click results in an immediate visual theme change and skipping the redundant "system" state.
+- Forced class-based Dark Mode strategy in Tailwind CSS for more reliable theme switching.
+- Updated the latest host verification marker to `dev-2026-04-26-a`.
+- Previous session: rotated the local development manifest ID, bumped the manifest version to `1.0.0.2`, and promoted the Excel verification marker to `dev-2026-04-25-b` so Excel can be forced to load a fresh DocTrace sideload identity.
+- Temporarily labeled the local verification ribbon command as `Open DocTrace B` to distinguish the fresh sideload from any stale `Open DocTrace` button still cached by Excel.
+- Added an in-task-pane Excel diagnostics smoke-test panel and promoted the verification marker to `dev-2026-04-25-c` so width, click, and `Excel.run` behavior can be verified directly inside the Excel sidebar.
+- Promoted the diagnostics marker to `dev-2026-04-25-d` and moved click/`Excel.run` results directly under the diagnostic buttons for easier Excel task pane verification.
+- Previous session: promoted the Excel verification marker to `dev-2026-04-25-a`.
+- Deep-scanned the Excel-only failure path and found a likely WebView compatibility bug: `crypto.randomUUID()` could fail in some Excel Desktop task panes, causing clicks that create activity/toast/document IDs to look like static no-ops.
+- Added `src/utils/id.ts` as a safe ID fallback and replaced `crypto.randomUUID()` usage in store, templates, parser, and matching results.
+- Removed `.at(...)`, `matchAll`, `flatMap`, and `Object.fromEntries` usage from document parsing, Excel, and matching paths to reduce older embedded WebView runtime risk.
+- Hardened task-pane width behavior with viewport-based shell sizing so dragging the Excel sidebar wider has a better chance to expand the real UI instead of leaving a blank right gutter.
+- Updated `manifest.xml` to version `1.0.0.1` and changed the manifest description from the old DataSnipper wording to DocTrace wording.
+- Verified with targeted Prettier, `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run validate:manifest`, and `npm.cmd run build`.
+
+- Project initialized for `DocTrace`, a DataSnipper-style Excel add-in for audit teams.
+- Locked the first wedge use case to `Test of Details` with inline output columns, task pane viewer, and hidden audit log storage.
+- Started Phase 0 and Phase 1 implementation from an empty repository.
+- Flattened the app structure so `src/` now lives at the repository root.
+- Moved `last_session_summary.md` into `docs/` and removed the `.antigravity` folder.
+- Finished a clean validation pass: `prettier`, `eslint`, `tsc`, and production `vite build`.
+- Added structured JSON evidence import and JSON viewer support.
+- Added explicit Excel output column mapping in the task pane and mapped write-back logic in Office.js.
+- Added manifest validation tooling and a Windows/Web/Mac testing guide for sideload and smoke tests.
+- Confirmed zero known production dependency vulnerabilities with `npm audit --omit=dev`.
+- Switched local HTTPS from Vite `basicSsl` to Microsoft `office-addin-dev-certs` for a trusted Excel-friendly localhost dev flow.
+- Added a timeout-based browser preview fallback so plain browser loads no longer remain stuck in `Booting`.
+- Locked Vite dev and secure HMR to port `3000` so Excel sideload testing cannot silently drift to `3001` or another fallback port.
+- Fixed task pane initialization in Excel by using `Office.initialize`, `Office.onReady`, and host fallback probing together, so the add-in can progress past the `Booting` state.
+- Added direct `Excel.run` startup probing against the active worksheet so the add-in can confirm a real Excel host even if Office metadata stays delayed.
+- Moved Office readiness detection into the bootstrap path before React renders, replacing the earlier effect-based approach that could race with Excel task pane initialization.
+- Replaced the hero logo image request with inline SVG rendering so the DocTrace brand mark appears consistently inside Excel.
+- Reordered the task pane so actionable controls appear before the static workflow summary, making the add-in immediately usable in narrow Excel sidebars.
+- Made the workflow step cards navigate to the real sections in the task pane so users can click `Step 1-4` and land on working controls.
+- Switched import actions to explicit button-driven file pickers and added built-in sample JSON loaders to reduce Excel webview file-dialog friction during testing.
+- Added ready-to-use three-row sample invoice and bank JSON files in both `public/demo/` and a new top-level `samples/` folder for easier manual testing.
+- Added a visible `Live activity` panel inside the Excel sidebar so action results and failures are preserved in the UI instead of relying only on transient toast messages.
+- Instrumented the controller so selection capture, sample imports, template actions, viewer focus, and matching all emit explicit success/error activity messages.
+- Added a `Prepare demo workspace` action that creates a dedicated `DocTrace Demo` worksheet, selects seeded sample rows, and imports the bundled invoice/bank JSON evidence automatically.
+- Replaced evidence uploads with native visible file inputs to improve PDF, image, and JSON import reliability inside Excel's embedded webview.
+- Improved narrow task-pane responsiveness by letting section headers and action buttons wrap cleanly instead of cramping into broken horizontal layouts.
+- Added global runtime diagnostics for browser errors and unhandled promise rejections so unexpected client-side failures show up inside the sidebar.
+- Confirmed the latest patch batch passes `npm.cmd run format`, `npm.cmd run lint`, `npx tsc --noEmit`, and `npm.cmd run build`.
+- Embedded the bundled sample invoice and bank JSON payloads directly into the app so sample-loading buttons no longer rely on Excel webview fetch behavior.
+- Updated the latest host verification marker to `dev-2026-04-23-e` for the current bundled-sample import fix.
+- Fixed the initial blank Excel task pane by rendering the React app immediately and resolving Office readiness in the background.
+- Added a local selection fallback for `Prepare demo workspace` so the task pane can still populate sample rows and evidence even when Excel worksheet seeding fails.
+- Updated the latest host verification marker to `dev-2026-04-23-f`.
+- Reworked `Prepare demo workspace` so the sidebar applies the local demo state immediately before any Excel host calls, eliminating the previous dead-no-op path when worksheet seeding stalled.
+- Added timeout guards around demo worksheet seeding and recapture so the add-in visibly falls back instead of appearing frozen.
+- Updated the latest host verification marker to `dev-2026-04-23-g`.
+- Reduced Office readiness fallback timing and added an immediate Office-context short-circuit so startup leaves `Booting` faster.
+- Added a system file picker helper with native input fallback to make PDF, image, and JSON evidence importing more reliable inside Excel.
+- Added disabled/loading states across the selection, import, config, and template panels so actions no longer feel static while work is in progress.
+- Hardened PDF worker startup errors, switched OCR to a reusable worker, fixed selection-sync cleanup, and replaced corrupted separator/empty-value glyphs with ASCII-safe labels.
+- Added template JSON validation and updated the latest host verification marker to `dev-2026-04-23-h`.
+- Switched PDF.js from a Vite worker instance on `workerPort` to an explicit `workerSrc` URL so PDF parsing is more compatible with `pdfjs-dist@5` inside Excel's embedded WebView.
+- Removed the remaining bundled-sample `fetch(...)` fallback so quick sample buttons now rely only on embedded invoice and bank JSON payloads.
+- Updated the latest host verification marker to `dev-2026-04-24-a`.
+- Made toast notifications click-through so they cannot intercept task-pane button clicks while stacked over content.
+- Updated preview actions so they focus the requested evidence and scroll directly to the viewer panel.
+- Enforced the invoice/reference alignment setting in deterministic matching and corrected output-column header lookup to use the captured header row.
+- Updated the latest host verification marker to `dev-2026-04-24-b`.
+- Hardened Office startup fallback so the task pane records a fallback state instead of staying in `Booting` when Office readiness throws.
+- Forced the task pane into a single-column layout and simplified output-field rendering to avoid Excel WebView breakpoint/layout glitches.
+- Updated the latest host verification marker to `dev-2026-04-24-c`.
+- Added a native event bridge for quick-start actions so Excel WebView click delegation issues cannot block demo, sample import, capture, or mapping buttons.
+- Updated the latest host verification marker to `dev-2026-04-24-d`.
+- Restored normal button `onClick` handlers alongside the native Excel WebView bridge so cursor and click semantics remain correct.
+- Restored responsive task-pane content width with a bounded max width so resizing the pane expands the usable UI instead of leaving a blank right gutter.
+- Updated the latest host verification marker to `dev-2026-04-24-e`.
+- Removed the Office `GetStarted` teaching callout from the manifest because the Excel first-run overlay can intercept task pane clicks during local sideload testing.

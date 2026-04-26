@@ -1,0 +1,252 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+/* Force Tailwind to use .dark class for dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100vh;
+    min-width: 0;
+    width: 100vw;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+  }
+
+  @supports (width: 100dvw) {
+    html,
+    body,
+    #root {
+      width: 100dvw;
+    }
+  }
+
+  button,
+  input,
+  select,
+  a,
+  [tabindex]:not([tabindex="-1"]) {
+    @apply focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:outline-none;
+  }
+}
+
+@layer components {
+  .dt-shell {
+    min-height: 100vh;
+    min-width: 0;
+    width: 100vw;
+    @apply bg-[radial-gradient(circle_at_top_left,_#f8fafc,_#f1f5f9_44%,_#e0f2fe_100%)];
+  }
+
+  .dark .dt-shell {
+    @apply bg-[radial-gradient(circle_at_top_left,_#0f172a,_#1e293b_44%,_#020617_100%)];
+  }
+
+  @supports (width: 100dvw) {
+    .dt-shell {
+      width: 100dvw;
+    }
+  }
+
+  .dt-hero {
+    @apply relative overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/70 p-6 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-all sm:p-8;
+  }
+
+  .dark .dt-hero {
+    @apply border-white/10 bg-slate-900/60 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)];
+  }
+
+  .dt-panel {
+    @apply relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/50 p-5 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] backdrop-blur-lg transition-all sm:p-6;
+  }
+
+  .dark .dt-panel {
+    @apply border-white/5 bg-slate-900/40 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)];
+  }
+
+  .dt-panel:hover {
+    @apply border-white/100 shadow-[0_24px_60px_-16px_rgba(15,23,42,0.12)];
+  }
+
+  .dark .dt-panel:hover {
+    @apply border-white/10 shadow-[0_24px_60px_-16px_rgba(0,0,0,0.6)];
+  }
+
+  .dt-kicker {
+    @apply text-[0.7rem] font-bold tracking-[0.2em] text-sky-600 uppercase opacity-80;
+  }
+
+  .dark .dt-kicker {
+    @apply text-sky-400;
+  }
+
+  .dt-section-title {
+    @apply mt-1 text-xl font-bold tracking-tight text-slate-950;
+  }
+
+  .dark .dt-section-title {
+    @apply text-white;
+  }
+
+  .dt-badge {
+    @apply inline-flex items-center rounded-xl px-3 py-1 text-[0.7rem] font-bold tracking-[0.1em] uppercase;
+  }
+
+  .dt-badge-neutral {
+    @apply border border-slate-200/50 bg-slate-100/90 text-slate-600 shadow-sm backdrop-blur-sm;
+  }
+
+  .dark .dt-badge-neutral {
+    @apply border border-white/10 bg-slate-800/90 text-slate-300 shadow-md;
+  }
+
+  .dt-badge-success {
+    @apply border border-emerald-200/50 bg-emerald-100/80 text-emerald-700 backdrop-blur-sm;
+  }
+
+  .dark .dt-badge-success {
+    @apply border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 shadow-sm shadow-emerald-500/5;
+  }
+
+  .dt-badge-danger {
+    @apply border border-rose-200/50 bg-rose-100/80 text-rose-700 backdrop-blur-sm;
+  }
+
+  .dark .dt-badge-danger {
+    @apply border border-rose-500/20 bg-rose-500/10 text-rose-400 shadow-sm shadow-rose-500/5;
+  }
+
+  .dt-button-primary {
+    @apply relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-2xl bg-sky-600 px-6 py-3 text-sm font-bold text-white shadow-xl shadow-sky-600/20 transition-all hover:-translate-y-0.5 hover:bg-sky-700 hover:shadow-sky-700/30 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .dark .dt-button-primary {
+    @apply bg-sky-500 shadow-sky-500/20 hover:bg-sky-400 hover:shadow-sky-400/30;
+  }
+
+  .dt-button-secondary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/80 bg-white/40 px-6 py-3 text-sm font-bold text-slate-700 shadow-sm backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-slate-900 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .dark .dt-button-secondary {
+    @apply border-white/10 bg-slate-800/40 text-slate-300 hover:border-white/20 hover:bg-slate-800/60 hover:text-white;
+  }
+
+  .dt-button-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[0.8rem] font-bold text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-950 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .dark .dt-button-ghost {
+    @apply text-slate-400 hover:bg-white/5 hover:text-white;
+  }
+
+  .dt-input,
+  .dt-select {
+    @apply w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm backdrop-blur-sm transition-all focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10;
+  }
+
+  .dark .dt-input,
+  .dark .dt-select {
+    @apply border-white/10 bg-slate-800/60 text-white focus:border-sky-500 focus:ring-sky-500/20;
+  }
+
+  .dt-file-input {
+    @apply w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-2.5 text-sm font-medium text-slate-600 shadow-sm file:mr-4 file:rounded-xl file:border-0 file:bg-slate-950 file:px-4 file:py-2 file:text-xs file:font-bold file:text-white hover:file:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .dark .dt-file-input {
+    @apply border-white/10 bg-slate-800/60 text-slate-400 file:bg-sky-500 hover:file:bg-sky-400;
+  }
+
+  .dt-field {
+    @apply grid gap-2 text-xs font-bold tracking-wide text-slate-500 uppercase;
+  }
+
+  .dark .dt-field {
+    @apply text-slate-400;
+  }
+
+  .dt-stat {
+    @apply rounded-[1.5rem] border border-white/80 bg-white/60 p-4 shadow-md backdrop-blur-md transition-all hover:border-white hover:shadow-lg;
+  }
+
+  .dark .dt-stat {
+    @apply border-white/10 bg-slate-800/60 shadow-lg;
+  }
+
+  .dt-stat-label {
+    @apply text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase opacity-70;
+  }
+
+  .dark .dt-stat-label {
+    @apply text-slate-400;
+  }
+
+  .dt-stat-value {
+    @apply mt-2 block truncate text-sm font-bold text-slate-950;
+  }
+
+  .dark .dt-stat-value {
+    @apply text-white;
+  }
+
+  .dt-upload-card {
+    @apply flex flex-col gap-2 rounded-[2rem] border-2 border-dashed border-slate-200 bg-slate-50/50 p-6 text-center transition-all hover:border-sky-400/50 hover:bg-sky-50/30;
+  }
+
+  .dark .dt-upload-card {
+    @apply border-white/5 bg-white/5 hover:border-sky-500/40 hover:bg-sky-500/5;
+  }
+
+  .dt-chip {
+    @apply inline-flex items-center rounded-lg border border-slate-200 bg-white/90 px-3 py-1.5 text-[0.7rem] font-bold tracking-tight text-slate-600 shadow-sm backdrop-blur-sm;
+  }
+
+  .dark .dt-chip {
+    @apply border-white/10 bg-slate-800/80 text-slate-400;
+  }
+
+  .dt-empty-state {
+    @apply flex min-h-32 flex-col items-center justify-center gap-3 rounded-[2.5rem] border border-slate-200/60 bg-white/30 p-8 text-center text-sm leading-relaxed font-semibold text-slate-500 shadow-inner;
+  }
+
+  .dark .dt-empty-state {
+    @apply border-white/5 bg-white/5 text-slate-400;
+  }
+
+  /* Specific fix for amber warning box text contrast */
+  .dt-warning-box {
+    @apply mt-4 rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm font-bold shadow-sm;
+    color: #78350f; /* Amber-900/950 - Dark brown for maximum contrast in light mode */
+  }
+
+  .dark .dt-warning-box {
+    @apply border-amber-500/20 bg-amber-500/10;
+    color: #fde68a; /* Amber-200 - Soft yellow for dark mode */
+  }
+}

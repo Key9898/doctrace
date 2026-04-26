@@ -1,0 +1,28 @@
+{
+  "documents": [
+    {
+      "kind": "bank-statement",
+      "fileName": "bank-statement-july.json",
+      "statementEntries": [
+        {
+          "date": "2020-07-11",
+          "amount": 1512.4,
+          "reference": "20020098475",
+          "rawLine": "2020-07-11 payment reference 20020098475 amount 1512.40"
+        },
+        {
+          "date": "2020-04-01",
+          "amount": 4270.5,
+          "reference": "47209847",
+          "rawLine": "2020-04-01 transfer reference 47209847 amount 4270.50"
+        },
+        {
+          "date": "2020-09-14",
+          "amount": 213.36,
+          "reference": "INV21436",
+          "rawLine": "2020-09-14 payment reference INV21436 amount 213.36"
+        }
+      ]
+    }
+  ]
+}

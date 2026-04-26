@@ -1,0 +1,26 @@
+node_modules/
+dist/
+coverage/
+.cache/
+.turbo/
+.idea/
+.vscode/
+*.log
+*.tmp
+*.bak
+*.orig
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Office add-in local/dev artifacts
+.certs/
+.office-addin-dev-certs/
+.office-addin-debugging/
+manifest.local.xml
+
+# Env files
+.env
+.env.*
+!.env.example
