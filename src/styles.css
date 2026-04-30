@@ -24,7 +24,8 @@
   #root {
     min-height: 100vh;
     min-width: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
@@ -36,14 +37,6 @@
 
   .dark body {
     @apply bg-slate-950 text-slate-100;
-  }
-
-  @supports (width: 100dvw) {
-    html,
-    body,
-    #root {
-      width: 100dvw;
-    }
   }
 
   button,
@@ -59,18 +52,13 @@
   .dt-shell {
     min-height: 100vh;
     min-width: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     @apply bg-[radial-gradient(circle_at_top_left,_#f8fafc,_#f1f5f9_44%,_#e0f2fe_100%)];
   }
 
   .dark .dt-shell {
     @apply bg-[radial-gradient(circle_at_top_left,_#0f172a,_#1e293b_44%,_#020617_100%)];
-  }
-
-  @supports (width: 100dvw) {
-    .dt-shell {
-      width: 100dvw;
-    }
   }
 
   .dt-hero {
@@ -239,6 +227,16 @@
     @apply border-white/5 bg-white/5 text-slate-400;
   }
 
+  .dt-toast-progress {
+    animation: dt-toast-progress-shrink 5s linear forwards;
+    width: 100%;
+  }
+
+  .dt-content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 160px;
+  }
+
   /* Specific fix for amber warning box text contrast */
   .dt-warning-box {
     @apply mt-4 rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm font-bold shadow-sm;
@@ -248,5 +246,15 @@
   .dark .dt-warning-box {
     @apply border-amber-500/20 bg-amber-500/10;
     color: #fde68a; /* Amber-200 - Soft yellow for dark mode */
+  }
+}
+
+@keyframes dt-toast-progress-shrink {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
   }
 }

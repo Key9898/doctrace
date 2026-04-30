@@ -15,6 +15,8 @@ DocTrace is an Excel-native audit workflow add-in focused on Test of Details for
 - Project rules and repo hygiene
 - Office add-in manifest and shared runtime setup
 - React, TypeScript, Vite, Tailwind, linting, and formatting
+- Native Tailwind/CSS animation direction for a lighter Excel task pane bundle
+- XML-aware Prettier formatting for the Office manifest
 - Task pane-first UI foundation
 - Workspace documentation and logs
 
@@ -32,25 +34,35 @@ DocTrace is an Excel-native audit workflow add-in focused on Test of Details for
 - Persist workbook templates
 - Maintain hidden audit log sheet
 - Preview matched evidence in the task pane
-- Visual Snipping (Click-to-Match): Click PDF text to snip values and link them to Excel cells
+- Visual Snipping (Click-to-Match): Capture PDF text, manual PDF/image regions, and extracted snippets into a multi-snip review queue before linking values to Excel cells
 - Configurable confidence score weights (invoice number, amount, date)
 - Browser-mode persistence via IndexedDB (survive page refreshes)
-- Web Worker matching engine for 1000+ document scale
-- Virtualized document and result lists for large workloads
+- Web Worker-backed matching engine with a safe main-thread fallback for larger workbooks
+- Render-safe list primitives for larger workloads
 - File picker fallback for Excel WebView2 compatibility
 - OCR progress reporting with page-level status
 - Optimized startup timeout (400ms vs 1200ms)
+
+## Production Cleanup (before public release)
+
+- Remove "Quick Start" demo section (Prepare demo workspace, sample load buttons)
+- Remove "Quick Sample Load" section (Sample invoices JSON, Sample bank JSON buttons)
+- Remove demo sentence from JSON Evidence Support: "If the native file picker is blocked, use the sample buttons to verify the system."
+- Remove `/demo/sample-invoices.json` and `/demo/sample-bank-statements.json` from public assets
+- Remove DiagnosticsPanel (Host smoke test) or move behind a developer-only flag
+- Review and remove any remaining demo-only code paths in useDocTraceController
 
 ## Phase 2
 
 - Node.js backend
 - Railway deployment
 - Organization template library
+- Team-wide template sharing (cloud sync, no more manual Export/Import JSON)
 - User/auth and firm-level access controls
 - Centralized evidence storage
 - Deployment/admin tooling
 
-## Phase 3 — AI/ML Intelligence Roadmap
+## Phase 3 - AI/ML Intelligence Roadmap
 
 ### Milestone 3.1: AI-Assisted Field Extraction
 

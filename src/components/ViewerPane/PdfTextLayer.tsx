@@ -1,171 +1,204 @@
-import { useEffect, useRef, useState } from "react";
-import * as pdfjs from "pdfjs-dist";
+import { useEffect, useState, type MouseEvent } from "react";
 
+import { readPdfTextLayerItems } from "@/services/documents/pdf.service";
 import type { Snip, SnipBoundingBox } from "@/types/domain";
 import { createId } from "@/utils/id";
+import {
+  areSnipBoundingBoxesNear,
+  buildManualSnipBoundingBox,
+  normalizeSnipText,
+} from "@/utils/snips";
 
 interface PdfTextLayerProps {
   source: string | ArrayBuffer;
   pageNumber: number;
-  scale: number;
   canvasWidth: number;
   canvasHeight: number;
   documentId: string;
   fileName: string;
+  snippingEnabled: boolean;
+  activeSnipId?: string;
   onSnip: (snip: Snip) => void;
   activeSnips: Snip[];
 }
 
 interface TextItem {
   str: string;
-  transform: number[];
-  width: number;
-  height: number;
+  boundingBox: SnipBoundingBox;
 }
 
 export function PdfTextLayer({
   source,
   pageNumber,
-  scale,
   canvasWidth,
   canvasHeight,
   documentId,
   fileName,
+  snippingEnabled,
+  activeSnipId,
   onSnip,
   activeSnips,
 }: PdfTextLayerProps) {
-  const layerRef = useRef<HTMLDivElement>(null);
   const [textItems, setTextItems] = useState<TextItem[]>([]);
-  const [viewport, setViewport] = useState<{ width: number; height: number }>({
-    width: canvasWidth,
-    height: canvasHeight,
-  });
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadTextContent() {
       try {
-        const doc =
-          typeof source === "string"
-            ? await pdfjs.getDocument(source).promise
-            : await pdfjs.getDocument({ data: source }).promise;
-        const page = await doc.getPage(pageNumber);
-        const vp = page.getViewport({ scale });
-        const content = await page.getTextContent();
+        const layer = await readPdfTextLayerItems(source, pageNumber);
 
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
 
-        setViewport({ width: vp.width, height: vp.height });
-
-        const rawItems = content.items.filter(
-          (item) => "str" in item && !!(item as { str: string }).str.trim(),
+        setTextItems(
+          layer.items.map((item) => ({
+            str: item.str,
+            boundingBox: {
+              x: item.x,
+              y: item.y,
+              width: item.width,
+              height: item.height,
+            },
+          })),
         );
-
-        const items: TextItem[] = rawItems.map((item) => {
-          const textItem = item as unknown as {
-            str: string;
-            transform: number[];
-            width: number;
-            height: number;
-          };
-          return {
-            str: textItem.str,
-            transform: textItem.transform,
-            width: textItem.width,
-            height: textItem.height,
-          };
-        });
-
-        setTextItems(items);
       } catch {
-        setTextItems([]);
+        if (!cancelled) {
+          setTextItems([]);
+        }
       }
     }
 
     void loadTextContent();
+
     return () => {
       cancelled = true;
     };
-  }, [source, pageNumber, scale]);
+  }, [source, pageNumber]);
 
-  const handleItemClick = (item: TextItem) => {
-    const boundingBox = computeBoundingBox(item, viewport, scale);
-    const snip: Snip = {
+  const pageSnips = activeSnips.filter(
+    (snip) => snip.documentId === documentId && snip.pageNumber === pageNumber,
+  );
+
+  const handleItemClick = (item: TextItem, stopPropagation: () => void) => {
+    stopPropagation();
+
+    if (!snippingEnabled) {
+      return;
+    }
+
+    onSnip({
       id: createId("snip"),
       documentId,
       fileName,
       pageNumber,
-      text: item.str.trim(),
-      boundingBox,
+      text: normalizeSnipText(item.str),
+      boundingBox: item.boundingBox,
       createdAt: new Date().toISOString(),
-    };
-    onSnip(snip);
+      sourceType: "pdf-text",
+    });
   };
 
-  const pageSnips = activeSnips.filter(
-    (s) => s.documentId === documentId && s.pageNumber === pageNumber,
-  );
+  const handleManualPageSnip = (event: MouseEvent<SVGSVGElement>) => {
+    if (!snippingEnabled) {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * canvasWidth;
+    const y = ((event.clientY - rect.top) / rect.height) * canvasHeight;
+
+    onSnip({
+      id: createId("snip"),
+      documentId,
+      fileName,
+      pageNumber,
+      text: `PDF region - page ${pageNumber} (${Math.round(x)}, ${Math.round(y)})`,
+      boundingBox: buildManualSnipBoundingBox(x, y, canvasWidth, canvasHeight),
+      createdAt: new Date().toISOString(),
+      sourceType: "manual-region",
+    });
+  };
+
+  if (!snippingEnabled && pageSnips.length === 0) {
+    return null;
+  }
 
   return (
-    <div
-      ref={layerRef}
-      className="absolute inset-0"
-      style={{ width: canvasWidth, height: canvasHeight }}
+    <svg
+      aria-label="PDF text snipping layer"
+      className="absolute inset-0 h-full w-full"
+      onClick={handleManualPageSnip}
+      preserveAspectRatio="none"
+      role="img"
+      viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
     >
-      {/* Clickable text spans */}
-      {textItems.map((item, index) => {
-        const box = computeBoundingBox(item, viewport, scale);
-        return (
-          <span
-            key={index}
-            className="absolute cursor-crosshair opacity-0 transition-opacity hover:bg-sky-400/30 hover:opacity-100"
-            style={{
-              left: box.x,
-              top: box.y,
-              width: box.width,
-              height: box.height,
-              lineHeight: `${box.height}px`,
-              fontSize: `${box.height * 0.8}px`,
-            }}
-            title={`Click to snip: "${item.str.trim()}"`}
-            onClick={() => handleItemClick(item)}
-          />
-        );
-      })}
+      {snippingEnabled ? (
+        <rect
+          className="fill-transparent"
+          height={canvasHeight}
+          width={canvasWidth}
+          x="0"
+          y="0"
+        >
+          <title>Click an empty document region to create a manual snip</title>
+        </rect>
+      ) : null}
 
-      {/* Highlight active snips on this page */}
+      {snippingEnabled
+        ? textItems.map((item, index) => {
+            const isCaptured = pageSnips.some((snip) =>
+              areSnipBoundingBoxesNear(snip.boundingBox, item.boundingBox),
+            );
+            const text = normalizeSnipText(item.str);
+
+            return (
+              <rect
+                aria-label={`Snip ${text}`}
+                className={
+                  isCaptured
+                    ? "cursor-crosshair fill-emerald-400/15 transition-colors hover:fill-emerald-400/30"
+                    : "cursor-crosshair fill-sky-400/0 transition-colors hover:fill-sky-400/30"
+                }
+                height={item.boundingBox.height}
+                key={`${item.str}-${index}`}
+                onClick={(event) =>
+                  handleItemClick(item, () => event.stopPropagation())
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    handleItemClick(item, () => event.stopPropagation());
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                width={item.boundingBox.width}
+                x={item.boundingBox.x}
+                y={item.boundingBox.y}
+              >
+                <title>{`Click to snip: ${text}`}</title>
+              </rect>
+            );
+          })
+        : null}
+
       {pageSnips.map((snip) => (
-        <div
+        <rect
+          className={
+            snip.id === activeSnipId
+              ? "pointer-events-none fill-amber-400/25 stroke-amber-500"
+              : "pointer-events-none fill-emerald-400/20 stroke-emerald-500"
+          }
+          height={snip.boundingBox.height}
           key={snip.id}
-          className="pointer-events-none absolute rounded border-2 border-emerald-500 bg-emerald-400/20"
-          style={{
-            left: snip.boundingBox.x,
-            top: snip.boundingBox.y,
-            width: snip.boundingBox.width,
-            height: snip.boundingBox.height,
-          }}
+          strokeWidth={snip.id === activeSnipId ? "3" : "2"}
+          width={snip.boundingBox.width}
+          x={snip.boundingBox.x}
+          y={snip.boundingBox.y}
         />
       ))}
-    </div>
+    </svg>
   );
-}
-
-function computeBoundingBox(
-  item: TextItem,
-  viewport: { width: number; height: number },
-  scale: number,
-): SnipBoundingBox {
-  // PDF text transform: [scaleX, skewY, skewX, scaleY, translateX, translateY]
-  const tx = item.transform[4] * scale;
-  const ty = viewport.height - item.transform[5] * scale - item.height * scale;
-  const width = item.width * scale;
-  const height = item.height * scale;
-
-  return {
-    x: Math.max(0, tx),
-    y: Math.max(0, ty),
-    width: Math.max(8, width),
-    height: Math.max(8, height),
-  };
 }

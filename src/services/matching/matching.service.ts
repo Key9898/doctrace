@@ -112,6 +112,16 @@ export function validateOutputMapping(
   };
 }
 
+export interface MatchingRunProgress {
+  processed: number;
+  total: number;
+}
+
+export interface MatchingRunOptions {
+  batchSize?: number;
+  onProgress?: (progress: MatchingRunProgress) => void;
+}
+
 function scoreInvoiceDocument(
   rowValues: Record<string, unknown>,
   config: MatchConfig,
@@ -331,6 +341,7 @@ export function runDocumentMatching(
   selection: SelectionSnapshot,
   documents: ParsedDocument[],
   config: MatchConfig,
+  options: MatchingRunOptions = {},
 ) {
   const invoiceDocuments = documents.filter(
     (document) => document.kind === "invoice" && document.status === "parsed",
@@ -340,7 +351,12 @@ export function runDocumentMatching(
       document.kind === "bank-statement" && document.status === "parsed",
   );
 
-  return selection.rows.map((row) => {
+  const results: MatchResult[] = [];
+  const batchSize = Math.max(1, options.batchSize ?? 25);
+  const total = selection.rows.length;
+
+  for (let index = 0; index < selection.rows.length; index += 1) {
+    const row = selection.rows[index];
     const invoiceCandidates = invoiceDocuments
       .map((document) => scoreInvoiceDocument(row.values, config, document))
       .sort((left, right) => right.score - left.score);
@@ -379,8 +395,15 @@ export function runDocumentMatching(
     };
 
     result.outputValues = buildOutputValues(result);
-    return result;
-  });
+    results.push(result);
+
+    const processed = index + 1;
+    if (processed % batchSize === 0 || processed === total) {
+      options.onProgress?.({ processed, total });
+    }
+  }
+
+  return results;
 }
 
 export function suggestInitialConfig(

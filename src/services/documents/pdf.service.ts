@@ -5,6 +5,15 @@ import type { ParsedPage } from "@/types/domain";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.mjs?url";
 
 let pdfWorkerReady = false;
+const PDF_RENDER_SCALE = 1.5;
+
+export interface PdfTextLayerItem {
+  str: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 function ensurePdfWorker() {
   if (pdfWorkerReady) {
@@ -94,7 +103,7 @@ export async function renderPdfPageToCanvas(
   const document = await loadPdfDocument(source);
   const safePageNumber = Math.min(Math.max(pageNumber, 1), document.numPages);
   const page = await document.getPage(safePageNumber);
-  const viewport = page.getViewport({ scale: 1.5 });
+  const viewport = page.getViewport({ scale: PDF_RENDER_SCALE });
   const context = canvas.getContext("2d");
 
   if (!context) {
@@ -113,6 +122,47 @@ export async function renderPdfPageToCanvas(
   }).promise;
 
   return document.numPages;
+}
+
+export async function readPdfTextLayerItems(
+  source: string | Uint8Array | ArrayBuffer,
+  pageNumber: number,
+) {
+  const document = await loadPdfDocument(source);
+  const safePageNumber = Math.min(Math.max(pageNumber, 1), document.numPages);
+  const page = await document.getPage(safePageNumber);
+  const viewport = page.getViewport({ scale: PDF_RENDER_SCALE });
+  const content = await page.getTextContent();
+
+  const items = content.items
+    .filter((item) => "str" in item && Boolean(item.str.trim()))
+    .map((item) => {
+      const textItem = item as {
+        str: string;
+        transform: number[];
+        width: number;
+        height: number;
+      };
+      const x = textItem.transform[4] * PDF_RENDER_SCALE;
+      const y =
+        viewport.height -
+        textItem.transform[5] * PDF_RENDER_SCALE -
+        textItem.height * PDF_RENDER_SCALE;
+
+      return {
+        str: textItem.str,
+        x: Math.max(0, x),
+        y: Math.max(0, y),
+        width: Math.max(8, textItem.width * PDF_RENDER_SCALE),
+        height: Math.max(8, textItem.height * PDF_RENDER_SCALE),
+      };
+    });
+
+  return {
+    width: viewport.width,
+    height: viewport.height,
+    items,
+  };
 }
 
 function buildSnippets(text: string) {

@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,7 +19,15 @@ import {
 } from "lucide-react";
 
 import type { ParsedDocument, Snip, ViewerState } from "@/types/domain";
+import { createId } from "@/utils/id";
+import { buildManualSnipBoundingBox, normalizeSnipText } from "@/utils/snips";
 import { SnipToolbar } from "./SnipToolbar";
+
+const PdfTextLayer = lazy(() =>
+  import("./PdfTextLayer").then((module) => ({
+    default: module.PdfTextLayer,
+  })),
+);
 
 interface ViewerPaneProps {
   documents: ParsedDocument[];
@@ -48,7 +64,10 @@ export function ViewerPane({
   const [pdfPageCount, setPdfPageCount] = useState(
     activeDocument?.pageCount ?? 1,
   );
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     setRenderError(undefined);
@@ -58,6 +77,7 @@ export function ViewerPane({
       activeDocument.sourceKind !== "pdf" ||
       !canvasRef.current
     ) {
+      setCanvasSize({ width: 0, height: 0 });
       return;
     }
 
@@ -75,6 +95,10 @@ export function ViewerPane({
       .then((pageCount) => {
         if (!cancelled) {
           setPdfPageCount(pageCount);
+          setCanvasSize({
+            width: canvasRef.current?.width ?? 0,
+            height: canvasRef.current?.height ?? 0,
+          });
         }
       })
       .catch((error) => {
@@ -94,6 +118,12 @@ export function ViewerPane({
       cancelled = true;
     };
   }, [activeDocument, activePageNumber]);
+
+  useEffect(() => {
+    if (activeDocument?.sourceKind !== "image") {
+      setImageSize({ width: 0, height: 0 });
+    }
+  }, [activeDocument]);
 
   if (!activeDocument) {
     return (
@@ -126,6 +156,38 @@ export function ViewerPane({
   }
 
   const totalPages = pdfPageCount || activeDocument.pageCount || 1;
+  const pageSnips = snips.filter(
+    (snip) =>
+      snip.documentId === activeDocument.id &&
+      snip.pageNumber === activePageNumber,
+  );
+
+  const createSnippetSnip = (snippet: string, index: number) => {
+    if (!onSnip) {
+      return;
+    }
+
+    const text = normalizeSnipText(snippet);
+    if (!text) {
+      return;
+    }
+
+    onSnip({
+      id: createId("snip"),
+      documentId: activeDocument.id,
+      fileName: activeDocument.fileName,
+      pageNumber: activePageNumber,
+      text,
+      boundingBox: {
+        x: 0,
+        y: index * 36,
+        width: 220,
+        height: 28,
+      },
+      createdAt: new Date().toISOString(),
+      sourceType: "extracted-snippet",
+    });
+  };
 
   return (
     <section className="dt-panel" aria-labelledby="active-viewer-title">
@@ -147,9 +209,10 @@ export function ViewerPane({
       {onToggleSnipping && (
         <div className="mt-3">
           <SnipToolbar
+            activeSnipId={viewer.activeSnipId}
+            pageSnips={pageSnips}
             snippingEnabled={snippingEnabled}
             onToggleSnipping={onToggleSnipping}
-            lastSnip={snips.length ? snips[snips.length - 1] : undefined}
             onLinkToCell={(snip) => onLinkSnipToCell?.(snip)}
             onDismissSnip={(snipId) => onDismissSnip?.(snipId)}
           />
@@ -205,36 +268,22 @@ export function ViewerPane({
                 className="max-w-full rounded-2xl bg-white shadow-2xl transition-transform"
                 ref={canvasRef}
               />
-              {snippingEnabled && onSnip && canvasRef.current && (
-                <div
-                  className="absolute inset-0 cursor-crosshair"
-                  onClick={(e) => {
-                    const canvas = canvasRef.current;
-                    if (!canvas || !activeDocument) return;
-                    const rect = canvas.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const scaleX = canvas.width / rect.width;
-                    const scaleY = canvas.height / rect.height;
-                    onSnip({
-                      id: `snip-${Date.now()}`,
-                      documentId: activeDocument.id,
-                      fileName: activeDocument.fileName,
-                      pageNumber: activePageNumber,
-                      text:
-                        viewer.query ||
-                        `[Snip at (${Math.round(x)}, ${Math.round(y)})]`,
-                      boundingBox: {
-                        x: x * scaleX,
-                        y: y * scaleY,
-                        width: 100,
-                        height: 20,
-                      },
-                      createdAt: new Date().toISOString(),
-                    });
-                  }}
-                />
-              )}
+              {onSnip && canvasSize.width > 0 && canvasSize.height > 0 ? (
+                <Suspense fallback={null}>
+                  <PdfTextLayer
+                    activeSnipId={viewer.activeSnipId}
+                    activeSnips={snips}
+                    canvasHeight={canvasSize.height}
+                    canvasWidth={canvasSize.width}
+                    documentId={activeDocument.id}
+                    fileName={activeDocument.fileName}
+                    onSnip={onSnip}
+                    pageNumber={activePageNumber}
+                    snippingEnabled={snippingEnabled}
+                    source={activeDocument.objectUrl}
+                  />
+                </Suspense>
+              ) : null}
             </div>
           </div>
         ) : activeDocument.sourceKind === "json" ? (
@@ -245,12 +294,38 @@ export function ViewerPane({
           </div>
         ) : (
           <div className="flex min-h-[300px] items-center justify-center bg-slate-950 p-6">
-            <img
-              alt={activeDocument.fileName}
-              className="max-h-[32rem] max-w-full rounded-2xl object-contain shadow-2xl"
-              loading="lazy"
-              src={activeDocument.objectUrl}
-            />
+            <div className="relative inline-block max-w-full">
+              <img
+                alt={activeDocument.fileName}
+                className="block max-h-[32rem] max-w-full rounded-2xl object-contain shadow-2xl"
+                loading="lazy"
+                onLoad={(event) => {
+                  setImageSize({
+                    width:
+                      event.currentTarget.naturalWidth ||
+                      event.currentTarget.clientWidth,
+                    height:
+                      event.currentTarget.naturalHeight ||
+                      event.currentTarget.clientHeight,
+                  });
+                }}
+                ref={imageRef}
+                src={activeDocument.objectUrl}
+              />
+              {onSnip && imageSize.width > 0 && imageSize.height > 0 ? (
+                <ImageSnipLayer
+                  activeSnipId={viewer.activeSnipId}
+                  activeSnips={pageSnips}
+                  documentId={activeDocument.id}
+                  fileName={activeDocument.fileName}
+                  imageHeight={imageSize.height}
+                  imageWidth={imageSize.width}
+                  onSnip={onSnip}
+                  pageNumber={activePageNumber}
+                  snippingEnabled={snippingEnabled}
+                />
+              ) : null}
+            </div>
           </div>
         )}
       </div>
@@ -311,13 +386,115 @@ export function ViewerPane({
                   className="rounded-2xl border border-white bg-white/60 px-4 py-3 text-[0.8rem] leading-relaxed font-medium text-slate-700 shadow-sm dark:border-white/5 dark:bg-white/5 dark:text-slate-300"
                   key={`${snippet}-${index}`}
                 >
-                  <HighlightedText query={viewer.query} text={snippet} />
+                  <div className="flex items-start gap-3">
+                    <p className="min-w-0 flex-1">
+                      <HighlightedText query={viewer.query} text={snippet} />
+                    </p>
+                    {snippingEnabled && onSnip ? (
+                      <button
+                        className="shrink-0 rounded-lg bg-emerald-50 px-2 py-1 text-[0.62rem] font-bold text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20"
+                        onClick={() => createSnippetSnip(snippet, index)}
+                        title="Capture this extracted snippet"
+                        type="button"
+                      >
+                        Snip
+                      </button>
+                    ) : null}
+                  </div>
                 </article>
               ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+interface ImageSnipLayerProps {
+  documentId: string;
+  fileName: string;
+  pageNumber: number;
+  imageWidth: number;
+  imageHeight: number;
+  snippingEnabled: boolean;
+  activeSnipId?: string;
+  activeSnips: Snip[];
+  onSnip: (snip: Snip) => void;
+}
+
+function ImageSnipLayer({
+  documentId,
+  fileName,
+  pageNumber,
+  imageWidth,
+  imageHeight,
+  snippingEnabled,
+  activeSnipId,
+  activeSnips,
+  onSnip,
+}: ImageSnipLayerProps) {
+  const handleImageSnip = (event: MouseEvent<SVGSVGElement>) => {
+    if (!snippingEnabled) {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * imageWidth;
+    const y = ((event.clientY - rect.top) / rect.height) * imageHeight;
+
+    onSnip({
+      id: createId("snip"),
+      documentId,
+      fileName,
+      pageNumber,
+      text: `Image region - page ${pageNumber} (${Math.round(x)}, ${Math.round(y)})`,
+      boundingBox: buildManualSnipBoundingBox(x, y, imageWidth, imageHeight),
+      createdAt: new Date().toISOString(),
+      sourceType: "manual-region",
+    });
+  };
+
+  if (!snippingEnabled && !activeSnips.length) {
+    return null;
+  }
+
+  return (
+    <svg
+      aria-label="Image snipping layer"
+      className="absolute inset-0 h-full w-full"
+      onClick={handleImageSnip}
+      preserveAspectRatio="none"
+      role="img"
+      viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+    >
+      {snippingEnabled ? (
+        <rect
+          className="cursor-crosshair fill-sky-400/0 transition-colors hover:fill-sky-400/10"
+          height={imageHeight}
+          width={imageWidth}
+          x="0"
+          y="0"
+        >
+          <title>Click an image region to create a manual evidence snip</title>
+        </rect>
+      ) : null}
+
+      {activeSnips.map((snip) => (
+        <rect
+          className={
+            snip.id === activeSnipId
+              ? "pointer-events-none fill-amber-400/25 stroke-amber-500"
+              : "pointer-events-none fill-emerald-400/20 stroke-emerald-500"
+          }
+          height={snip.boundingBox.height}
+          key={snip.id}
+          strokeWidth={snip.id === activeSnipId ? "3" : "2"}
+          width={snip.boundingBox.width}
+          x={snip.boundingBox.x}
+          y={snip.boundingBox.y}
+        />
+      ))}
+    </svg>
   );
 }
 

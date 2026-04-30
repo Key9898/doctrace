@@ -5,8 +5,9 @@
 1. Never use inline CSS styles.
 2. Use Tailwind utility classes and shared component primitives only.
 3. Keep icons on `lucide-react`.
-4. Use `framer-motion` for any animation work.
-5. Prefer ASCII in source files unless a file already requires Unicode.
+4. Do not add `framer-motion` to the Excel task pane bundle unless a future phase explicitly approves it.
+5. Use lightweight Tailwind/CSS animations for motion so the Excel sidebar stays fast on Windows, Mac, and Web.
+6. Prefer ASCII in source files unless a file already requires Unicode.
 
 ## Collaboration and edits
 
@@ -25,6 +26,7 @@
 3. Run Prettier, ESLint, and TypeScript validation before concluding work when possible.
 4. Never commit generated noise, local certificates, or runtime caches.
 5. Keep `.gitignore` current from day one.
+6. Keep `manifest.xml` XML-formatted through the project Prettier configuration.
 
 ## Product constraints
 
@@ -32,3 +34,4 @@
 2. Build for Windows, Mac, and Excel on the web parity wherever the Office platform allows it.
 3. Prefer deterministic and explainable workflows in the MVP.
 4. Treat audit traceability as a first-class feature.
+5. Keep Browser Preview showcase-ready whenever Excel licensing or host issues block live sideload testing.

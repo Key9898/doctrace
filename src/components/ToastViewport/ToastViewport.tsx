@@ -67,26 +67,16 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
           </div>
           {/* Subtle accent line */}
           <div
-            className={`absolute bottom-0 left-0 h-1 transition-all duration-[5000ms] ease-linear ${
+            className={`dt-toast-progress absolute bottom-0 left-0 h-1 transition-all duration-[5000ms] ease-linear ${
               toast.tone === "success"
                 ? "bg-emerald-500"
                 : toast.tone === "error"
                   ? "bg-rose-500"
                   : "bg-sky-500"
             }`}
-            style={{
-              width: "100%",
-              animation: "shrinkWidth 5s linear forwards",
-            }}
           />
         </div>
       ))}
-      <style>{`
-        @keyframes shrinkWidth {
-          from { width: 100%; }
-          to { width: 0%; }
-        }
-      `}</style>
     </div>
   );
 }

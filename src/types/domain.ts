@@ -175,6 +175,7 @@ export interface ViewerState {
   pageNumber: number;
   query?: string;
   linkedRowId?: string;
+  activeSnipId?: string;
 }
 
 export interface ToastMessage {
@@ -207,7 +208,7 @@ export interface AuditLogRow {
   explanation: string;
 }
 
-/* ── Visual Snipping ─────────────────────────────────────── */
+/* Visual Snipping */
 
 export interface Snip {
   id: string;
@@ -217,6 +218,7 @@ export interface Snip {
   text: string;
   boundingBox: SnipBoundingBox;
   createdAt: string;
+  sourceType?: SnipSourceType;
 }
 
 export interface SnipBoundingBox {
@@ -226,6 +228,8 @@ export interface SnipBoundingBox {
   height: number;
 }
 
+export type SnipSourceType = "pdf-text" | "manual-region" | "extracted-snippet";
+
 export interface SnipLink {
   id: string;
   snipId: string;
@@ -234,6 +238,6 @@ export interface SnipLink {
   linkedAt: string;
 }
 
-/* ── Progress Reporting ──────────────────────────────────── */
+/* Progress Reporting */
 
 export type ProgressCallback = (message: string) => void;

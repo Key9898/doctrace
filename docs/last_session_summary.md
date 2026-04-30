@@ -1,5 +1,23 @@
 # Last Session Summary
 
+- Latest session: Deep-scanned the Viewer/Snip workflow and upgraded it from a single last-snip interaction into a standard multi-snip review queue.
+- Added duplicate snip prevention, active snip focus/highlighting, and clear snip source labels for PDF text, manual regions, and extracted snippets.
+- Added new snip capture scenarios: PDF text-layer snips, PDF blank-region manual snips, image-region snips, and extracted-snippet snips from the viewer's relevant snippets list.
+- Redesigned `SnipPanel` with captured/linked/open counters, clearer link state, grouped Excel cell links, and explicit View/Link/Remove actions.
+- Persisted snips, snip links, and viewer focus in Browser Preview state so refreshes keep the review queue intact.
+- Stabilized Prettier scripts by replacing `prettier --write .` / `prettier --check .` with explicit file globs.
+- Added snip utility tests for manual bounding boxes and duplicate detection, bringing the suite to 57 passing tests.
+- Latest session: Aligned the project plan and rules with the current lightweight animation strategy: `framer-motion` remains out of the Excel task pane bundle, and native Tailwind/CSS animation is now the documented standard for Windows, Mac, and Web.
+- Added XML-aware formatting for `manifest.xml` with `@prettier/plugin-xml`, a `.prettierignore`, and a `format:check` gate in `npm.cmd run validate`.
+- Wired matching through `runDocumentMatchingInWorker(...)` so the main match flow uses a Web Worker when available and safely falls back to main-thread matching when a host blocks workers.
+- Added a 1000-row matching smoke test to validate the large-workbook fallback path and progress reporting.
+- Fully wired PDF text-layer snipping into the task pane viewer through a lazy-loaded `PdfTextLayer` overlay backed by `readPdfTextLayerItems(...)`.
+- Verified and hardened the PDF/image blob restore fix: raw file blobs are stored in IndexedDB before import completion, restored documents rebuild fresh object URLs, and removed/reset documents clean up blob entries.
+- Reworked task-pane width rules from fixed viewport sizing to host-width sizing so Browser Preview and Excel WebView hosts can resize more predictably.
+- Restored production-facing ribbon labels to `DocTrace` / `Open DocTrace`, bumped the manifest to `1.0.0.3`, and promoted the build marker to `prod-2026-04-29-a`.
+- Confirmed the local dev recovery path: `ERR_CONNECTION_REFUSED` means the Vite dev server is not running or did not start cleanly; after certificate verification and `npm.cmd run dev`, `https://127.0.0.1:3000/` responds.
+- Validation completed: `npm.cmd run format`, `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run test`, `npm.cmd run build`, `npm.cmd run validate:manifest`, `npm.cmd run format:check`, and `npm.cmd audit --omit=dev`.
+- Browser Preview is the current showcase path while Excel live smoke testing is blocked by the local Microsoft license state; keep Excel Diagnostics in-app until a licensed Excel host can be tested again.
 - Latest session: Optimized performance by removing the unused `framer-motion` dependency to reduce bundle size for the Excel sidebar. Achieved 100% Quality Assurance (QA) PASS with zero ESLint errors and consistent Prettier formatting. Implemented "Final Polish" enhancements, including an overhaul of the AppShell with a glassy BrandMark and responsive stats grid, and a complete revamp of the Toast system with Dark Mode support and visual progress bars.
 - Synchronized global vertical gaps across the entire taskpane (44px visual gap between sections) and unified panel padding (py-4) to fix inconsistent white space throughout the application in `styles.css`.
 - Enhanced all interactive elements with tactile feedback (scaling, hover translations, and refined shadow transitions) for a premium "Pro" software experience.

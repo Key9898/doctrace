@@ -15,7 +15,7 @@ import { ToastViewport } from "@/components/ToastViewport/ToastViewport";
 import { ViewerPane } from "@/components/ViewerPane/ViewerPane";
 import { WorkflowStepper } from "@/components/WorkflowStepper/WorkflowStepper";
 
-const BUILD_LABEL = "prod-2026-04-27-a";
+const BUILD_LABEL = "prod-2026-04-30-a";
 
 export function App() {
   const controller = useDocTraceController();
@@ -323,6 +323,7 @@ export function App() {
             </div>
 
             <SnipPanel
+              activeSnipId={controller.viewer.activeSnipId}
               snips={controller.snips}
               snipLinks={controller.snipLinks}
               onLinkToCell={controller.actions.linkSnipToCell}

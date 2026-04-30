@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.cache/
+.turbo/
+.git/
+.idea/
+.vscode/
+.certs/
+.office-addin-dev-certs/
+.office-addin-debugging/
+*.log
+lint_output.txt

@@ -300,7 +300,7 @@ function DocumentGroup({
                       {document.fileName}
                     </h3>
                     <p className="mt-1 text-[0.7rem] font-medium text-slate-500 dark:text-slate-400">
-                      {document.pageCount || 1} page(s) • Imported{" "}
+                      {document.pageCount || 1} page(s) - Imported{" "}
                       {formatDate(document.importedAt)}
                     </p>
                   </div>

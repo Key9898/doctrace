@@ -9,10 +9,10 @@ import { parseImportFile } from "@/services/documents/document-parser.service";
 import {
   buildTemplateName,
   hydrateOutputColumnMap,
-  runDocumentMatching,
   suggestInitialConfig,
   validateOutputMapping,
 } from "@/services/matching/matching.service";
+import { runDocumentMatchingInWorker } from "@/services/matching/matching-worker.service";
 import {
   appendAuditLog,
   buildDemoSelectionSnapshot,
@@ -28,6 +28,9 @@ import {
 import {
   persistState,
   loadState,
+  persistBlob,
+  loadBlob,
+  removeBlob,
 } from "@/services/persistence/indexeddb.service";
 import { useDocTraceStore } from "@/state/app-store";
 import type {
@@ -35,9 +38,12 @@ import type {
   MatchConfig,
   MatchTemplate,
   Snip,
+  SnipLink,
   SelectionSnapshot,
+  ViewerState,
 } from "@/types/domain";
 import { createId } from "@/utils/id";
+import { isDuplicateSnip, normalizeSnipText } from "@/utils/snips";
 
 function buildTemplate(config: MatchConfig, name: string): MatchTemplate {
   const now = new Date().toISOString();
@@ -268,6 +274,11 @@ export function useDocTraceController() {
 
           importedCount += 1;
 
+          if (parsed.sourceKind !== "json" && !state.officeAvailable) {
+            const buffer = await file.arrayBuffer();
+            await persistBlob(parsed.id, buffer, file.type || parsed.mimeType);
+          }
+
           if (!state.viewer.documentId) {
             state.setViewer({
               documentId: parsed.id,
@@ -425,6 +436,15 @@ export function useDocTraceController() {
         state.setConfig(
           suggestInitialConfig(localDemoSelection, state.config.outputFields),
         );
+        state.setSnips([]);
+        state.setSnipLinks([]);
+        state.setViewer({
+          documentId: undefined,
+          pageNumber: 1,
+          query: undefined,
+          linkedRowId: undefined,
+          activeSnipId: undefined,
+        });
         state.resetResults();
       });
 
@@ -438,6 +458,8 @@ export function useDocTraceController() {
         if (document.objectUrl) {
           URL.revokeObjectURL(document.objectUrl);
         }
+
+        void removeBlob(document.id);
       });
 
       const invoiceFile = await createSampleFile(
@@ -544,6 +566,7 @@ export function useDocTraceController() {
     }
 
     state.removeDocument(documentId);
+    void removeBlob(documentId);
     recordActivity("success", "Evidence removed", target?.fileName);
 
     if (state.viewer.documentId === documentId) {
@@ -646,10 +669,23 @@ export function useDocTraceController() {
     );
 
     try {
-      const results = runDocumentMatching(
+      const results = await runDocumentMatchingInWorker(
         state.selection,
         state.documents,
         state.config,
+        ({ mode, processed, total, detail }) => {
+          const prefix =
+            mode === "worker"
+              ? "Worker matching progress"
+              : "Fallback matching progress";
+          state.setBusyMessage(
+            `${prefix}: ${processed}/${total} row(s) processed`,
+          );
+
+          if (detail) {
+            recordActivity("info", "Matching worker fallback", detail);
+          }
+        },
       );
 
       startTransition(() => {
@@ -894,11 +930,56 @@ export function useDocTraceController() {
   };
 
   const addSnip = (snip: Snip) => {
-    state.addSnip(snip);
+    const normalizedText = normalizeSnipText(snip.text);
+
+    if (!normalizedText) {
+      state.pushToast({
+        tone: "error",
+        title: "Empty snip ignored",
+        description: "Choose a text value or evidence region with content.",
+      });
+      return;
+    }
+
+    const candidate = {
+      ...snip,
+      text: normalizedText,
+    };
+    const duplicate = state.snips.find((entry) =>
+      isDuplicateSnip(entry, candidate),
+    );
+
+    if (duplicate) {
+      state.setViewer({
+        documentId: duplicate.documentId,
+        pageNumber: duplicate.pageNumber,
+        query: duplicate.text,
+        activeSnipId: duplicate.id,
+      });
+      state.pushToast({
+        tone: "info",
+        title: "Snip already captured",
+        description: `"${duplicate.text}" is already in the snip list.`,
+      });
+      recordActivity(
+        "info",
+        "Duplicate snip focused",
+        `"${duplicate.text}" was already captured.`,
+      );
+      return;
+    }
+
+    state.addSnip(candidate);
+    state.setViewer({
+      documentId: candidate.documentId,
+      pageNumber: candidate.pageNumber,
+      query: candidate.text,
+      activeSnipId: candidate.id,
+    });
     recordActivity(
       "success",
       "Text snipped",
-      `"${snip.text}" from ${snip.fileName}`,
+      `"${candidate.text}" from ${candidate.fileName}`,
     );
   };
 
@@ -921,10 +1002,16 @@ export function useDocTraceController() {
         sheetName,
         linkedAt: new Date().toISOString(),
       });
+      state.setViewer({
+        documentId: snip.documentId,
+        pageNumber: snip.pageNumber,
+        query: snip.text,
+        activeSnipId: snip.id,
+      });
       state.pushToast({
         tone: "success",
         title: "Snip linked",
-        description: `"${snip.text}" → ${sheetName}!${cellAddress}`,
+        description: `"${snip.text}" -> ${sheetName}!${cellAddress}`,
       });
       recordActivity(
         "success",
@@ -944,14 +1031,45 @@ export function useDocTraceController() {
   };
 
   const toggleSnipping = () => {
-    state.setSnippingEnabled(!state.snippingEnabled);
+    const nextEnabled = !state.snippingEnabled;
+    state.setSnippingEnabled(nextEnabled);
+    recordActivity(
+      "info",
+      nextEnabled ? "Snip mode enabled" : "Snip mode disabled",
+      nextEnabled
+        ? "Click PDF text, image regions, or viewer snippets to capture evidence."
+        : "Captured snips remain available in the snip review panel.",
+    );
   };
 
   const focusSnip = (snip: Snip) => {
-    focusDocument(snip.documentId, snip.pageNumber);
+    state.setViewer({
+      documentId: snip.documentId,
+      pageNumber: snip.pageNumber,
+      query: snip.text,
+      activeSnipId: snip.id,
+    });
+    recordActivity(
+      "info",
+      "Snip focused",
+      `${snip.fileName} page ${snip.pageNumber}`,
+    );
   };
 
-  // ── Browser-mode persistence ──────────────────────────────
+  const removeSnip = (snipId: string) => {
+    state.removeSnip(snipId);
+
+    if (state.viewer.activeSnipId === snipId) {
+      state.setViewer({
+        activeSnipId: undefined,
+        query: undefined,
+      });
+    }
+
+    recordActivity("success", "Snip removed");
+  };
+
+  // Browser-mode persistence.
   useEffect(() => {
     if (state.officeAvailable) return;
 
@@ -959,11 +1077,42 @@ export function useDocTraceController() {
       documents: never[];
       config: MatchConfig;
       results: never[];
-    }>("appState").then((saved) => {
+      snips?: Snip[];
+      snipLinks?: SnipLink[];
+      viewer?: ViewerState;
+    }>("appState").then(async (saved) => {
       if (!saved) return;
-      if (saved.documents?.length) state.setDocuments(saved.documents);
+
+      if (saved.documents?.length) {
+        const restoredDocuments = await Promise.all(
+          saved.documents.map(async (doc: Record<string, unknown>) => {
+            const sourceKind = doc.sourceKind as string;
+            if (sourceKind === "json") return doc;
+
+            const stored = await loadBlob(doc.id as string);
+            if (stored) {
+              const blob = new Blob([stored.data], { type: stored.mimeType });
+              return { ...doc, objectUrl: URL.createObjectURL(blob) };
+            }
+
+            // Blob not found - clear stale objectUrl to prevent ERR_FILE_NOT_FOUND.
+            return { ...doc, objectUrl: "" };
+          }),
+        );
+        state.setDocuments(restoredDocuments as never[]);
+      }
+
       if (saved.config) state.setConfig(saved.config);
       if (saved.results?.length) state.setResults(saved.results);
+      if (saved.snips?.length) {
+        state.setSnips(saved.snips);
+      }
+      if (saved.snipLinks?.length) {
+        state.setSnipLinks(saved.snipLinks);
+      }
+      if (saved.viewer) {
+        state.setViewer(saved.viewer);
+      }
       recordActivity(
         "info",
         "Session restored",
@@ -982,6 +1131,9 @@ export function useDocTraceController() {
         documents: state.documents,
         config: state.config,
         results: state.results,
+        snips: state.snips,
+        snipLinks: state.snipLinks,
+        viewer: state.viewer,
       });
     }, 1000);
 
@@ -992,6 +1144,9 @@ export function useDocTraceController() {
     state.documents,
     state.config,
     state.results,
+    state.snips,
+    state.snipLinks,
+    state.viewer,
   ]);
 
   return {
@@ -1015,7 +1170,7 @@ export function useDocTraceController() {
       linkSnipToCell,
       toggleSnipping,
       focusSnip,
-      removeSnip: state.removeSnip,
+      removeSnip,
       removeSnipLink: state.removeSnipLink,
     },
   };

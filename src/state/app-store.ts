@@ -46,6 +46,8 @@ interface AppState {
   pushActivity: (activity: Omit<ActivityEvent, "id" | "createdAt">) => void;
   dismissToast: (toastId: string) => void;
   resetResults: () => void;
+  setSnips: (snips: Snip[]) => void;
+  setSnipLinks: (snipLinks: SnipLink[]) => void;
   addSnip: (snip: Snip) => void;
   removeSnip: (snipId: string) => void;
   addSnipLink: (link: SnipLink) => void;
@@ -153,6 +155,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
         pageNumber: 1,
       },
     }),
+  setSnips: (snips) => set({ snips }),
+  setSnipLinks: (snipLinks) => set({ snipLinks }),
   addSnip: (snip) =>
     set((state) => ({
       snips: [...state.snips, snip],

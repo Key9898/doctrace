@@ -8,7 +8,8 @@
     "certs:install": "office-addin-dev-certs install",
     "certs:verify": "office-addin-dev-certs verify",
     "dev": "vite --host 127.0.0.1 --port 3000",
-    "format": "prettier --write .",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,css,html,xml,svg}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,css,html,xml,svg}\"",
     "generate:assets": "node scripts/generate-icons.mjs",
     "lint": "eslint .",
     "predev": "npm run certs:install",
@@ -18,7 +19,7 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run lint && npm run typecheck && npm run validate:manifest && vite build",
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run validate:manifest && vite build",
     "validate:manifest": "office-addin-manifest validate manifest.xml"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
+    "@prettier/plugin-xml": "^3.4.2",
     "@tailwindcss/vite": "^4.1.13",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.2.0",

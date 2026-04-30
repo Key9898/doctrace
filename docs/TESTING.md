@@ -11,6 +11,19 @@
 7. Run `npm.cmd run validate` when you want a full lint, typecheck, manifest, and build pass
 8. If Vite says port `3000` is already in use, stop the other process instead of switching to another port, because the Excel manifest is pinned to `https://127.0.0.1:3000`
 
+## Browser Preview showcase path
+
+Use this path when Excel sideload testing is blocked by a license, tenant, cache, or WebView policy issue.
+
+1. Start the dev server with `npm.cmd run dev`.
+2. Open `https://127.0.0.1:3000/` in Edge or Chrome.
+3. Click `Prepare demo workspace` to seed the browser-mode sample selection and bundled invoice/bank evidence.
+4. Click `Load sample invoices JSON` and `Load sample bank JSON` if you want to demonstrate JSON import separately.
+5. Use `Choose invoice files` and `Choose bank files` to import local PDF, image, or JSON evidence.
+6. Use `Suggested mapping`, adjust the amount/date/reference columns, and run `Match all rows`.
+7. Use the evidence viewer to preview imported evidence and snip PDF text-layer regions.
+8. Save, export, import, and reload templates to show the workbook/team-shared setup workflow.
+
 ## Manifest validation
 
 - Local manifest validation: `npm.cmd run validate:manifest`
@@ -76,6 +89,8 @@
 
 ## Troubleshooting notes
 
+- If the browser shows `ERR_CONNECTION_REFUSED` for `https://127.0.0.1:3000/`, the Vite dev server is not running or failed during startup. Run `npm.cmd run dev` from the project root and keep that terminal open.
+- If the dev server exits during certificate setup, run `npm.cmd run certs:install`, approve the local Microsoft Office add-in dev certificate, then run `npm.cmd run dev` again.
 - If ribbon assets or commands look stale, clear the Office cache and sideload again.
 - If the manifest fails validation, run `npm.cmd run validate:manifest`.
 - If the task pane stays in `Booting` during browser-only preview, wait a few seconds for it to fall back to `Browser preview`.

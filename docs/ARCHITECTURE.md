@@ -1,36 +1,49 @@
 # Architecture
 
-## High-level shape
+## High-Level Shape
 
 ```text
 DocTrace
-├─ src
-│  ├─ app
-│  ├─ components
-│  ├─ hooks
-│  ├─ services
-│  ├─ state
-│  ├─ types
-│  └─ utils
-├─ public
-├─ scripts
-└─ docs
+|-- src
+|   |-- app
+|   |-- components
+|   |-- hooks
+|   |-- services
+|   |-- state
+|   |-- types
+|   `-- utils
+|-- public
+|-- scripts
+`-- docs
 ```
 
-## Why this structure
+## Why This Structure
 
-- `components/*`: modular UI units for the Excel task pane
-- `hooks/`: reusable smart logic
-- `services/`: Office, parsing, OCR, matching, and template persistence
-- `utils/`: pure helpers and formatters
-- `docs/`: planning, architecture, and session summaries
+- `components/*`: modular UI units for the Excel task pane.
+- `hooks/`: reusable smart logic.
+- `services/`: Office, parsing, OCR, matching, and template persistence.
+- `utils/`: pure helpers and formatters.
+- `docs/`: planning, architecture, and session summaries.
 
-## Data flow
+## Data Flow
 
-1. User selects sample rows in Excel.
+1. User selects sample rows in Excel or prepares a Browser Preview demo workspace.
 2. DocTrace captures the range and normalizes row records.
-3. User imports invoices and bank statements.
+3. User imports invoices and bank statements as PDF, image, or JSON evidence.
 4. Browser-side parsing extracts candidate fields and bank entries.
-5. Matching engine produces deterministic row-to-evidence links.
-6. Office service writes output columns and audit log entries to the workbook.
-7. The task pane viewer shows the evidence and extracted snippets for review.
+5. Web Worker-backed matching produces deterministic row-to-evidence links with a safe main-thread fallback.
+6. Office service writes output columns and audit log entries to the workbook when Excel is available.
+7. The task pane viewer shows evidence, extracted snippets, and PDF text-layer snips for review.
+
+## Browser-Mode Persistence
+
+- `state` store: serialized app state including document metadata, config, results, and viewer state.
+- `blobs` store: raw PDF/image ArrayBuffers keyed by document ID.
+- On restore, blob URLs are recreated from stored ArrayBuffers.
+- On document removal, both state and blob entries are cleaned up.
+
+## Browser Preview Mode
+
+- Used for demos when Excel sideload testing is blocked by license or host policy.
+- Supports local demo workspace seeding, PDF/image/JSON imports, deterministic matching, templates, and evidence preview.
+- Keeps Excel Diagnostics visible so host sizing, click delivery, and Office.js access can be tested again once a licensed Excel host is available.

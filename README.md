@@ -6,6 +6,7 @@ DocTrace is a cross-platform Excel Add-in for audit teams that need a DataSnippe
 
 - Phase 0: project foundation, rules, manifest, tooling, and clean root-level app structure
 - Phase 1: sample selection, document import, OCR/text extraction, JSON evidence import, deterministic matching, Excel output column mapping, workbook templates, hidden audit log sheet, and task pane viewer
+- Browser Preview showcase mode remains supported while Excel host testing is blocked by local Microsoft licensing or sideload policy issues
 
 ## Workspace layout
 
@@ -21,7 +22,9 @@ docs/
 - Manifest: Excel add-in only XML manifest for best Windows, Mac, and Excel on the web compatibility
 - Runtime: shared runtime
 - UI: React + TypeScript + Tailwind, with a Catalyst-ready enterprise visual system
+- Motion: native Tailwind/CSS animation only for a lighter Excel task pane bundle
 - Parsing: `pdfjs-dist` for PDF text/rendering and `tesseract.js` OCR fallback for scans/images
+- Matching: Web Worker-backed deterministic engine with a safe main-thread fallback
 - Persistence: workbook settings for templates and hidden worksheet audit log for traceability
 
 ## Commands
@@ -31,9 +34,14 @@ npm.cmd install
 npm.cmd run generate:assets
 npm.cmd run certs:verify
 npm.cmd run dev
+npm.cmd run format:check
 npm.cmd run validate:manifest
 npm.cmd run validate
 ```
+
+## Browser Preview demo
+
+If Excel cannot be used because the Microsoft license or host policy is not active, run `npm.cmd run dev` and open [https://127.0.0.1:3000/](https://127.0.0.1:3000/). The Browser Preview path supports demo workspace seeding, PDF/image/JSON import, deterministic matching, PDF text-layer snipping, template export/import, and the Excel Diagnostics panel for future host smoke tests.
 
 ## Windows local dev and Excel sideload
 
@@ -50,3 +58,4 @@ npm.cmd run validate
 - The MVP is local-first and does not include a backend yet.
 - Shared templates are workbook-embedded and exportable/importable as JSON in Phase 1.
 - Sample JSON evidence files are available under `public/demo/`.
+- If `https://127.0.0.1:3000/` shows `ERR_CONNECTION_REFUSED`, start or restart the dev server with `npm.cmd run dev`.

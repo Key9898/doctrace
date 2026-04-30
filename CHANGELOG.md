@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-04-30
+
+- Deep-scanned and refactored the Viewer/Snip workflow from a last-snip-only interaction into a multi-snip review queue.
+- Added duplicate snip prevention, active snip focus/highlighting, and clearer source labels for `PDF text`, `Manual region`, and `Extracted snippet` captures.
+- Added PDF blank-region manual snips, image-region snips, and extracted-snippet snips so reviewers can capture evidence even when no PDF text layer is available.
+- Redesigned the Snip review panel with captured/linked/open counters, clearer link status, view/link/remove actions, and grouped Excel cell links.
+- Persisted snips, snip links, and viewer focus in Browser Preview state so refreshes preserve the review queue.
+- Hardened Prettier scripts with explicit file globs so formatting no longer depends on `prettier --write .` behavior.
+- Added snip utility tests covering manual bounding boxes and duplicate detection.
+
+## 2026-04-29
+
+- Aligned project rules and product plan with the lightweight native Tailwind/CSS animation direction after removing `framer-motion` from the Excel task pane bundle.
+- Added XML-aware Prettier formatting through `@prettier/plugin-xml`, a `.prettierignore`, and a `format:check` gate in the full validation script.
+- Wired the main matching flow through a Web Worker service with a safe main-thread fallback, progress reporting, and a 1000-row smoke test for large-workbook matching readiness.
+- Fully wired PDF text-layer snipping into the viewer through a lazy-loaded overlay, so PDF text regions can create reviewable snips instead of relying on coordinate-only placeholder snips.
+- Hardened browser-mode PDF/image persistence by awaiting raw blob writes before import completion and cleaning stale blob entries when demo documents are reset or removed.
+- Reworked task-pane shell sizing away from fixed viewport widths so Browser Preview and Excel WebView hosts can resize more naturally.
+- Restored production-facing ribbon labels to `DocTrace` / `Open DocTrace` and bumped the local manifest version to `1.0.0.3`.
+- Confirmed the dev server recovery path for `ERR_CONNECTION_REFUSED`: trusted Office certificates are installed and `https://127.0.0.1:3000/` responds successfully when `npm.cmd run dev` is running.
+
+## 2026-04-28
+
+- Fixed PDF/image preview failure (`ERR_FILE_NOT_FOUND`) caused by stale blob URLs after garbage collection or session restore. Raw file data is now persisted in a dedicated IndexedDB `blobs` store and blob URLs are recreated on restore.
+- Added favicon link tag to `index.html` to resolve 404 on `/favicon.ico`.
+- Updated `PRODUCT_PLAN.md` with production cleanup checklist and template sharing roadmap.
+
 ## 2026-04-26
 
 - Revamped the global design system with a premium, modern aesthetic, incorporating glassmorphism (backdrop-blur), refined typography (Outfit font), and a harmonized color palette.
