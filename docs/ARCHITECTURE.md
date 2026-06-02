@@ -32,8 +32,16 @@ DocTrace
 3. User imports invoices and bank statements as PDF, image, or JSON evidence.
 4. Browser-side parsing extracts candidate fields and bank entries.
 5. Web Worker-backed matching produces deterministic row-to-evidence links with a safe main-thread fallback.
-6. Office service writes output columns and audit log entries to the workbook when Excel is available.
-7. The task pane viewer shows evidence, extracted snippets, and PDF text-layer snips for review.
+6. Deferred and batch-loaded result rendering keeps 1000+ row review workflows usable inside the Excel task pane.
+7. Office service writes output columns and audit log entries to the workbook when Excel is available.
+8. The task pane viewer shows evidence, extracted snippets, and PDF text-layer snips for review.
+
+## Internationalization
+
+- Runtime locale config lives in `src/i18n/`.
+- Myanmar (`my-MM`) is the default first-class locale and English (`en-US`) remains the fallback.
+- Number, date, currency, status labels, and OCR language selection are centralized so future locales can be added without changing matching logic.
+- OCR prefers Myanmar + English when Myanmar locale is active and safely falls back to English if the host cannot load Myanmar OCR data.
 
 ## Browser-Mode Persistence
 

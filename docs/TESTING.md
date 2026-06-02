@@ -27,7 +27,16 @@ Use this path when Excel sideload testing is blocked by a license, tenant, cache
 ## Manifest validation
 
 - Local manifest validation: `npm.cmd run validate:manifest`
+- Production manifest validation: `npm.cmd run validate:manifest:prod`
 - Full project validation: `npm.cmd run validate`
+
+## Production/Vercel sideload smoke path
+
+1. Deploy the current GitHub commit to `https://doctrace-one.vercel.app/`.
+2. Confirm `https://doctrace-one.vercel.app/index.html` and `/assets/icon-80.png` open over HTTPS.
+3. Run `npm.cmd run validate:manifest:prod`.
+4. Sideload `manifest.production.xml` in Excel Desktop, Excel on the web, or Excel for Mac.
+5. Verify the task pane opens from `Open DocTrace`, then test Browser/Excel host diagnostics, evidence import, mapping, matching, and snipping.
 
 ## Runtime logging
 
@@ -95,5 +104,6 @@ Use this path when Excel sideload testing is blocked by a license, tenant, cache
 - If the manifest fails validation, run `npm.cmd run validate:manifest`.
 - If the task pane stays in `Booting` during browser-only preview, wait a few seconds for it to fall back to `Browser preview`.
 - If the task pane opens but icons do not, confirm the local `https://127.0.0.1:3000/assets/...` URLs load in a browser.
+- If a production sideload opens the wrong build, confirm Excel is using `manifest.production.xml`, not the local `manifest.xml`.
 - If the browser still shows an untrusted certificate warning, rerun `npm.cmd run certs:install`.
 - If the browser address shows `localhost:3001` or any port other than `3000`, stop the dev server and restart it after freeing port `3000`; do not sideload Excel against a shifted Vite port.

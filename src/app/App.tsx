@@ -14,13 +14,25 @@ import { TemplateLibraryPanel } from "@/components/TemplateLibraryPanel/Template
 import { ToastViewport } from "@/components/ToastViewport/ToastViewport";
 import { ViewerPane } from "@/components/ViewerPane/ViewerPane";
 import { WorkflowStepper } from "@/components/WorkflowStepper/WorkflowStepper";
+import { setActiveLocale, LOCALE_CONFIGS } from "@/i18n/locales";
+import { translate } from "@/i18n/translations";
 
-const BUILD_LABEL = "prod-2026-04-30-a";
+const BUILD_LABEL = "prod-2026-04-30-b";
 
 export function App() {
   const controller = useDocTraceController();
   const rootRef = useRef<HTMLDivElement>(null);
   const busy = Boolean(controller.busyMessage);
+  const t = (key: Parameters<typeof translate>[1]) =>
+    translate(controller.locale, key);
+
+  useEffect(() => {
+    const localeConfig = LOCALE_CONFIGS[controller.locale];
+    setActiveLocale(controller.locale);
+    document.documentElement.lang = controller.locale;
+    document.documentElement.dir = localeConfig.direction;
+  }, [controller.locale]);
+
   const navigateToStep = (stepId: string) => {
     document.getElementById(stepId)?.scrollIntoView({
       behavior: "smooth",
@@ -135,19 +147,20 @@ export function App() {
         buildLabel={BUILD_LABEL}
         busyMessage={controller.busyMessage}
         documentCount={controller.documents.length}
+        locale={controller.locale}
         officeAvailable={controller.officeAvailable}
         officeReady={controller.officeReady}
+        onLocaleChange={controller.setLocale}
         resultCount={controller.results.length}
         selectionAddress={controller.selection?.address}
       >
         <section className="dt-panel">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="dt-kicker">Quick Start</p>
-              <h2 className="dt-section-title">Run a real demo first</h2>
+              <p className="dt-kicker">{t("quick.kicker")}</p>
+              <h2 className="dt-section-title">{t("quick.title")}</h2>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                These actions now perform real work in Excel and report every
-                result in the live activity feed below.
+                {t("quick.description")}
               </p>
             </div>
             <span className="dt-badge dt-badge-neutral">{BUILD_LABEL}</span>
@@ -162,7 +175,7 @@ export function App() {
               onClick={() => runQuickAction("prepare-demo")}
               type="button"
             >
-              Prepare demo workspace
+              {t("quick.prepare")}
             </button>
             <button
               aria-disabled={busy}
@@ -172,7 +185,7 @@ export function App() {
               onClick={() => runQuickAction("capture-selection")}
               type="button"
             >
-              Capture current selection
+              {t("quick.capture")}
             </button>
             <button
               aria-disabled={busy}
@@ -182,7 +195,7 @@ export function App() {
               onClick={() => runQuickAction("load-invoices")}
               type="button"
             >
-              Load sample invoices JSON
+              {t("quick.loadInvoices")}
             </button>
             <button
               aria-disabled={busy}
@@ -192,7 +205,7 @@ export function App() {
               onClick={() => runQuickAction("load-bank")}
               type="button"
             >
-              Load sample bank JSON
+              {t("quick.loadBank")}
             </button>
             <button
               aria-disabled={busy}
@@ -202,7 +215,7 @@ export function App() {
               onClick={() => runQuickAction("suggested-mapping")}
               type="button"
             >
-              Apply suggested mapping
+              {t("quick.mapping")}
             </button>
           </div>
         </section>
@@ -344,13 +357,12 @@ export function App() {
         <section className="dt-panel" aria-labelledby="current-shape-title">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="dt-kicker">Project Status</p>
+              <p className="dt-kicker">{t("project.kicker")}</p>
               <h2 className="dt-section-title" id="current-shape-title">
-                Why this MVP works for audit teams
+                {t("project.title")}
               </h2>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                DataSnipper-style document matching built for deterministic
-                audit evidence.
+                {t("project.description")}
               </p>
             </div>
           </div>
@@ -360,18 +372,10 @@ export function App() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400">
                   <FileText className="h-5 w-5" />
                 </div>
-                Invoice-side evidence
+                {t("project.invoiceTitle")}
               </div>
               <p className="mt-4 text-xs leading-6 font-medium text-slate-600 dark:text-slate-400">
-                Digital PDFs are parsed directly, while scanned evidence falls
-                back to OCR.
-                <strong className="text-slate-900 dark:text-white">
-                  {" "}
-                  JSON evidence bundles
-                </strong>{" "}
-                are also supported for structured imports. DocTrace extracts
-                invoice number, date, amount, and reviewer snippets for each
-                source file.
+                {t("project.invoiceBody")}
               </p>
             </article>
             <article className="rounded-[2.5rem] border border-white/80 bg-white/40 p-6 shadow-sm transition-all hover:bg-white dark:border-white/5 dark:bg-slate-900/40 dark:hover:bg-slate-900/60">
@@ -379,15 +383,10 @@ export function App() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                   <Landmark className="h-5 w-5" />
                 </div>
-                Statement-side traceability
+                {t("project.statementTitle")}
               </div>
               <p className="mt-4 text-xs leading-6 font-medium text-slate-600 dark:text-slate-400">
-                Bank statement lines are heuristically parsed into date, amount,
-                and reference candidates, then written into{" "}
-                <strong className="text-slate-900 dark:text-white">
-                  mapped worksheet columns
-                </strong>{" "}
-                with a persistent audit log stored directly in the workbook.
+                {t("project.statementBody")}
               </p>
             </article>
           </div>

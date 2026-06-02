@@ -8,6 +8,7 @@
 4. Do not add `framer-motion` to the Excel task pane bundle unless a future phase explicitly approves it.
 5. Use lightweight Tailwind/CSS animations for motion so the Excel sidebar stays fast on Windows, Mac, and Web.
 6. Prefer ASCII in source files unless a file already requires Unicode.
+7. Keep locale, date, number, currency, and OCR-language behavior centralized in `src/i18n/` and formatter utilities instead of hardcoding regional assumptions.
 
 ## Collaboration and edits
 
@@ -27,6 +28,7 @@
 4. Never commit generated noise, local certificates, or runtime caches.
 5. Keep `.gitignore` current from day one.
 6. Keep `manifest.xml` XML-formatted through the project Prettier configuration.
+7. Validate both `manifest.xml` and `manifest.production.xml` before any release or sideload handoff.
 
 ## Product constraints
 
@@ -35,3 +37,4 @@
 3. Prefer deterministic and explainable workflows in the MVP.
 4. Treat audit traceability as a first-class feature.
 5. Keep Browser Preview showcase-ready whenever Excel licensing or host issues block live sideload testing.
+6. Keep Myanmar supported as a first-class locale while preserving English fallback behavior for international audit teams.

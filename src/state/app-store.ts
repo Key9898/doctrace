@@ -1,5 +1,11 @@
 import { create } from "zustand";
 
+import {
+  DEFAULT_LOCALE,
+  resolveSupportedLocale,
+  setActiveLocale,
+  type AppLocale,
+} from "@/i18n/locales";
 import type {
   ActivityEvent,
   MatchConfig,
@@ -14,9 +20,12 @@ import type {
 } from "@/types/domain";
 import { createId } from "@/utils/id";
 
+const LOCALE_STORAGE_KEY = "doctrace.locale";
+
 interface AppState {
   officeReady: boolean;
   officeAvailable: boolean;
+  locale: AppLocale;
   busyMessage?: string;
   selection?: SelectionSnapshot;
   documents: ParsedDocument[];
@@ -31,6 +40,7 @@ interface AppState {
   snipLinks: SnipLink[];
   snippingEnabled: boolean;
   setOfficeState: (ready: boolean, available: boolean) => void;
+  setLocale: (locale: AppLocale) => void;
   setBusyMessage: (message?: string) => void;
   setSelection: (selection?: SelectionSnapshot) => void;
   setDocuments: (documents: ParsedDocument[]) => void;
@@ -75,9 +85,30 @@ const defaultConfig: MatchConfig = {
   outputColumnMap: {},
 };
 
+function resolveInitialLocale(): AppLocale {
+  if (typeof window === "undefined") {
+    return DEFAULT_LOCALE;
+  }
+
+  try {
+    const storedLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+    if (storedLocale) {
+      return resolveSupportedLocale(storedLocale);
+    }
+  } catch {
+    return DEFAULT_LOCALE;
+  }
+
+  return resolveSupportedLocale(window.navigator.language);
+}
+
+const initialLocale = resolveInitialLocale();
+setActiveLocale(initialLocale);
+
 export const useDocTraceStore = create<AppState>((set) => ({
   officeReady: false,
   officeAvailable: false,
+  locale: initialLocale,
   busyMessage: undefined,
   selection: undefined,
   documents: [],
@@ -95,6 +126,20 @@ export const useDocTraceStore = create<AppState>((set) => ({
   snippingEnabled: false,
   setOfficeState: (ready, available) =>
     set({ officeReady: ready, officeAvailable: available }),
+  setLocale: (locale) => {
+    const nextLocale = resolveSupportedLocale(locale);
+
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
+      } catch {
+        // Locale still updates in memory when storage is blocked by a host.
+      }
+    }
+
+    setActiveLocale(nextLocale);
+    set({ locale: nextLocale });
+  },
   setBusyMessage: (busyMessage) => set({ busyMessage }),
   setSelection: (selection) => set({ selection }),
   setDocuments: (documents) => set({ documents }),

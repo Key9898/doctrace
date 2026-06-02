@@ -19,8 +19,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run validate:manifest && vite build",
-    "validate:manifest": "office-addin-manifest validate manifest.xml"
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run validate:manifest && npm run validate:manifest:prod && vite build",
+    "validate:manifest": "office-addin-manifest validate manifest.xml",
+    "validate:manifest:prod": "office-addin-manifest validate manifest.production.xml"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",

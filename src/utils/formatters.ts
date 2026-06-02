@@ -1,4 +1,6 @@
 import type { ExcelPrimitive, MatchStatus } from "@/types/domain";
+import { getActiveLocaleConfig } from "@/i18n/locales";
+import { translate } from "@/i18n/translations";
 
 const EMPTY_VALUE = "--";
 
@@ -7,7 +9,9 @@ export function formatNumber(value?: number | null) {
     return EMPTY_VALUE;
   }
 
-  return new Intl.NumberFormat("en-US", {
+  const { numberLocale } = getActiveLocaleConfig();
+
+  return new Intl.NumberFormat(numberLocale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
@@ -18,9 +22,11 @@ export function formatCurrency(value?: number | null) {
     return EMPTY_VALUE;
   }
 
-  return new Intl.NumberFormat("en-US", {
+  const { currency, numberLocale } = getActiveLocaleConfig();
+
+  return new Intl.NumberFormat(numberLocale, {
     style: "currency",
-    currency: "USD",
+    currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
@@ -37,7 +43,9 @@ export function formatDate(value?: string | null) {
     return value;
   }
 
-  return new Intl.DateTimeFormat("en-GB", {
+  const { dateLocale } = getActiveLocaleConfig();
+
+  return new Intl.DateTimeFormat(dateLocale, {
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -69,12 +77,14 @@ export function formatCellValue(value: ExcelPrimitive) {
 }
 
 export function statusLabel(status: MatchStatus) {
+  const { id } = getActiveLocaleConfig();
+
   switch (status) {
     case "matched":
-      return "Matched";
+      return translate(id, "status.matched");
     case "partial":
-      return "Partial";
+      return translate(id, "status.partial");
     case "exception":
-      return "Exception";
+      return translate(id, "status.exception");
   }
 }

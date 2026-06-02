@@ -1,5 +1,9 @@
 # Last Session Summary
 
+- Latest session: Added `manifest.production.xml` for the Vercel domain `https://doctrace-one.vercel.app/` and added `npm.cmd run validate:manifest:prod` so local and production manifests can be validated separately.
+- Added Myanmar-first internationalization foundations with centralized locale config, task-pane language switching, locale-aware formatters, and Myanmar+English OCR preference with English fallback.
+- Upgraded Step 4 results review with deferred, batch-loaded result cards rendered through `VirtualList` so 1000+ row review workflows remain usable in the Excel task pane.
+- Promoted the build marker to `prod-2026-04-30-b`.
 - Latest session: Deep-scanned the Viewer/Snip workflow and upgraded it from a single last-snip interaction into a standard multi-snip review queue.
 - Added duplicate snip prevention, active snip focus/highlighting, and clear snip source labels for PDF text, manual regions, and extracted snippets.
 - Added new snip capture scenarios: PDF text-layer snips, PDF blank-region manual snips, image-region snips, and extracted-snippet snips from the viewer's relevant snippets list.

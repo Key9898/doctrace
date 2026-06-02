@@ -2,6 +2,9 @@
 
 ## 2026-04-30
 
+- Added a production Office manifest for `https://doctrace-one.vercel.app/` and a dedicated `validate:manifest:prod` script.
+- Added Myanmar-first i18n foundations with centralized locale config, locale-aware date/number/currency formatting, a task-pane language switcher, and OCR language selection with English fallback.
+- Upgraded Step 4 results review for 1000+ row workflows by rendering match result cards through a deferred, batch-loaded, render-safe list path.
 - Deep-scanned and refactored the Viewer/Snip workflow from a last-snip-only interaction into a multi-snip review queue.
 - Added duplicate snip prevention, active snip focus/highlighting, and clearer source labels for `PDF text`, `Manual region`, and `Extracted snippet` captures.
 - Added PDF blank-region manual snips, image-region snips, and extracted-snippet snips so reviewers can capture evidence even when no PDF text layer is available.

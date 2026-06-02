@@ -1,33 +1,42 @@
+import type { AppLocale } from "@/i18n/locales";
+import { LOCALE_OPTIONS } from "@/i18n/locales";
+import { translate } from "@/i18n/translations";
+import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
+
 interface AppShellProps {
   officeReady: boolean;
   officeAvailable: boolean;
+  locale: AppLocale;
   busyMessage?: string;
   documentCount: number;
   resultCount: number;
   selectionAddress?: string;
   buildLabel: string;
+  onLocaleChange: (locale: AppLocale) => void;
   children: React.ReactNode;
 }
-
-import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
 
 export function AppShell({
   officeReady,
   officeAvailable,
+  locale,
   busyMessage,
   documentCount,
   resultCount,
   selectionAddress,
   buildLabel,
+  onLocaleChange,
   children,
 }: AppShellProps) {
+  const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+
   return (
     <div className="dt-shell min-w-0">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-2xl focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
       >
-        Skip to main content
+        {t("app.skip")}
       </a>
       <div className="mx-auto flex w-full max-w-6xl min-w-0 flex-col gap-3 px-3 py-4 sm:px-4">
         <header className="dt-hero" role="banner">
@@ -37,7 +46,7 @@ export function AppShell({
                 <BrandMark />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="dt-kicker">Excel audit workspace</p>
+                <p className="dt-kicker">{t("app.workspace")}</p>
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">
                     DocTrace
@@ -48,21 +57,39 @@ export function AppShell({
                   >
                     {officeReady
                       ? officeAvailable
-                        ? "Excel connected"
-                        : "Browser preview"
-                      : "Booting"}
+                        ? t("app.excelConnected")
+                        : t("app.browserPreview")
+                      : t("app.booting")}
                   </span>
                   <span className="dt-badge dt-badge-neutral">
                     {buildLabel}
                   </span>
                 </div>
                 <p className="mt-1 max-w-3xl text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">
-                  Deterministic document matching for Test of Details workflows,
-                  built for audit teams working directly in Excel.
+                  {t("app.description")}
                 </p>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex shrink-0 items-center gap-2">
+              <label className="sr-only" htmlFor="doctrace-locale">
+                {t("app.language")}
+              </label>
+              <select
+                className="dt-select h-10 w-[7.5rem] rounded-xl px-3 py-2 text-xs"
+                id="doctrace-locale"
+                onChange={(event) =>
+                  onLocaleChange(event.target.value as AppLocale)
+                }
+                value={locale}
+              >
+                {LOCALE_OPTIONS.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <ThemeToggle />
+            </div>
           </div>
 
           <div
@@ -71,39 +98,37 @@ export function AppShell({
             aria-label="Application statistics"
           >
             <div className="dt-stat min-w-0">
-              <span className="dt-stat-label">Selection</span>
+              <span className="dt-stat-label">{t("app.selection")}</span>
               <strong
                 className="dt-stat-value truncate"
-                title={selectionAddress ?? "Not captured"}
+                title={selectionAddress ?? t("app.none")}
               >
-                {selectionAddress ?? "None"}
+                {selectionAddress ?? t("app.none")}
               </strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Documents</span>
+              <span className="dt-stat-label">{t("app.documents")}</span>
               <strong className="dt-stat-value" aria-live="polite">
                 {documentCount}
               </strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Results</span>
+              <span className="dt-stat-label">{t("app.results")}</span>
               <strong className="dt-stat-value" aria-live="polite">
                 {resultCount}
               </strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Status</span>
+              <span className="dt-stat-label">{t("app.status")}</span>
               <strong className="dt-stat-value truncate" aria-live="polite">
-                {busyMessage ?? "Ready"}
+                {busyMessage ?? t("app.ready")}
               </strong>
             </div>
           </div>
 
           {officeReady && !officeAvailable ? (
             <div className="dt-warning-box mt-4" role="status">
-              Browser preview mode is active. Open DocTrace inside Excel to
-              capture worksheet selections, write mapped output columns, and
-              update the hidden audit log.
+              {t("app.browserWarning")}
             </div>
           ) : null}
         </header>

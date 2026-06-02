@@ -36,6 +36,7 @@ npm.cmd run certs:verify
 npm.cmd run dev
 npm.cmd run format:check
 npm.cmd run validate:manifest
+npm.cmd run validate:manifest:prod
 npm.cmd run validate
 ```
 
@@ -52,10 +53,17 @@ If Excel cannot be used because the Microsoft license or host policy is not acti
 5. Verify [https://127.0.0.1:3000/index.html](https://127.0.0.1:3000/index.html) opens locally
 6. In Excel Desktop, sideload [manifest.xml](C:\Users\keych\Development\Projects\Personal\doctrace\manifest.xml) and open the `DocTrace` task pane from the `Data` tab
 
+## Production manifest
+
+- Local development keeps using `manifest.xml` with `https://127.0.0.1:3000`.
+- Production/Vercel sideloading uses `manifest.production.xml` with `https://doctrace-one.vercel.app/`.
+- Validate both manifests with `npm.cmd run validate`.
+
 ## Notes
 
 - The UI is intentionally optimized for Excel task pane constraints.
 - The MVP is local-first and does not include a backend yet.
+- Myanmar is the default runtime locale, with English available from the task pane language switcher.
 - Shared templates are workbook-embedded and exportable/importable as JSON in Phase 1.
 - Sample JSON evidence files are available under `public/demo/`.
 - If `https://127.0.0.1:3000/` shows `ERR_CONNECTION_REFUSED`, start or restart the dev server with `npm.cmd run dev`.

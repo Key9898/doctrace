@@ -42,9 +42,13 @@ DocTrace is an Excel-native audit workflow add-in focused on Test of Details for
 - File picker fallback for Excel WebView2 compatibility
 - OCR progress reporting with page-level status
 - Optimized startup timeout (400ms vs 1200ms)
+- Myanmar-first internationalization foundation with locale-aware date, number, currency, status labels, and OCR language selection with English fallback
+- Production Vercel manifest for `https://doctrace-one.vercel.app/`
+- 1000+ row review readiness through worker-backed matching, deferred results rendering, batch-loaded result cards, and render-safe list primitives
 
 ## Production Cleanup (before public release)
 
+- Keep `manifest.production.xml` aligned with the active Vercel domain and validate it before sideload testing.
 - Remove "Quick Start" demo section (Prepare demo workspace, sample load buttons)
 - Remove "Quick Sample Load" section (Sample invoices JSON, Sample bank JSON buttons)
 - Remove demo sentence from JSON Evidence Support: "If the native file picker is blocked, use the sample buttons to verify the system."
@@ -61,6 +65,7 @@ DocTrace is an Excel-native audit workflow add-in focused on Test of Details for
 - User/auth and firm-level access controls
 - Centralized evidence storage
 - Deployment/admin tooling
+- Full enterprise localization management for all user-facing strings, help text, and firm-specific terminology
 
 ## Phase 3 - AI/ML Intelligence Roadmap
 
