@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-06-02
+
+- Fixed Excel Task Pane button/input click interactions not responding inside WebView2 on Windows Desktop.
+- Root cause: `backdrop-filter` (Tailwind `backdrop-blur-*`) and `transition-all` create GPU-composited layers that swallow pointer events in WebView2.
+- Added `dt-excel-host` CSS class applied to `<html>` IMMEDIATELY when Office.js is present (before async detection); disables all `backdrop-filter`, replaces `transition-all` with safe `transition-colors`, kills GPU-promoting transforms, forces `pointer-events: auto` on all interactive elements.
+- Installed a native click bridge (`installNativeClickBridge`) that intercepts `pointerup` at the document level and synthetically dispatches `click` events to the correct target element, completely bypassing CSS compositing interference in WebView2.
+- Added `touch-action: manipulation` to root elements to prevent click-delay in WebView2.
+- Replaced `overflow: hidden` with `overflow: clip` on `.dt-hero` and `.dt-panel` to avoid creating scrolling contexts that trap events.
+- Replaced experimental `useEffectEvent` with stable `useCallback` + `useRef` pattern for `runQuickAction` in App.tsx.
+- Removed redundant `onTouchEnd` handlers from Quick Actions buttons that could interfere with synthetic event chains.
+- ToastViewport now returns `null` when no toasts are visible instead of rendering an empty fixed-position container.
+- Added `data-doctrace-action` debug attributes to SelectionPanel and MatchConfigPanel buttons.
+
 ## 2026-04-30
 
 - Added a production Office manifest for `https://doctrace-one.vercel.app/` and a dedicated `validate:manifest:prod` script.

@@ -103,28 +103,13 @@ export function DiagnosticsPanel({
       recordEvent("Resize event observed");
     };
 
-    const handleNativeClick = (event: Event) => {
-      const target = event.target;
-      recordEvent(
-        `Native ${event.type} reached app: ${
-          target instanceof Element ? describeElement(target) : "unknown target"
-        }`,
-      );
-    };
-
     globalThis.addEventListener("resize", handleResize);
     globalThis.visualViewport?.addEventListener("resize", handleResize);
-    document.addEventListener("pointerdown", handleNativeClick, true);
-    document.addEventListener("mousedown", handleNativeClick, true);
-    document.addEventListener("click", handleNativeClick, true);
     const intervalId = globalThis.setInterval(refreshSnapshot, 5000);
 
     return () => {
       globalThis.removeEventListener("resize", handleResize);
       globalThis.visualViewport?.removeEventListener("resize", handleResize);
-      document.removeEventListener("pointerdown", handleNativeClick, true);
-      document.removeEventListener("mousedown", handleNativeClick, true);
-      document.removeEventListener("click", handleNativeClick, true);
       globalThis.clearInterval(intervalId);
     };
   }, [recordEvent]);
@@ -345,15 +330,4 @@ function readRuntimeSnapshot(): RuntimeSnapshot {
     visualViewportWidth:
       globalThis.visualViewport?.width ?? globalThis.innerWidth,
   };
-}
-
-function describeElement(element: Element) {
-  const tag = element.tagName.toLowerCase();
-  const text = element.textContent?.trim().replace(/\s+/g, " ").slice(0, 40);
-  const id = element.id ? `#${element.id}` : "";
-  const role = element.getAttribute("role")
-    ? `[role=${element.getAttribute("role")}]`
-    : "";
-
-  return `${tag}${id}${role}${text ? ` "${text}"` : ""}`;
 }

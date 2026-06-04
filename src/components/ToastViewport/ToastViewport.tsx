@@ -21,6 +21,10 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
     };
   }, [onDismiss, toasts]);
 
+  if (toasts.length === 0) {
+    return null;
+  }
+
   return (
     <div
       aria-live="polite"

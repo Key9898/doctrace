@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type MouseEvent,
+  type PointerEvent,
 } from "react";
 import {
   ChevronLeft,
@@ -125,6 +126,31 @@ export function ViewerPane({
     }
   }, [activeDocument]);
 
+  const lastScrolledSnipId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (
+      viewer.activeSnipId &&
+      viewer.activeSnipId !== lastScrolledSnipId.current
+    ) {
+      lastScrolledSnipId.current = viewer.activeSnipId;
+
+      const timer = setTimeout(() => {
+        // Query the active snip element (either JSON line highlight or PDF/Image SVG rect highlight)
+        const activeEl = document.querySelector(
+          '[class*="bg-amber-500/25"], [class*="fill-amber-400/25"]',
+        );
+        if (activeEl) {
+          activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    } else if (!viewer.activeSnipId) {
+      lastScrolledSnipId.current = null;
+    }
+  }, [viewer.activeSnipId]);
+
   if (!activeDocument) {
     return (
       <section className="dt-panel" aria-labelledby="viewer-title">
@@ -187,6 +213,46 @@ export function ViewerPane({
       createdAt: new Date().toISOString(),
       sourceType: "extracted-snippet",
     });
+  };
+
+  const handleJsonTextSelection = (event: MouseEvent<HTMLDivElement>) => {
+    if (!snippingEnabled || !onSnip) {
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection) {
+      return;
+    }
+    const selectedText = selection.toString().trim();
+
+    if (!selectedText) {
+      return;
+    }
+
+    const isInside = event.currentTarget.contains(selection.anchorNode);
+    if (!isInside) {
+      return;
+    }
+
+    onSnip({
+      id: createId("snip"),
+      documentId: activeDocument.id,
+      fileName: activeDocument.fileName,
+      pageNumber: activePageNumber,
+      text: selectedText,
+      boundingBox: {
+        x: 0,
+        y: 0,
+        width: 180,
+        height: 28,
+      },
+      createdAt: new Date().toISOString(),
+      sourceType: "extracted-snippet",
+    });
+
+    selection?.removeAllRanges();
+    event.stopPropagation();
   };
 
   return (
@@ -287,9 +353,78 @@ export function ViewerPane({
             </div>
           </div>
         ) : activeDocument.sourceKind === "json" ? (
-          <div className="max-h-[32rem] overflow-auto bg-slate-950 p-6">
+          <div
+            className="max-h-[32rem] overflow-auto bg-slate-950 p-6"
+            onMouseUp={handleJsonTextSelection}
+          >
             <pre className="rounded-2xl border border-white/5 bg-slate-900/50 p-6 font-mono text-[0.7rem] leading-6 break-words whitespace-pre-wrap text-slate-300">
-              {activeDocument.rawJson ?? activeDocument.extractedText}
+              {(activeDocument.rawJson ?? activeDocument.extractedText ?? "")
+                .split(/\r?\n/)
+                .map((line, index) => {
+                  const trimmedLine = line.trim();
+                  if (!trimmedLine) {
+                    return <div key={index} className="h-4" />;
+                  }
+
+                  const matchedSnip = pageSnips.find((s) => {
+                    const sText = s.text.trim();
+                    return (
+                      sText &&
+                      (trimmedLine.includes(sText) ||
+                        sText.includes(trimmedLine))
+                    );
+                  });
+                  const isCaptured = !!matchedSnip;
+                  const isActive =
+                    isCaptured && matchedSnip.id === viewer.activeSnipId;
+
+                  const lineClass = `relative block px-2 py-0.5 rounded transition-colors duration-150 ${
+                    snippingEnabled
+                      ? isCaptured
+                        ? isActive
+                          ? "bg-amber-500/25 text-amber-300 cursor-pointer hover:bg-amber-500/35"
+                          : "bg-emerald-500/25 text-emerald-300 cursor-pointer hover:bg-emerald-500/35"
+                        : "cursor-crosshair hover:bg-sky-500/10 hover:text-sky-200"
+                      : isCaptured
+                        ? isActive
+                          ? "bg-amber-500/15 text-amber-300"
+                          : "bg-emerald-500/15 text-emerald-300"
+                        : ""
+                  }`;
+
+                  return (
+                    <div
+                      className={lineClass}
+                      key={index}
+                      onClick={() => {
+                        if (snippingEnabled && onSnip) {
+                          const selectionText = window
+                            .getSelection()
+                            ?.toString()
+                            .trim();
+                          if (selectionText) {
+                            return; // Let handleJsonTextSelection handle it
+                          }
+                          createSnippetSnip(line, index);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={snippingEnabled ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (
+                          snippingEnabled &&
+                          onSnip &&
+                          (e.key === "Enter" || e.key === " ")
+                        ) {
+                          e.preventDefault();
+                          createSnippetSnip(line, index);
+                        }
+                      }}
+                    >
+                      {line}
+                    </div>
+                  );
+                })}
             </pre>
           </div>
         ) : (
@@ -433,22 +568,74 @@ function ImageSnipLayer({
   activeSnips,
   onSnip,
 }: ImageSnipLayerProps) {
-  const handleImageSnip = (event: MouseEvent<SVGSVGElement>) => {
-    if (!snippingEnabled) {
-      return;
-    }
+  const [drawingStart, setDrawingStart] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [drawingCurrent, setDrawingCurrent] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
+  const getCoordinates = (event: PointerEvent<SVGSVGElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * imageWidth;
     const y = ((event.clientY - rect.top) / rect.height) * imageHeight;
+    return { x, y };
+  };
+
+  const handlePointerDown = (event: PointerEvent<SVGSVGElement>) => {
+    if (!snippingEnabled) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const coords = getCoordinates(event);
+    setDrawingStart(coords);
+    setDrawingCurrent(coords);
+  };
+
+  const handlePointerMove = (event: PointerEvent<SVGSVGElement>) => {
+    if (!snippingEnabled || !drawingStart) return;
+    const coords = getCoordinates(event);
+    setDrawingCurrent(coords);
+  };
+
+  const handlePointerUp = (event: PointerEvent<SVGSVGElement>) => {
+    if (!snippingEnabled || !drawingStart || !drawingCurrent) return;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+
+    const start = drawingStart;
+    const end = drawingCurrent;
+    setDrawingStart(null);
+    setDrawingCurrent(null);
+
+    const deltaX = Math.abs(end.x - start.x);
+    const deltaY = Math.abs(end.y - start.y);
+
+    let boundingBox;
+    if (deltaX < 5 && deltaY < 5) {
+      // Just a click, use default centered bounding box
+      boundingBox = buildManualSnipBoundingBox(
+        start.x,
+        start.y,
+        imageWidth,
+        imageHeight,
+      );
+    } else {
+      // User dragged to draw a custom box
+      boundingBox = {
+        x: Math.min(start.x, end.x),
+        y: Math.min(start.y, end.y),
+        width: Math.max(10, deltaX),
+        height: Math.max(10, deltaY),
+      };
+    }
 
     onSnip({
       id: createId("snip"),
       documentId,
       fileName,
       pageNumber,
-      text: `Image region - page ${pageNumber} (${Math.round(x)}, ${Math.round(y)})`,
-      boundingBox: buildManualSnipBoundingBox(x, y, imageWidth, imageHeight),
+      text: `Image region - page ${pageNumber} (${Math.round(boundingBox.x)}, ${Math.round(boundingBox.y)})`,
+      boundingBox,
       createdAt: new Date().toISOString(),
       sourceType: "manual-region",
     });
@@ -458,16 +645,40 @@ function ImageSnipLayer({
     return null;
   }
 
+  // Render a live drag preview box while drawing
+  const previewBox = (() => {
+    if (!drawingStart || !drawingCurrent) return null;
+    const x = Math.min(drawingStart.x, drawingCurrent.x);
+    const y = Math.min(drawingStart.y, drawingCurrent.y);
+    const width = Math.abs(drawingCurrent.x - drawingStart.x);
+    const height = Math.abs(drawingCurrent.y - drawingStart.y);
+    if (width < 5 && height < 5) return null;
+    return (
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        className="pointer-events-none fill-sky-400/20 stroke-sky-500"
+        strokeWidth="2"
+        strokeDasharray="4 2"
+      />
+    );
+  })();
+
   return (
     <svg
       aria-label="Image snipping layer"
       className="absolute inset-0 h-full w-full"
-      onClick={handleImageSnip}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
       preserveAspectRatio="none"
       role="img"
       viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+      style={{ touchAction: "none" }}
     >
-      {snippingEnabled ? (
+      {snippingEnabled && !drawingStart ? (
         <rect
           className="cursor-crosshair fill-sky-400/0 transition-colors hover:fill-sky-400/10"
           height={imageHeight}
@@ -475,9 +686,13 @@ function ImageSnipLayer({
           x="0"
           y="0"
         >
-          <title>Click an image region to create a manual evidence snip</title>
+          <title>
+            Drag to draw a custom image region, or click to use default box
+          </title>
         </rect>
       ) : null}
+
+      {previewBox}
 
       {activeSnips.map((snip) => (
         <rect

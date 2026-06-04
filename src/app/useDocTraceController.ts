@@ -84,6 +84,45 @@ async function withTimeout<T>(
   }
 }
 
+async function extractTextFromImageRegion(
+  objectUrl: string,
+  boundingBox: { x: number; y: number; width: number; height: number },
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = objectUrl;
+    img.onload = async () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = boundingBox.width;
+        canvas.height = boundingBox.height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          throw new Error("Could not get 2D context");
+        }
+        ctx.drawImage(
+          img,
+          boundingBox.x,
+          boundingBox.y,
+          boundingBox.width,
+          boundingBox.height,
+          0,
+          0,
+          boundingBox.width,
+          boundingBox.height,
+        );
+        const { runOcr } = await import("@/services/documents/ocr.service");
+        const text = await runOcr(canvas);
+        resolve(text.trim());
+      } catch (error) {
+        reject(error);
+      }
+    };
+    img.onerror = (err) => reject(err);
+  });
+}
+
 export function useDocTraceController() {
   useWorkbookSelectionSync();
 
@@ -930,57 +969,113 @@ export function useDocTraceController() {
   };
 
   const addSnip = (snip: Snip) => {
-    const normalizedText = normalizeSnipText(snip.text);
+    try {
+      const normalizedText = normalizeSnipText(snip.text);
 
-    if (!normalizedText) {
-      state.pushToast({
-        tone: "error",
-        title: "Empty snip ignored",
-        description: "Choose a text value or evidence region with content.",
-      });
-      return;
-    }
+      if (!normalizedText) {
+        state.pushToast({
+          tone: "error",
+          title: "Empty snip ignored",
+          description: "Choose a text value or evidence region with content.",
+        });
+        return;
+      }
 
-    const candidate = {
-      ...snip,
-      text: normalizedText,
-    };
-    const duplicate = state.snips.find((entry) =>
-      isDuplicateSnip(entry, candidate),
-    );
+      const candidate = {
+        ...snip,
+        text: normalizedText,
+      };
 
-    if (duplicate) {
-      state.setViewer({
-        documentId: duplicate.documentId,
-        pageNumber: duplicate.pageNumber,
-        query: duplicate.text,
-        activeSnipId: duplicate.id,
-      });
-      state.pushToast({
-        tone: "info",
-        title: "Snip already captured",
-        description: `"${duplicate.text}" is already in the snip list.`,
-      });
-      recordActivity(
-        "info",
-        "Duplicate snip focused",
-        `"${duplicate.text}" was already captured.`,
+      const currentStore = useDocTraceStore.getState();
+      const duplicate = currentStore.snips.find((entry) =>
+        isDuplicateSnip(entry, candidate),
       );
-      return;
-    }
 
-    state.addSnip(candidate);
-    state.setViewer({
-      documentId: candidate.documentId,
-      pageNumber: candidate.pageNumber,
-      query: candidate.text,
-      activeSnipId: candidate.id,
-    });
-    recordActivity(
-      "success",
-      "Text snipped",
-      `"${candidate.text}" from ${candidate.fileName}`,
-    );
+      if (duplicate) {
+        currentStore.setViewer({
+          documentId: duplicate.documentId,
+          pageNumber: duplicate.pageNumber,
+          query: duplicate.text,
+          activeSnipId: duplicate.id,
+        });
+        currentStore.pushToast({
+          tone: "info",
+          title: "Snip already captured",
+          description: `"${duplicate.text}" is already in the snip list.`,
+        });
+        currentStore.pushActivity({
+          tone: "info",
+          title: "Duplicate snip focused",
+          description: `"${duplicate.text}" was already captured.`,
+        });
+        return;
+      }
+
+      currentStore.addSnip(candidate);
+      currentStore.setViewer({
+        documentId: candidate.documentId,
+        pageNumber: candidate.pageNumber,
+        query: candidate.text,
+        activeSnipId: candidate.id,
+      });
+
+      currentStore.pushActivity({
+        tone: "success",
+        title: "Text snipped",
+        description: `"${candidate.text}" from ${candidate.fileName}`,
+      });
+
+      // If it's a manual region from an image, run OCR asynchronously to extract the actual text!
+      if (candidate.sourceType === "manual-region") {
+        const doc = currentStore.documents.find(
+          (d) => d.id === candidate.documentId,
+        );
+        if (doc && doc.sourceKind === "image") {
+          currentStore.pushActivity({
+            tone: "info",
+            title: "Text extraction active",
+            description: "Running OCR on image region...",
+          });
+          void extractTextFromImageRegion(doc.objectUrl, candidate.boundingBox)
+            .then((extractedText) => {
+              if (extractedText) {
+                const latestStore = useDocTraceStore.getState();
+                const updatedSnips = latestStore.snips.map((s) =>
+                  s.id === candidate.id ? { ...s, text: extractedText } : s,
+                );
+                latestStore.setSnips(updatedSnips);
+
+                if (latestStore.viewer.activeSnipId === candidate.id) {
+                  latestStore.setViewer({ query: extractedText });
+                }
+
+                latestStore.pushActivity({
+                  tone: "success",
+                  title: "Text extracted from region",
+                  description: `"${extractedText}" replaced coordinate placeholder.`,
+                });
+              }
+            })
+            .catch((err) => {
+              console.error("Manual region OCR failed:", err);
+              const latestStore = useDocTraceStore.getState();
+              latestStore.pushActivity({
+                tone: "error",
+                title: "Text extraction failed",
+                description: "Could not extract text from the selected region.",
+              });
+            });
+        }
+      }
+    } catch (error) {
+      console.error("addSnip failed:", error);
+      const currentStore = useDocTraceStore.getState();
+      currentStore.pushToast({
+        tone: "error",
+        title: "Add snip failed",
+        description: error instanceof Error ? error.message : String(error),
+      });
+    }
   };
 
   const linkSnipToCell = async (snip: Snip) => {
@@ -1054,6 +1149,14 @@ export function useDocTraceController() {
       "Snip focused",
       `${snip.fileName} page ${snip.pageNumber}`,
     );
+
+    // Scroll the Viewer Pane into view so the user doesn't have to scroll up manually
+    setTimeout(() => {
+      const viewerEl = document.getElementById("step-viewer");
+      if (viewerEl) {
+        viewerEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
   };
 
   const removeSnip = (snipId: string) => {

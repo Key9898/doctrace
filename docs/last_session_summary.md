@@ -1,5 +1,28 @@
 # Last Session Summary
 
+- **Latest session**: Completely fixed and polished the **Data Snipping workflow** across all supported file types (PDF, Image, and JSON) to achieve 100% correct, interactive, and smooth performance:
+  - **WebView2 Event Bridge Refinement**: Fixed the double-click/toggle-off bug for switcher and toggle buttons inside the Excel Task Pane (WebView2) by ensuring native trusted click events cancel the scheduled synthetic fallback click.
+  - **Image Drag-to-Draw Custom Bounding Box**: Refactored `ImageSnipLayer` to support pointer event capture dragging, drawing a dynamic dashed preview box, and falling back to a default centered box on click.
+  - **Asynchronous OCR Text Extraction**: Integrated asynchronous OCR in `addSnip` for manual regions on images, cropping the selected area and running local Tesseract OCR to automatically replace coordinates with actual text.
+  - **React Hook Stale Closure Resolution**: Solved a state synchronization bug where newly captured snips disappeared from the queue during async OCR by directly using Zustand's `useDocTraceStore.getState()` instead of stale closed-over variables.
+  - **Interactive JSON Snipping**: Completely overhauled the JSON evidence viewer by splitting raw JSON into interactive line-by-line blocks. Added hover highlights, cursor crosshairs, and a line click handler to easily capture individual lines as snips.
+  - **Custom JSON Text Selection**: Implemented an `onMouseUp` listener to capture custom highlighted text selections inside the JSON viewer and auto-bypass line clicks when text is selected.
+  - **Visual Highlights & Auto-Scroll Viewport Focus**: Added color-coded highlight indicators for captured JSON lines (Emerald) and the active snip (Amber). Wired auto-scroll logic so that clicking "View" on any snip card in the review queue:
+    1. Smoothly scrolls the main outer panel viewport back to the top of the Document Viewer (`#step-viewer`).
+    2. Smoothly scrolls the inner document canvas or line container to center the active highlighted element (`bg-amber-500/25` or `fill-amber-400/25`).
+  - **Validation & Compilation**: Ensured 100% Quality Assurance (QA) pass. Verified that TypeScript type-checking (`tsc --noEmit`), unit tests (`59/59 passing`), and optimized production compilation (`vite build`) all succeed without error.
+  - **Segmented Language Switcher Toggle**: Replaced the native select dropdown in `AppShell.tsx` with a custom Segmented Toggle Pill switcher (`မြန်မာ` / `EN`) to support 1-click language switching, better visual feedback with tactile glassmorphic card highlights, and a clean, responsive layout suited for narrow task panes.
+- Latest session: Fixed Excel Task Pane button/input click interactions not responding inside WebView2 on Windows Desktop.
+- Root cause: `backdrop-filter` and `transition-all` create GPU-composited layers in WebView2 that silently swallow pointer/click events while still allowing scroll.
+- Applied `dt-excel-host` CSS class to `<html>` IMMEDIATELY when Office.js is present (synchronous, before any async detection). CSS overrides: disable all `backdrop-filter`, replace `transition-all` with safe `transition-colors`, kill GPU-promoting transforms, force `pointer-events: auto` on all interactive elements, remove stacking context traps (`isolation`, `contain`).
+- Installed `installNativeClickBridge()` in `main.tsx` — a document-level `pointerdown`/`pointerup` listener that synthetically dispatches `click` events to the correct target element when WebView2 swallows native clicks. Includes tap detection (< 600ms, < 10px movement) to avoid interfering with scrolling.
+- Added `touch-action: manipulation` to root elements to prevent WebView2 click-delay.
+- Replaced `overflow: hidden` with `overflow: clip` on `.dt-hero` and `.dt-panel`.
+- Replaced experimental `useEffectEvent` with stable `useCallback` + `useRef` for `runQuickAction` in `App.tsx`.
+- Removed redundant `onTouchEnd` handlers from Quick Actions buttons.
+- `ToastViewport` returns `null` when no toasts visible (eliminates phantom overlay).
+- Added `data-doctrace-action` debug attributes to `SelectionPanel` and `MatchConfigPanel` buttons.
+- Validation: TypeScript check passed, 59/59 unit tests passed, production build succeeded.
 - Latest session: Added `manifest.production.xml` for the Vercel domain `https://doctrace-one.vercel.app/` and added `npm.cmd run validate:manifest:prod` so local and production manifests can be validated separately.
 - Added Myanmar-first internationalization foundations with centralized locale config, task-pane language switching, locale-aware formatters, and Myanmar+English OCR preference with English fallback.
 - Upgraded Step 4 results review with deferred, batch-loaded result cards rendered through `VirtualList` so 1000+ row review workflows remain usable in the Excel task pane.

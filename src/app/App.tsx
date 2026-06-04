@@ -1,5 +1,5 @@
 import { FileText, Landmark } from "lucide-react";
-import { useEffect, useEffectEvent, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { useDocTraceController } from "@/app/useDocTraceController";
 import { ActivityPanel } from "@/components/ActivityPanel/ActivityPanel";
@@ -55,91 +55,41 @@ export function App() {
     window.requestAnimationFrame(() => navigateToStep("step-viewer"));
   };
 
-  const runQuickAction = useEffectEvent((actionName: string) => {
-    if (controller.busyMessage) {
+  const controllerRef = useRef(controller);
+  controllerRef.current = controller;
+
+  const runQuickAction = useCallback((actionName: string) => {
+    const ctrl = controllerRef.current;
+    if (ctrl.busyMessage) {
       return;
     }
 
     switch (actionName) {
       case "prepare-demo":
-        void controller.actions.prepareDemoWorkspace();
+        void ctrl.actions.prepareDemoWorkspace();
         break;
       case "capture-selection":
-        void controller.actions.captureCurrentSelection();
+        void ctrl.actions.captureCurrentSelection();
         break;
       case "load-invoices":
-        void controller.actions.importSampleDocuments(
+        void ctrl.actions.importSampleDocuments(
           "invoice",
           "/demo/sample-invoices.json",
           "sample-invoices.json",
         );
         break;
       case "load-bank":
-        void controller.actions.importSampleDocuments(
+        void ctrl.actions.importSampleDocuments(
           "bank-statement",
           "/demo/sample-bank-statements.json",
           "sample-bank-statements.json",
         );
         break;
       case "suggested-mapping":
-        controller.actions.applySuggestedMapping();
+        ctrl.actions.applySuggestedMapping();
         break;
     }
-  });
-
-  useEffect(() => {
-    const rootElement = rootRef.current;
-
-    if (!rootElement) {
-      return;
-    }
-
-    let lastActionKey = "";
-    let lastActionTime = 0;
-
-    const handleNativeAction = (event: Event) => {
-      const target = event.target;
-
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      const actionButton = target.closest<HTMLElement>(
-        "[data-doctrace-action]",
-      );
-
-      if (!actionButton || !rootElement.contains(actionButton)) {
-        return;
-      }
-
-      const actionName = actionButton.dataset.doctraceAction;
-      if (
-        !actionName ||
-        actionButton.getAttribute("aria-disabled") === "true"
-      ) {
-        return;
-      }
-
-      const nextActionKey = actionName;
-      const now = Date.now();
-      if (nextActionKey === lastActionKey && now - lastActionTime < 350) {
-        return;
-      }
-
-      lastActionKey = nextActionKey;
-      lastActionTime = now;
-      event.preventDefault();
-      runQuickAction(actionName);
-    };
-
-    rootElement.addEventListener("pointerup", handleNativeAction, true);
-    rootElement.addEventListener("click", handleNativeAction, true);
-
-    return () => {
-      rootElement.removeEventListener("pointerup", handleNativeAction, true);
-      rootElement.removeEventListener("click", handleNativeAction, true);
-    };
-  }, [controller.busyMessage, controller.actions, runQuickAction]);
+  }, []);
 
   return (
     <div ref={rootRef}>

@@ -31,7 +31,7 @@ export function AppShell({
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
 
   return (
-    <div className="dt-shell min-w-0">
+    <div className="dt-shell min-h-0 min-w-0">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-2xl focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
@@ -71,23 +71,34 @@ export function AppShell({
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <label className="sr-only" htmlFor="doctrace-locale">
-                {t("app.language")}
-              </label>
-              <select
-                className="dt-select h-10 w-[7.5rem] rounded-xl px-3 py-2 text-xs"
-                id="doctrace-locale"
-                onChange={(event) =>
-                  onLocaleChange(event.target.value as AppLocale)
-                }
-                value={locale}
+              <div
+                className="inline-flex h-10 items-center gap-1 rounded-xl border border-white/60 bg-slate-100/80 p-1 dark:border-white/5 dark:bg-white/5"
+                role="group"
+                aria-label={t("app.language")}
               >
-                {LOCALE_OPTIONS.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                <button
+                  type="button"
+                  onClick={() => onLocaleChange("my-MM")}
+                  className={`h-full rounded-lg px-2.5 text-[0.65rem] font-bold transition-all ${
+                    locale === "my-MM"
+                      ? "bg-white text-slate-900 shadow-sm dark:bg-white/10 dark:text-white"
+                      : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                  }`}
+                >
+                  မြန်မာ
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onLocaleChange("en-US")}
+                  className={`h-full rounded-lg px-2.5 text-[0.65rem] font-bold transition-all ${
+                    locale === "en-US"
+                      ? "bg-white text-slate-900 shadow-sm dark:bg-white/10 dark:text-white"
+                      : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
               <ThemeToggle />
             </div>
           </div>

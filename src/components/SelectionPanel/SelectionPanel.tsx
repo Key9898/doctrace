@@ -28,6 +28,7 @@ export function SelectionPanel({
         </div>
         <button
           className="dt-button-primary w-full sm:w-auto"
+          data-doctrace-action="capture-selection"
           disabled={busy}
           onClick={onCapture}
           type="button"
@@ -54,6 +55,7 @@ export function SelectionPanel({
         </div>
         <button
           className="group flex items-center gap-3"
+          data-doctrace-action="toggle-headers"
           onClick={() => onHeadersChange(!hasHeaders)}
           type="button"
         >

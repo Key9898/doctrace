@@ -106,6 +106,7 @@ export function MatchConfigPanel({
         </div>
         <button
           className="dt-button-secondary w-full sm:w-auto"
+          data-doctrace-action="suggested-mapping"
           disabled={busy}
           onClick={onApplySuggested}
           type="button"
@@ -364,6 +365,7 @@ export function MatchConfigPanel({
           </div>
           <button
             className="dt-button-primary w-full py-4 sm:w-auto"
+            data-doctrace-action="run-match"
             disabled={busy}
             onClick={onRunMatch}
             type="button"

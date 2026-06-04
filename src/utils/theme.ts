@@ -3,8 +3,9 @@ const THEME_KEY = "doctrace-theme";
 export type Theme = "light" | "dark" | "system";
 
 export function getStoredTheme(): Theme {
-  if (typeof window === "undefined") return "system";
-  return (localStorage.getItem(THEME_KEY) as Theme) || "system";
+  if (typeof window === "undefined") return "dark";
+  const stored = localStorage.getItem(THEME_KEY) as Theme;
+  return stored || "dark";
 }
 
 export function setStoredTheme(theme: Theme): void {

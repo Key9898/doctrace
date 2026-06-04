@@ -22,11 +22,33 @@
   html,
   body,
   #root {
-    min-height: 100vh;
+    min-height: 100%;
+    height: 100%;
     min-width: 0;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+
+  /* Excel WebView2 Task Pane: Use auto height */
+  .dt-excel-host,
+  .dt-excel-host body,
+  .dt-excel-host #root {
+    min-height: auto;
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea,
+  a {
+    pointer-events: auto;
+    user-select: auto;
+    -webkit-user-select: auto;
+    touch-action: manipulation;
   }
 
   body {
@@ -50,11 +72,15 @@
 
 @layer components {
   .dt-shell {
-    min-height: 100vh;
+    min-height: 100%;
     min-width: 0;
     width: 100%;
     max-width: 100%;
     @apply bg-[radial-gradient(circle_at_top_left,_#f8fafc,_#f1f5f9_44%,_#e0f2fe_100%)];
+  }
+
+  .dt-excel-host .dt-shell {
+    min-height: auto;
   }
 
   .dark .dt-shell {
@@ -62,7 +88,8 @@
   }
 
   .dt-hero {
-    @apply relative overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/70 p-6 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-all sm:p-8;
+    @apply relative rounded-[2.5rem] border border-white/80 bg-white/70 p-6 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-all sm:p-8;
+    overflow: clip;
   }
 
   .dark .dt-hero {
@@ -70,7 +97,8 @@
   }
 
   .dt-panel {
-    @apply relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/50 p-5 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] backdrop-blur-lg transition-all sm:p-6;
+    @apply relative rounded-[2.5rem] border border-white/60 bg-white/50 p-5 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] backdrop-blur-lg transition-all sm:p-6;
+    overflow: clip;
   }
 
   .dark .dt-panel {
@@ -247,6 +275,84 @@
     @apply border-amber-500/20 bg-amber-500/10;
     color: #fde68a; /* Amber-200 - Soft yellow for dark mode */
   }
+}
+
+/* ── Excel WebView2 compatibility ─────────────────────────────────────────
+   WebView2 on Windows Desktop creates GPU-composited layers for elements
+   with backdrop-filter, transition-all, and complex shadows.  Those layers
+   can silently swallow pointer/click events while still allowing scroll.
+
+   When running inside the Excel host we aggressively disable ALL CSS
+   properties known to create problematic compositing layers.
+   The class "dt-excel-host" is added to <html> by main.tsx IMMEDIATELY
+   when Office.js is present (before any async detection).
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 1. Kill ALL backdrop-filter — primary cause of click swallowing */
+.dt-excel-host .dt-panel,
+.dt-excel-host .dt-hero,
+.dt-excel-host .dt-stat,
+.dt-excel-host .dt-upload-card,
+.dt-excel-host .dt-button-primary,
+.dt-excel-host .dt-button-secondary,
+.dt-excel-host .dt-button-ghost {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 2. Replace transition-all with safe transition-colors on components
+      that use it.  transition-all promotes EVERY animatable property to
+      a GPU compositing layer which breaks hit-testing in WebView2. */
+.dt-excel-host .dt-panel,
+.dt-excel-host .dt-hero,
+.dt-excel-host .dt-stat,
+.dt-excel-host .dt-upload-card,
+.dt-excel-host .dt-button-primary,
+.dt-excel-host .dt-button-secondary,
+.dt-excel-host .dt-button-ghost,
+.dt-excel-host .dt-input,
+.dt-excel-host .dt-select {
+  transition-property: color, background-color, border-color, opacity !important;
+  transition-duration: 150ms !important;
+  transition-timing-function: ease !important;
+  will-change: auto !important;
+}
+
+/* 3. Disable hover transforms that create GPU layers */
+.dt-excel-host .dt-button-primary:hover,
+.dt-excel-host .dt-button-secondary:hover {
+  transform: none !important;
+}
+
+/* 4. Force pointer-events: auto on all interactive elements with
+      maximum specificity to override any Tailwind utility class */
+.dt-excel-host button,
+.dt-excel-host input,
+.dt-excel-host select,
+.dt-excel-host textarea,
+.dt-excel-host a,
+.dt-excel-host label,
+.dt-excel-host summary,
+.dt-excel-host [role="button"],
+.dt-excel-host [tabindex] {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+/* 5. Ensure no stacking context traps on panels */
+.dt-excel-host .dt-panel,
+.dt-excel-host .dt-hero {
+  isolation: auto !important;
+  contain: none !important;
+}
+
+/* 6. Panel height fixes for Excel WebView2 Task Pane */
+.dt-excel-host .dt-panel,
+.dt-excel-host .dt-hero,
+.dt-excel-host .dt-stat,
+.dt-excel-host .dt-upload-card {
+  min-height: auto;
+  height: auto;
 }
 
 @keyframes dt-toast-progress-shrink {
