@@ -140,7 +140,7 @@ function installNativeClickBridge() {
         }
       }
     },
-    { capture: true }
+    { capture: true },
   );
 
   document.addEventListener(

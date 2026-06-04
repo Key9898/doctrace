@@ -1,5 +1,4 @@
 import type { AppLocale } from "@/i18n/locales";
-import { LOCALE_OPTIONS } from "@/i18n/locales";
 import { translate } from "@/i18n/translations";
 import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
 
@@ -13,6 +12,8 @@ interface AppShellProps {
   selectionAddress?: string;
   buildLabel: string;
   onLocaleChange: (locale: AppLocale) => void;
+  activeModule: "matching" | "engagements";
+  onModuleChange: (module: "matching" | "engagements") => void;
   children: React.ReactNode;
 }
 
@@ -26,6 +27,8 @@ export function AppShell({
   selectionAddress,
   buildLabel,
   onLocaleChange,
+  activeModule,
+  onModuleChange,
   children,
 }: AppShellProps) {
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
@@ -63,6 +66,19 @@ export function AppShell({
                   </span>
                   <span className="dt-badge dt-badge-neutral">
                     {buildLabel}
+                  </span>
+                  <span
+                    className={`dt-badge ${
+                      window.location.hostname === "localhost" ||
+                      window.location.hostname === "127.0.0.1"
+                        ? "border-amber-200/50 bg-amber-100/80 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400"
+                        : "border-emerald-200/50 bg-emerald-100/80 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400"
+                    }`}
+                  >
+                    {window.location.hostname === "localhost" ||
+                    window.location.hostname === "127.0.0.1"
+                      ? "DEV"
+                      : "PROD"}
                   </span>
                 </div>
                 <p className="mt-1 max-w-3xl text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">
@@ -143,6 +159,38 @@ export function AppShell({
             </div>
           ) : null}
         </header>
+
+        {/* Workspace Module Selector */}
+        <nav
+          className="flex items-center justify-start gap-2 border-b border-slate-200 pb-3 dark:border-slate-800"
+          role="tablist"
+          aria-label="Workspace Modules"
+        >
+          <button
+            role="tab"
+            aria-selected={activeModule === "engagements"}
+            onClick={() => onModuleChange("engagements")}
+            className={`flex h-9 items-center gap-1.5 rounded-2xl px-4 text-xs font-bold transition-all ${
+              activeModule === "engagements"
+                ? "bg-sky-600 text-white shadow-sm"
+                : "border border-white/60 bg-white/40 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
+            }`}
+          >
+            {t("nav.engagements")}
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeModule === "matching"}
+            onClick={() => onModuleChange("matching")}
+            className={`flex h-9 items-center gap-1.5 rounded-2xl px-4 text-xs font-bold transition-all ${
+              activeModule === "matching"
+                ? "bg-sky-600 text-white shadow-sm"
+                : "border border-white/60 bg-white/45 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
+            }`}
+          >
+            {t("nav.matching")}
+          </button>
+        </nav>
 
         <main id="main-content" role="main" className="flex flex-col gap-3">
           {children}

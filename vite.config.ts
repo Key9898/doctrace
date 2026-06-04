@@ -5,13 +5,20 @@ import path from "node:path";
 import { getHttpsServerOptions } from "office-addin-dev-certs";
 
 export default defineConfig(async ({ command }) => {
-  let httpsOptions: Awaited<ReturnType<typeof getHttpsServerOptions>> | undefined;
+  let httpsOptions:
+    | Awaited<ReturnType<typeof getHttpsServerOptions>>
+    | undefined;
 
   if (command !== "build") {
     try {
-      httpsOptions = await getHttpsServerOptions(undefined, ["127.0.0.1", "localhost"]);
+      httpsOptions = await getHttpsServerOptions(undefined, [
+        "127.0.0.1",
+        "localhost",
+      ]);
     } catch {
-      console.warn("Certificate not available, falling back to HTTP. Run 'npm run certs:install' as Administrator to enable HTTPS.");
+      console.warn(
+        "Certificate not available, falling back to HTTP. Run 'npm run certs:install' as Administrator to enable HTTPS.",
+      );
     }
   }
 

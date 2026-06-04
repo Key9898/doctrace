@@ -52,7 +52,28 @@ export type TranslationKey =
   | "results.noResultsDescription"
   | "status.matched"
   | "status.partial"
-  | "status.exception";
+  | "status.exception"
+  | "nav.matching"
+  | "nav.engagements"
+  | "eng.title"
+  | "eng.kicker"
+  | "eng.new"
+  | "eng.clientName"
+  | "eng.financialYear"
+  | "eng.framework"
+  | "eng.status"
+  | "eng.create"
+  | "eng.cancel"
+  | "eng.team"
+  | "eng.partner"
+  | "eng.manager"
+  | "eng.senior"
+  | "eng.associate"
+  | "eng.progress"
+  | "eng.workpapers"
+  | "eng.reviewNotes"
+  | "eng.pbcRequests"
+  | "eng.delete";
 
 const translations: Record<AppLocale, Record<TranslationKey, string>> = {
   "my-MM": {
@@ -116,6 +137,27 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.matched": "Matched",
     "status.partial": "Partial",
     "status.exception": "Exception",
+    "nav.matching": "🛠️ စာရင်းတိုက်ဆိုင်စစ်ဆေးရေး",
+    "nav.engagements": "📊 စာရင်းစစ်လုပ်ငန်း စီမံခန့်ခွဲမှု",
+    "eng.title": "လုပ်ငန်းပရောဂျက်များနှင့် Dashboard",
+    "eng.kicker": "DocTrace Modules",
+    "eng.new": "Engagement အသစ်ဖန်တီးရန်",
+    "eng.clientName": "ကလိုင်းယင့်အမည်",
+    "eng.financialYear": "စာရင်းကိုင်နှစ်",
+    "eng.framework": "အသုံးပြုမည့် Standard",
+    "eng.status": "အခြေအနေ",
+    "eng.create": "ဖန်တီးမည်",
+    "eng.cancel": "မလုပ်တော့ပါ",
+    "eng.team": "Audit စစ်ဆေးရေးအဖွဲ့ ဖွဲ့စည်းပုံ",
+    "eng.partner": "Audit Partner (မန်နေဂျင်းပါတနာ)",
+    "eng.manager": "Audit Manager (မန်နေဂျာ)",
+    "eng.senior": "Senior Auditor (အကြီးတန်းစာရင်းစစ်)",
+    "eng.associate": "Associate (အငယ်တန်းစာရင်းစစ်)",
+    "eng.progress": "Audit ပြီးစီးမှုနှုန်း",
+    "eng.workpapers": "Workpapers ပြီးစီးမှု",
+    "eng.reviewNotes": "ကျန်ရှိနေသော Review Notes",
+    "eng.pbcRequests": "Client PBC တောင်းဆိုမှုများ",
+    "eng.delete": "ဖျက်မည်",
   },
   "en-US": {
     "app.skip": "Skip to main content",
@@ -178,6 +220,27 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.matched": "Matched",
     "status.partial": "Partial",
     "status.exception": "Exception",
+    "nav.matching": "🛠️ Matching Workspace",
+    "nav.engagements": "📊 Project Dashboard",
+    "eng.title": "Audit Engagements & Dashboard",
+    "eng.kicker": "DocTrace Modules",
+    "eng.new": "Create New Engagement",
+    "eng.clientName": "Client Name",
+    "eng.financialYear": "Financial Year",
+    "eng.framework": "Auditing Framework",
+    "eng.status": "Status",
+    "eng.create": "Create",
+    "eng.cancel": "Cancel",
+    "eng.team": "Audit Team Assignment",
+    "eng.partner": "Engagement Partner",
+    "eng.manager": "Audit Manager",
+    "eng.senior": "Senior Auditor",
+    "eng.associate": "Audit Associate",
+    "eng.progress": "Audit Progress",
+    "eng.workpapers": "Workpapers Done",
+    "eng.reviewNotes": "Outstanding Review Notes",
+    "eng.pbcRequests": "Client PBC Requests",
+    "eng.delete": "Delete",
   },
 };
 

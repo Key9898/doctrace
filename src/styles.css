@@ -32,12 +32,23 @@
     -ms-touch-action: manipulation;
   }
 
-  /* Excel WebView2 Task Pane: Use auto height */
-  .dt-excel-host,
-  .dt-excel-host body,
+  /* Excel WebView2 Task Pane: Use scrollable body layout to prevent cutoff */
+  .dt-excel-host {
+    min-height: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .dt-excel-host body {
+    min-height: 100% !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
   .dt-excel-host #root {
-    min-height: auto;
-    height: auto;
+    min-height: 100% !important;
+    height: auto !important;
   }
 
   button,
@@ -80,7 +91,7 @@
   }
 
   .dt-excel-host .dt-shell {
-    min-height: auto;
+    min-height: 100% !important;
   }
 
   .dark .dt-shell {
@@ -312,7 +323,8 @@
 .dt-excel-host .dt-button-ghost,
 .dt-excel-host .dt-input,
 .dt-excel-host .dt-select {
-  transition-property: color, background-color, border-color, opacity !important;
+  transition-property:
+    color, background-color, border-color, opacity !important;
   transition-duration: 150ms !important;
   transition-timing-function: ease !important;
   will-change: auto !important;

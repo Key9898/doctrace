@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useEffectEvent } from "react";
+import { startTransition, useEffect, useCallback, useRef } from "react";
 
 import {
   sampleBankStatementsPayload,
@@ -127,19 +127,22 @@ export function useDocTraceController() {
   useWorkbookSelectionSync();
 
   const state = useDocTraceStore();
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
-  const recordActivity = useEffectEvent(
+  const recordActivity = useCallback(
     (
       tone: "info" | "success" | "error",
       title: string,
       description?: string,
     ) => {
-      state.pushActivity({
+      stateRef.current.pushActivity({
         tone,
         title,
         description,
       });
     },
+    [],
   );
 
   useEffect(() => {

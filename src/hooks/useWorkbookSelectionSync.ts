@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent } from "react";
+import { useEffect, useRef } from "react";
 
 import { getResultByLinkedReference } from "@/services/matching/matching.service";
 import {
@@ -13,24 +13,11 @@ export function useWorkbookSelectionSync() {
   const results = useDocTraceStore((state) => state.results);
   const setViewer = useDocTraceStore((state) => state.setViewer);
 
-  const syncSelection = useEffectEvent(async () => {
-    const rowNumber = await getCurrentSelectionRowNumber();
-
-    if (!rowNumber) {
-      return;
-    }
-
-    const focus = getResultByLinkedReference(results, rowNumber);
-
-    if (focus) {
-      setViewer({
-        linkedRowId: focus.rowId,
-        documentId: focus.documentId,
-        pageNumber: focus.pageNumber,
-        query: focus.query,
-      });
-    }
-  });
+  // Use refs to access latest values in selection sync handler without re-triggering registration
+  const resultsRef = useRef(results);
+  resultsRef.current = results;
+  const setViewerRef = useRef(setViewer);
+  setViewerRef.current = setViewer;
 
   useEffect(() => {
     if (!officeReady || !officeAvailable || !results.length) {
@@ -40,8 +27,21 @@ export function useWorkbookSelectionSync() {
     let disposed = false;
     let cleanup: (() => void | Promise<void>) | undefined;
 
-    void registerSelectionChangeHandler(() => {
-      void syncSelection();
+    void registerSelectionChangeHandler(async () => {
+      const rowNumber = await getCurrentSelectionRowNumber();
+      if (!rowNumber) {
+        return;
+      }
+
+      const focus = getResultByLinkedReference(resultsRef.current, rowNumber);
+      if (focus) {
+        setViewerRef.current({
+          linkedRowId: focus.rowId,
+          documentId: focus.documentId,
+          pageNumber: focus.pageNumber,
+          query: focus.query,
+        });
+      }
     })
       .then((registeredCleanup) => {
         if (disposed) {
@@ -57,5 +57,5 @@ export function useWorkbookSelectionSync() {
       disposed = true;
       void cleanup?.();
     };
-  }, [officeAvailable, officeReady, results.length, syncSelection]);
+  }, [officeAvailable, officeReady, results.length]);
 }

@@ -241,3 +241,35 @@ export interface SnipLink {
 /* Progress Reporting */
 
 export type ProgressCallback = (message: string) => void;
+
+/* EZAAI Engagements & Dashboard */
+
+export type AuditFramework = "ISA" | "IFRS" | "IFRS_SMEs";
+export type EngagementStatus =
+  | "Not Started"
+  | "In Progress"
+  | "Pending Client"
+  | "Under Review"
+  | "Cleared for Partner Review"
+  | "Completed"
+  | "Archived";
+
+export interface EngagementTeam {
+  partner: string;
+  manager: string;
+  senior: string;
+  associate: string;
+}
+
+export interface Engagement {
+  id: string;
+  clientName: string;
+  financialYear: string;
+  framework: AuditFramework;
+  status: EngagementStatus;
+  createdAt: string;
+  progressPercentage: number;
+  teamAssignments: EngagementTeam;
+  documents?: ParsedDocument[];
+  results?: MatchResult[];
+}

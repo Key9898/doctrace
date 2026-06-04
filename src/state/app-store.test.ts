@@ -121,4 +121,71 @@ describe("app store", () => {
     store.dismissToast(toastId);
     expect(useDocTraceStore.getState().toasts.length).toBe(0);
   });
+
+  describe("engagements & modules", () => {
+    beforeEach(() => {
+      useDocTraceStore.setState({
+        engagements: [
+          {
+            id: "test-eng-1",
+            clientName: "Test Client 1",
+            financialYear: "FY 2025-26",
+            framework: "ISA",
+            status: "In Progress",
+            progressPercentage: 50,
+            createdAt: new Date().toISOString(),
+            teamAssignments: {
+              partner: "",
+              manager: "",
+              senior: "",
+              associate: "",
+            },
+          },
+        ],
+        activeEngagementId: "test-eng-1",
+        activeModule: "matching",
+      });
+    });
+
+    it("should select engagement and set module", () => {
+      const store = useDocTraceStore.getState();
+      store.setModule("engagements");
+      expect(useDocTraceStore.getState().activeModule).toBe("engagements");
+
+      store.selectEngagement("test-eng-2");
+      expect(useDocTraceStore.getState().activeEngagementId).toBe("test-eng-2");
+    });
+
+    it("should create new engagement", () => {
+      const store = useDocTraceStore.getState();
+      store.createEngagement("New Client", "FY 2026-27", "IFRS", "Not Started");
+      const state = useDocTraceStore.getState();
+      expect(state.engagements.length).toBe(2);
+      expect(state.engagements[1].clientName).toBe("New Client");
+      expect(state.activeEngagementId).toBe(state.engagements[1].id);
+    });
+
+    it("should update engagement status", () => {
+      const store = useDocTraceStore.getState();
+      store.updateEngagementStatus("test-eng-1", "Completed");
+      const state = useDocTraceStore.getState();
+      expect(state.engagements[0].status).toBe("Completed");
+      expect(state.engagements[0].progressPercentage).toBe(100);
+    });
+
+    it("should update engagement team", () => {
+      const store = useDocTraceStore.getState();
+      store.updateEngagementTeam("test-eng-1", { partner: "Partner Name" });
+      const state = useDocTraceStore.getState();
+      expect(state.engagements[0].teamAssignments.partner).toBe("Partner Name");
+    });
+
+    it("should delete engagement", () => {
+      const store = useDocTraceStore.getState();
+      store.deleteEngagement("test-eng-1");
+      const state = useDocTraceStore.getState();
+      expect(state.engagements.length).toBe(0);
+      expect(state.activeEngagementId).toBeNull();
+    });
+  });
 });
