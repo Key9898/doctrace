@@ -153,7 +153,7 @@ export function useDocTraceController() {
     void loadWorkbookTemplates()
       .then((templates) => {
         const validTemplates = (templates || []).filter(
-          (t) => t && typeof t === "object" && t.id && t.config
+          (t) => t && typeof t === "object" && t.id && t.config,
         );
         useDocTraceStore.getState().setTemplates(validTemplates);
         recordActivity(

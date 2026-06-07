@@ -1,4 +1,6 @@
 import { defineConfig } from "vite";
+import type { ViteDevServer } from "vite";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
@@ -29,33 +31,35 @@ export default defineConfig(async ({ command }) => {
       tailwindcss(),
       {
         name: "client-logger",
-        configureServer(server) {
-          server.middlewares.use((req, res, next) => {
-            if (req.url === "/api/log" && req.method === "POST") {
-              let body = "";
-              req.on("data", (chunk) => {
-                body += chunk;
-              });
-              req.on("end", () => {
-                try {
-                  const data = JSON.parse(body);
-                  const logLine = `[${new Date().toISOString()}] [${data.type || "ERROR"}] ${data.message}\n${data.stack ? data.stack + "\n" : ""}\n`;
-                  fs.appendFileSync(
-                    path.resolve(__dirname, "client_errors.log"),
-                    logLine,
-                    "utf-8",
-                  );
-                  res.statusCode = 200;
-                  res.end("OK");
-                } catch {
-                  res.statusCode = 500;
-                  res.end("Fail");
-                }
-              });
-            } else {
-              next();
-            }
-          });
+        configureServer(server: ViteDevServer) {
+          server.middlewares.use(
+            (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+              if (req.url === "/api/log" && req.method === "POST") {
+                let body = "";
+                req.on("data", (chunk: Buffer | string) => {
+                  body += chunk;
+                });
+                req.on("end", () => {
+                  try {
+                    const data = JSON.parse(body);
+                    const logLine = `[${new Date().toISOString()}] [${data.type || "ERROR"}] ${data.message}\n${data.stack ? data.stack + "\n" : ""}\n`;
+                    fs.appendFileSync(
+                      path.resolve(__dirname, "client_errors.log"),
+                      logLine,
+                      "utf-8",
+                    );
+                    res.statusCode = 200;
+                    res.end("OK");
+                  } catch {
+                    res.statusCode = 500;
+                    res.end("Fail");
+                  }
+                });
+              } else {
+                next();
+              }
+            },
+          );
         },
       },
     ],
