@@ -32,23 +32,24 @@
     -ms-touch-action: manipulation;
   }
 
-  /* Excel WebView2 Task Pane: Use scrollable body layout to prevent cutoff */
+  /* Excel WebView2 Task Pane: Enable natural viewport scrolling to fix hit-testing and repaint freezing */
   .dt-excel-host {
     min-height: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
   }
 
   .dt-excel-host body {
     min-height: 100% !important;
-    height: 100% !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .dt-excel-host #root {
     min-height: 100% !important;
     height: auto !important;
+    overflow: visible !important;
   }
 
   button,
@@ -358,13 +359,14 @@
   contain: none !important;
 }
 
-/* 6. Panel height fixes for Excel WebView2 Task Pane */
+/* 6. Panel height and overflow fixes for Excel WebView2 Task Pane */
 .dt-excel-host .dt-panel,
 .dt-excel-host .dt-hero,
 .dt-excel-host .dt-stat,
 .dt-excel-host .dt-upload-card {
   min-height: auto;
   height: auto;
+  overflow: visible !important;
 }
 
 @keyframes dt-toast-progress-shrink {

@@ -375,38 +375,68 @@ function registerRuntimeDiagnostics() {
 
   diagnosticsHost.__doctraceDiagnosticsInstalled = true;
 
+  const sendToServer = (type: string, message: string, stack?: string) => {
+    fetch("/api/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, message, stack }),
+    }).catch(() => undefined);
+  };
+
   globalThis.addEventListener("error", (event) => {
+    const error = event.error;
+    const msg = error instanceof Error ? error.message : event.message;
+    const stack = error instanceof Error ? error.stack : undefined;
+    sendToServer("ERROR", msg, stack);
+
     useDocTraceStore.getState().pushActivity({
       tone: "error",
       title: "Runtime error",
-      description:
-        event.error instanceof Error ? event.error.message : event.message,
+      description: msg,
     });
     useDocTraceStore.getState().pushToast({
       tone: "error",
       title: "Runtime error",
-      description:
-        event.error instanceof Error ? event.error.message : event.message,
+      description: msg,
     });
   });
 
   globalThis.addEventListener("unhandledrejection", (event) => {
-    const description =
-      event.reason instanceof Error
-        ? event.reason.message
-        : typeof event.reason === "string"
-          ? event.reason
-          : "An unhandled promise rejection occurred.";
+    const reason = event.reason;
+    const msg =
+      reason instanceof Error
+        ? reason.message
+        : typeof reason === "string"
+          ? reason
+          : "Unhandled rejection";
+    const stack = reason instanceof Error ? reason.stack : undefined;
+    sendToServer("REJECTION", msg, stack);
 
     useDocTraceStore.getState().pushActivity({
       tone: "error",
       title: "Unhandled promise rejection",
-      description,
+      description: msg,
     });
     useDocTraceStore.getState().pushToast({
       tone: "error",
       title: "Unhandled promise rejection",
-      description,
+      description: msg,
     });
   });
+
+  const originalConsoleError = console.error;
+  console.error = (...args: unknown[]) => {
+    originalConsoleError.apply(console, args);
+    const msg = args
+      .map((arg) =>
+        arg instanceof Error
+          ? arg.message
+          : typeof arg === "object"
+            ? JSON.stringify(arg)
+            : String(arg),
+      )
+      .join(" ");
+    const stack = args.find((arg) => arg instanceof Error)?.stack;
+    sendToServer("CONSOLE_ERROR", msg, stack);
+  };
 }

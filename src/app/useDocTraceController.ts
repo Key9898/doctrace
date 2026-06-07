@@ -152,15 +152,18 @@ export function useDocTraceController() {
 
     void loadWorkbookTemplates()
       .then((templates) => {
-        state.setTemplates(templates);
+        const validTemplates = (templates || []).filter(
+          (t) => t && typeof t === "object" && t.id && t.config
+        );
+        useDocTraceStore.getState().setTemplates(validTemplates);
         recordActivity(
           "info",
           "Workbook templates loaded",
-          `${templates.length} template(s) available in this workbook.`,
+          `${validTemplates.length} template(s) available in this workbook.`,
         );
       })
       .catch((error) => {
-        state.pushToast({
+        useDocTraceStore.getState().pushToast({
           tone: "error",
           title: "Templates could not be loaded",
           description:
@@ -174,7 +177,7 @@ export function useDocTraceController() {
           resolveErrorMessage(error, "Workbook templates are unavailable."),
         );
       });
-  }, [recordActivity, state.officeAvailable, state.officeReady, state]);
+  }, [recordActivity, state.officeAvailable, state.officeReady]);
 
   const applySuggestedMapping = () => {
     if (!state.selection) {

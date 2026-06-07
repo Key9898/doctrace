@@ -159,13 +159,13 @@ export function TemplateLibraryPanel({
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="dt-chip font-bold">
-                  Tol. ±{template.config.amountTolerance}
+                  Tol. ±{template.config?.amountTolerance ?? 0}
                 </span>
                 <span className="dt-chip font-bold">
-                  {template.config.dateToleranceDays}d Window
+                  {template.config?.dateToleranceDays ?? 0}d Window
                 </span>
                 <span className="dt-chip font-bold">
-                  {template.config.outputFields.length} Fields
+                  {template.config?.outputFields?.length ?? 0} Fields
                 </span>
               </div>
 
