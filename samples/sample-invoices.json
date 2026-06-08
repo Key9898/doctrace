@@ -37,6 +37,42 @@
           ]
         }
       ]
+    },
+    {
+      "kind": "invoice",
+      "fileName": "invoice_3.json",
+      "invoiceNumber": "RENT22",
+      "amount": 3500000.0,
+      "date": "2026-05-22",
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "BUILDING B PROPERTIES Kaba Aye Pagoda Road, Bahan Township, Yangon Email: rent@buildingb.com.mm | Tel: +95 1 543210 RENTAL INVOICE Bill To: TZ Assurance Clients Group Logistics & Rent Dept Yangon Office, Myanmar Invoice Number: RENT22 Invoice Date: 2026-05-22 Due Date: 2026-06-05 Description Period Amount (MMK) Monthly Office Rent - Building B (Floor 3) May 2026 3,500,000 Total Amount Due: 3,500,000 MMK",
+          "snippets": [
+            "BUILDING B PROPERTIES",
+            "Invoice Number: RENT22",
+            "Total Amount Due: 3,500,000 MMK"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "invoice",
+      "fileName": "invoice_4.json",
+      "invoiceNumber": "PMTAPXCRD",
+      "amount": 3500000.0,
+      "date": "2026-05-27",
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "APEX FINANCIAL SERVICES Merchant Street, Kyauktada Township, Yangon Email: services@apexfinance.com.mm | Tel: +95 1 379981 PAYMENT RECEIPT Cardholder: TZ Assurance Clients Group Corporate Account Payment Receipt Number: PMTAPXCRD Payment Date: 2026-05-27 Payment Method: Bank Transfer Description Settlement Code Amount Paid (MMK) Fulfillment of Apex Corporate Card Balance APX-CRD-FUL-05 3,500,000 Total Paid: 3,500,000 MMK",
+          "snippets": [
+            "APEX FINANCIAL SERVICES",
+            "Receipt Number: PMTAPXCRD",
+            "Total Paid: 3,500,000 MMK"
+          ]
+        }
+      ]
     }
   ]
 }

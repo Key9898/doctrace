@@ -322,37 +322,37 @@ function generateBankStatement1() {
   const transactions = [
     {
       date: "2026-05-02",
-      desc: "Service Charges - Monthly Account Maintenance",
+      desc: "Service Charges - Monthly Account Maintenance BANK-FEE-05",
       dr: "25,000",
       cr: "",
     },
     {
       date: "2026-05-04",
-      desc: "ACH Credit Receipt - Invoice PMT Client Zenith",
+      desc: "ACH Credit Receipt - Invoice PMT Client Zenith REC-ZN-4091",
       dr: "",
       cr: "12,450,000",
     },
     {
       date: "2026-05-06",
-      desc: "Utility Bill - Yangon Electricity Supply Corporation (YESC)",
+      desc: "Utility Bill - Yangon Electricity Supply Corporation (YESC) YESC-84918",
       dr: "480,000",
       cr: "",
     },
     {
       date: "2026-05-09",
-      desc: "Office Supplies - Golden Land Bookstore",
+      desc: "Office Supplies - Golden Land Bookstore SUP-GL-0918",
       dr: "125,000",
       cr: "",
     },
     {
       date: "2026-05-11",
-      desc: "Outward Wire Transfer - FT-901842 Tax Payment",
+      desc: "Outward Wire Transfer - FT-901842 Tax Payment TAX-2026-05",
       dr: "2,500,000",
       cr: "",
     },
     {
       date: "2026-05-12",
-      desc: "Incoming TT Ref: GOL-0248 Sales Deposit",
+      desc: "Incoming TT Ref: GOL-0248 Sales Deposit REC-GOL-02",
       dr: "",
       cr: "8,920,000",
     },
@@ -365,13 +365,13 @@ function generateBankStatement1() {
     },
     {
       date: "2026-05-16",
-      desc: "Local Cash Deposit - Branch 3 Teller 4",
+      desc: "Local Cash Deposit - Branch 3 Teller 4 DEP-CSH-16",
       dr: "",
       cr: "5,000,000",
     },
     {
       date: "2026-05-17",
-      desc: "Online Wire Transfer Fees - Outward",
+      desc: "Online Wire Transfer Fees - Outward BANK-FEE-06",
       dr: "15,000",
       cr: "",
     },
@@ -384,37 +384,37 @@ function generateBankStatement1() {
     },
     {
       date: "2026-05-22",
-      desc: "Outward Wire Transfer - Office Rent KBZ Transfer",
+      desc: "Outward Wire Transfer - Office Rent KBZ Transfer RENT-2026-05",
       dr: "3,500,000",
       cr: "",
     },
     {
       date: "2026-05-24",
-      desc: "Credit Interest Payment Received",
+      desc: "Credit Interest Payment Received INT-REC-05",
       dr: "",
       cr: "50,000",
     },
     {
       date: "2026-05-25",
-      desc: "ACH Receipt - Client Apex Holdings Settlement",
+      desc: "ACH Receipt - Client Apex Holdings Settlement REC-APX-84",
       dr: "",
       cr: "9,000,000",
     },
     {
       date: "2026-05-27",
-      desc: "Software License Renewal - Microsoft Office 365",
+      desc: "Software License Renewal - Microsoft Office 365 LIC-MS-365",
       dr: "9,000,000",
       cr: "",
     },
     {
       date: "2026-05-28",
-      desc: "Outward Telegram Transfer Commission Charges",
+      desc: "Outward Telegram Transfer Commission Charges BANK-FEE-07",
       dr: "15,000",
       cr: "",
     },
     {
       date: "2026-05-30",
-      desc: "Corporate Fuel Expense - KBZ Visa Debit Card",
+      desc: "Corporate Fuel Expense - KBZ Visa Debit Card FUEL-KBZ-30",
       dr: "1,000,000",
       cr: "",
     },
@@ -614,10 +614,396 @@ function generateBankStatement2() {
   savePDF(doc, "bank_statement_2.pdf");
 }
 
+// -------------------------------------------------------------
+// 5. INVOICE 3: TENANT BUILDING B RENT (MMK)
+// -------------------------------------------------------------
+function generateInvoice3() {
+  const doc = new jsPDF({ format: "letter" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(15, 23, 42);
+  doc.text("BUILDING B PROPERTIES", 20, 25);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Kaba Aye Pagoda Road, Bahan Township, Yangon", 20, 31);
+  doc.text("Email: rent@buildingb.com.mm | Tel: +95 1 543210", 20, 36);
+
+  doc.setDrawColor(226, 232, 240);
+  doc.line(20, 42, 195, 42);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(15, 23, 42);
+  doc.text("RENTAL INVOICE", 20, 53);
+
+  doc.setFontSize(10);
+  doc.text("Bill To:", 20, 65);
+  doc.setFont("helvetica", "normal");
+  doc.text("TZ Assurance Clients Group", 20, 71);
+  doc.text("Logistics & Rent Dept", 20, 76);
+  doc.text("Yangon Office, Myanmar", 20, 81);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Invoice Number:", 120, 65);
+  doc.text("Invoice Date:", 120, 71);
+  doc.text("Due Date:", 120, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("RENT22", 160, 65); // Fuzzy reference code compared to RENT-IN-22
+  doc.text("2026-05-22", 160, 71);
+  doc.text("2026-06-05", 160, 76);
+
+  doc.setFillColor(248, 250, 252);
+  doc.rect(20, 95, 175, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(71, 85, 105);
+  doc.text("Description", 25, 100);
+  doc.text("Period", 120, 100);
+  doc.text("Amount (MMK)", 195, 100, { align: "right" });
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(15, 23, 42);
+  doc.text("Monthly Office Rent - Building B (Floor 3)", 25, 112);
+  doc.text("May 2026", 120, 112);
+  doc.text("3,500,000", 195, 112, { align: "right" });
+  doc.line(20, 116, 195, 116);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Total Amount Due:", 120, 130);
+  doc.text("3,500,000 MMK", 195, 130, { align: "right" });
+
+  savePDF(doc, "invoice_3.pdf");
+}
+
+// -------------------------------------------------------------
+// 6. INVOICE 4: APEX CREDIT CARD PAYMENT RECEIPT (MMK)
+// -------------------------------------------------------------
+function generateInvoice4() {
+  const doc = new jsPDF({ format: "letter" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(15, 23, 42);
+  doc.text("APEX FINANCIAL SERVICES", 20, 25);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Merchant Street, Kyauktada Township, Yangon", 20, 31);
+  doc.text("Email: services@apexfinance.com.mm | Tel: +95 1 379981", 20, 36);
+
+  doc.setDrawColor(226, 232, 240);
+  doc.line(20, 42, 195, 42);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(15, 23, 42);
+  doc.text("PAYMENT RECEIPT", 20, 53);
+
+  doc.setFontSize(10);
+  doc.text("Cardholder:", 20, 65);
+  doc.setFont("helvetica", "normal");
+  doc.text("TZ Assurance Clients Group", 20, 71);
+  doc.text("Corporate Account Payment", 20, 76);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Receipt Number:", 120, 65);
+  doc.text("Payment Date:", 120, 71);
+  doc.text("Payment Method:", 120, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("PMTAPXCRD", 160, 65); // Fuzzy reference code compared to PMT-APX-CRD
+  doc.text("2026-05-27", 160, 71);
+  doc.text("Bank Transfer", 160, 76);
+
+  doc.setFillColor(248, 250, 252);
+  doc.rect(20, 95, 175, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(71, 85, 105);
+  doc.text("Description", 25, 100);
+  doc.text("Settlement Code", 120, 100);
+  doc.text("Amount Paid (MMK)", 195, 100, { align: "right" });
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(15, 23, 42);
+  doc.text("Fulfillment of Apex Corporate Card Balance", 25, 112);
+  doc.text("APX-CRD-FUL-05", 120, 112);
+  doc.text("3,500,000", 195, 112, { align: "right" });
+  doc.line(20, 116, 195, 116);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Total Paid:", 120, 130);
+  doc.text("3,500,000 MMK", 195, 130, { align: "right" });
+
+  savePDF(doc, "invoice_4.pdf");
+}
+
+// -------------------------------------------------------------
+// 7. BANK STATEMENT 3: KBZ Bank Part 1 (2026-05-01 to 2026-05-15)
+// -------------------------------------------------------------
+function generateBankStatement3() {
+  const doc = new jsPDF({ format: "letter" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(16, 185, 129); // emerald-500
+  doc.text("KANBAWZA BANK (KBZ BANK)", 20, 25);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Head Office: Strand Road, Yangon, Myanmar", 20, 31);
+
+  doc.setDrawColor(16, 185, 129);
+  doc.line(20, 38, 195, 38);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(15, 23, 42);
+  doc.text("SAVINGS ACCOUNT STATEMENT - PART 1", 20, 48);
+
+  doc.setFontSize(9);
+  doc.text("Account Name:", 20, 58);
+  doc.text("Account Number:", 20, 64);
+  doc.text("Statement Period:", 20, 70);
+  doc.text("Currency:", 20, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("TZ Assurance Clients Group", 55, 58);
+  doc.text("058-201-058-0091823", 55, 64);
+  doc.text("2026-05-01 to 2026-05-15", 55, 70);
+  doc.text("MMK (Kyat)", 55, 76);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Opening Balance:", 120, 58);
+  doc.text("Total Debits:", 120, 64);
+  doc.text("Total Credits:", 120, 70);
+  doc.text("Closing Balance:", 120, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("75,000,000 MMK", 155, 58);
+  doc.text("1,710,000 MMK", 155, 64);
+  doc.text("15,050,000 MMK", 155, 70);
+  doc.setFont("helvetica", "bold");
+  doc.text("88,340,000 MMK", 155, 76);
+
+  doc.setFillColor(241, 245, 249);
+  doc.rect(20, 88, 175, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(51, 65, 85);
+  doc.text("Value Date", 23, 93);
+  doc.text("Transaction Details / References", 50, 93);
+  doc.text("Withdrawals (Debit)", 125, 93);
+  doc.text("Deposits (Credit)", 160, 93);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(8);
+
+  const transactions = [
+    {
+      date: "2026-05-01",
+      desc: "Opening Balance Carried Forward",
+      dr: "",
+      cr: "",
+    },
+    {
+      date: "2026-05-03",
+      desc: "Monthly Savings Account Service Charges KBZ-FEE-05",
+      dr: "10,000",
+      cr: "",
+    },
+    {
+      date: "2026-05-05",
+      desc: "Interest Pay-out Savings Account KBZ-INT-05",
+      dr: "",
+      cr: "50,000",
+    },
+    {
+      date: "2026-05-08",
+      desc: "Cash Withdrawal - ATM Union Square Branch ATM-WTH-08",
+      dr: "500,000",
+      cr: "",
+    },
+    {
+      date: "2026-05-10",
+      desc: "Inward Clearing Cheque Ref #10084729 CHQ-DEP-10",
+      dr: "",
+      cr: "15,000,000",
+    },
+    // DISCREPANCY: Ledger date is 2026-05-14, but Bank date is 2026-05-25 (11 days difference)
+    {
+      date: "2026-05-25",
+      desc: "Online Fund Transfer - KBZ to CB Card Settlement TRF-CB-CARD",
+      dr: "1,200,000",
+      cr: "",
+    },
+  ];
+
+  let y = 102;
+  transactions.forEach((tx) => {
+    doc.text(tx.date, 23, y);
+    doc.text(tx.desc, 50, y);
+
+    if (tx.dr) {
+      doc.text(tx.dr, 145, y, { align: "right" });
+    } else {
+      doc.text("-", 140, y);
+    }
+
+    if (tx.cr) {
+      doc.text(tx.cr, 180, y, { align: "right" });
+    } else {
+      doc.text("-", 175, y);
+    }
+
+    doc.setDrawColor(241, 245, 249);
+    doc.line(20, y + 2, 195, y + 2);
+    y += 7;
+  });
+
+  savePDF(doc, "bank_statement_3.pdf");
+}
+
+// -------------------------------------------------------------
+// 8. BANK STATEMENT 4: KBZ Bank Part 2 (2026-05-16 to 2026-05-31)
+// -------------------------------------------------------------
+function generateBankStatement4() {
+  const doc = new jsPDF({ format: "letter" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(16, 185, 129); // emerald-500
+  doc.text("KANBAWZA BANK (KBZ BANK)", 20, 25);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Head Office: Strand Road, Yangon, Myanmar", 20, 31);
+
+  doc.setDrawColor(16, 185, 129);
+  doc.line(20, 38, 195, 38);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(15, 23, 42);
+  doc.text("SAVINGS ACCOUNT STATEMENT - PART 2", 20, 48);
+
+  doc.setFontSize(9);
+  doc.text("Account Name:", 20, 58);
+  doc.text("Account Number:", 20, 64);
+  doc.text("Statement Period:", 20, 70);
+  doc.text("Currency:", 20, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("TZ Assurance Clients Group", 55, 58);
+  doc.text("058-201-058-0091823", 55, 64);
+  doc.text("2026-05-16 to 2026-05-31", 55, 70);
+  doc.text("MMK (Kyat)", 55, 76);
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Opening Balance:", 120, 58);
+  doc.text("Total Debits:", 120, 64);
+  doc.text("Total Credits:", 120, 70);
+  doc.text("Closing Balance:", 120, 76);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("88,340,000 MMK", 155, 58);
+  doc.text("16,220,000 MMK", 155, 64);
+  doc.text("3,500,000 MMK", 155, 70);
+  doc.setFont("helvetica", "bold");
+  doc.text("75,620,000 MMK", 155, 76);
+
+  doc.setFillColor(241, 245, 249);
+  doc.rect(20, 88, 175, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(51, 65, 85);
+  doc.text("Value Date", 23, 93);
+  doc.text("Transaction Details / References", 50, 93);
+  doc.text("Withdrawals (Debit)", 125, 93);
+  doc.text("Deposits (Credit)", 160, 93);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(15, 23, 42);
+  doc.setFontSize(8);
+
+  const transactions = [
+    {
+      date: "2026-05-18",
+      desc: "Monthly Salary Disbursement to Employee payroll PAYROLL-05",
+      dr: "12,480,000",
+      cr: "",
+    },
+    // FUZZY MATCH REFERENCE: Bank reference has RENT22 (Ledger has RENT-IN-22)
+    {
+      date: "2026-05-22",
+      desc: "Inward Transfer - Rent from tenant Building B RENT22",
+      dr: "",
+      cr: "3,500,000",
+    },
+    // DISCREPANCY: Ledger amount is 80,000, but Bank amount is 85,000 (discrepancy of 5,000)
+    {
+      date: "2026-05-24",
+      desc: "Office Internet Payment - Fiber Link Yangon NET-FIBER-24",
+      dr: "85,000",
+      cr: "",
+    },
+    {
+      date: "2026-05-25",
+      desc: "Corporate Dining Expense - KBZ Card Ref #419 DIN-CARD-25",
+      dr: "120,000",
+      cr: "",
+    },
+    // FUZZY MATCH REFERENCE: Bank reference has PMTAPXCRD (Ledger has PMT-APX-CRD)
+    {
+      date: "2026-05-27",
+      desc: "Fulfillment Receipt - Apex Credit Card Payment PMTAPXCRD",
+      dr: "3,500,000",
+      cr: "",
+    },
+    // DISCREPANCY: VAT Tax Payment (81,000 MMK, TAX-VAT-28) is COMPLETELY MISSING from statement!
+  ];
+
+  let y = 102;
+  transactions.forEach((tx) => {
+    doc.text(tx.date, 23, y);
+    doc.text(tx.desc, 50, y);
+
+    if (tx.dr) {
+      doc.text(tx.dr, 145, y, { align: "right" });
+    } else {
+      doc.text("-", 140, y);
+    }
+
+    if (tx.cr) {
+      doc.text(tx.cr, 180, y, { align: "right" });
+    } else {
+      doc.text("-", 175, y);
+    }
+
+    doc.setDrawColor(241, 245, 249);
+    doc.line(20, y + 2, 195, y + 2);
+    y += 7;
+  });
+
+  savePDF(doc, "bank_statement_4.pdf");
+}
+
 // Execute all
 console.log("Generating sample MMK audit PDF documents...");
 generateInvoice1();
 generateInvoice2();
+generateInvoice3();
+generateInvoice4();
 generateBankStatement1();
 generateBankStatement2();
+generateBankStatement3();
+generateBankStatement4();
 console.log("All sample PDFs successfully generated in ./samples folder.");

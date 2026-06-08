@@ -181,6 +181,7 @@ export function App() {
                       }
                     }}
                     results={controller.results}
+                    onClearMatch={controller.actions.clearResults}
                   />
                 </div>
 

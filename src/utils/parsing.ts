@@ -1,7 +1,7 @@
 import type { ExcelPrimitive } from "@/types/domain";
 
 const AMOUNT_PATTERN =
-  /(?:USD|EUR|GBP|MMK|\$)?\s*-?\d{1,3}(?:[.,\s]\d{3})*(?:[.,]\d{2})|-?\d+(?:[.,]\d{2})/gi;
+  /(?:USD|EUR|GBP|MMK|\$)?\s*-?(?:\b\d{1,3}(?:[.,\s]\d{3})*(?:[.,]\d{2})\b|\b\d+(?:[.,]\d{2})\b|\b\d{1,3}(?:[.,\s]\d{3})+(?!\d))/gi;
 const DATE_PATTERNS = [
   /\b\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}\b/g,
   /\b\d{4}[/.-]\d{1,2}[/.-]\d{1,2}\b/g,
@@ -114,7 +114,69 @@ export function extractInvoiceIdentifiers(text: string) {
   );
   const fallbackTokens = collectRegexMatches(text, /\b[A-Z0-9-]{6,}\b/g);
 
-  return [...new Set([...exactMatches, ...fallbackTokens])];
+  const candidates = [...new Set([...exactMatches, ...fallbackTokens])];
+
+  const EXCLUDED_WORDS = new Set([
+    "bill",
+    "to",
+    "from",
+    "date",
+    "due",
+    "invoice",
+    "receipt",
+    "reference",
+    "statement",
+    "payment",
+    "amount",
+    "total",
+    "tax",
+    "vat",
+    "consignee",
+    "client",
+    "vendor",
+    "customer",
+    "terms",
+    "description",
+    "qty",
+    "quantity",
+    "price",
+    "subtotal",
+    "phone",
+    "email",
+    "address",
+    "page",
+    "code",
+    "bank",
+    "account",
+    "number",
+    "value",
+    "name",
+    "charges",
+    "service",
+    "office",
+    "cardholder",
+    "withdrawals",
+    "deposits",
+    "balance",
+    "details",
+    "references",
+    "erences",
+  ]);
+
+  return candidates.filter((token) => {
+    const norm = token.toLowerCase();
+
+    // Exclude dates (e.g. 2026-05-02, 2026/05/02)
+    if (/^\d{4}[/.-]\d{2}[/.-]\d{2}$/.test(token)) return false;
+
+    // Exclude pure numbers of 4 digits or less (e.g. years like 2026)
+    if (/^\d{1,4}$/.test(token)) return false;
+
+    // Exclude common header keywords
+    if (EXCLUDED_WORDS.has(norm)) return false;
+
+    return true;
+  });
 }
 
 function collectRegexMatches(text: string, pattern: RegExp, groupIndex = 0) {

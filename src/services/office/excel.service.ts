@@ -229,9 +229,25 @@ export async function writeMatchResults(
       );
       bodyRange.values = toOutputMatrix(results, [field]);
       bodyRange.format.fill.color = "#F8FAFC";
-      bodyRange.format.borders.getItem("EdgeBottom").style =
-        Excel.BorderLineStyle.continuous;
       bodyRange.format.wrapText = true;
+
+      const borderNames = [
+        "EdgeTop",
+        "EdgeBottom",
+        "EdgeLeft",
+        "EdgeRight",
+        "InsideHorizontal",
+        "InsideVertical",
+      ] as const;
+      for (const borderName of borderNames) {
+        try {
+          const border = bodyRange.format.borders.getItem(borderName);
+          border.style = Excel.BorderLineStyle.continuous;
+          border.color = "#D1D5DB"; // Light gray gridlines
+        } catch {
+          // Ignore errors for 1x1 ranges where inside borders are not applicable
+        }
+      }
 
       if (selection.hasHeaders) {
         const headerRange = worksheet.getRangeByIndexes(
@@ -395,5 +411,50 @@ export async function writeSnipToCell(text: string) {
       cellAddress: range.address.split("!")[1] ?? range.address,
       sheetName: sheet.name,
     };
+  });
+}
+
+export async function clearMatchResults(
+  selection: SelectionSnapshot,
+  config: MatchConfig,
+) {
+  if (!window.Excel) {
+    throw new Error("Excel APIs are not available in this environment.");
+  }
+
+  return Excel.run(async (context) => {
+    const worksheet = context.workbook.worksheets.getItem(selection.sheetName);
+    const bodyRowIndex = selection.firstDataRowNumber - 1;
+    const resolvedMap = resolveOutputColumnMap(selection, config);
+
+    for (const field of config.outputFields) {
+      const targetColumnIndex = resolvedMap[field];
+
+      if (typeof targetColumnIndex !== "number") {
+        continue;
+      }
+
+      // Clear matching body rows
+      const bodyRange = worksheet.getRangeByIndexes(
+        bodyRowIndex,
+        targetColumnIndex,
+        selection.rowCount,
+        1,
+      );
+      bodyRange.clear();
+
+      // Clear header if selection has headers
+      if (selection.hasHeaders) {
+        const headerRange = worksheet.getRangeByIndexes(
+          bodyRowIndex - 1,
+          targetColumnIndex,
+          1,
+          1,
+        );
+        headerRange.clear();
+      }
+    }
+
+    await context.sync();
   });
 }

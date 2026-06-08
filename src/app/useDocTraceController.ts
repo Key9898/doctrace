@@ -13,6 +13,7 @@ import { runDocumentMatchingInWorker } from "@/services/matching/matching-worker
 import {
   appendAuditLog,
   captureSelection,
+  clearMatchResults,
   writeMatchResults,
   writeSnipToCell,
 } from "@/services/office/excel.service";
@@ -565,6 +566,44 @@ export function useDocTraceController() {
     }
   };
 
+  const clearResults = async () => {
+    state.resetResults();
+
+    if (state.officeAvailable && state.selection) {
+      state.setBusyMessage("Clearing match results from Excel...");
+      try {
+        await clearMatchResults(state.selection, state.config);
+        state.pushToast({
+          tone: "success",
+          title: "Match cleared",
+          description: "Match results were cleared from Excel and UI.",
+        });
+        recordActivity(
+          "info",
+          "Match cleared",
+          "Match results cleared from Excel and UI.",
+        );
+      } catch (error) {
+        state.pushToast({
+          tone: "error",
+          title: "Clear failed",
+          description: resolveErrorMessage(
+            error,
+            "Unable to clear Excel range.",
+          ),
+        });
+      } finally {
+        state.setBusyMessage(undefined);
+      }
+    } else {
+      state.pushToast({
+        tone: "success",
+        title: "Match cleared",
+        description: "Match results were cleared from UI.",
+      });
+    }
+  };
+
   const saveTemplate = async (name: string) => {
     const template = buildTemplate(
       {
@@ -1029,6 +1068,7 @@ export function useDocTraceController() {
       importPickedDocuments,
       removeDocument,
       runMatching,
+      clearResults,
       saveTemplate,
       loadTemplate,
       deleteTemplate,

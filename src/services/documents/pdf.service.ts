@@ -61,13 +61,42 @@ export async function readPdfPages(
   for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {
     const page = await document.getPage(pageNumber);
     const textContent = await page.getTextContent();
-    const directText = textContent.items
-      .map((item) => ("str" in item ? item.str : ""))
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
+    const textItems = textContent.items.filter(
+      (item): item is typeof item & { str: string; transform: number[] } =>
+        item !== null &&
+        typeof item === "object" &&
+        "str" in item &&
+        typeof (item as Record<string, unknown>).str === "string" &&
+        "transform" in item &&
+        Array.isArray((item as Record<string, unknown>).transform),
+    );
 
-    let text = directText;
+    let directText = "";
+    let lastY: number | undefined = undefined;
+
+    for (const item of textItems) {
+      const currentY = item.transform[5];
+
+      if (lastY !== undefined && Math.abs(currentY - lastY) > 3) {
+        directText += "\n";
+      } else if (
+        directText.length > 0 &&
+        !directText.endsWith("\n") &&
+        !directText.endsWith(" ")
+      ) {
+        directText += " ";
+      }
+
+      directText += item.str;
+      lastY = currentY;
+    }
+
+    let text = directText
+      .replace(/[ \t]+/g, " ")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join("\n");
 
     if (!text && ocrFallback) {
       const viewport = page.getViewport({ scale: 2 });

@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
+  Trash2,
 } from "lucide-react";
 
 import { buildResultsSummary } from "@/services/matching/matching.service";
@@ -26,12 +27,14 @@ interface ResultsPanelProps {
   results: MatchResult[];
   onFocusInvoice: (result: MatchResult) => void;
   onFocusBank: (result: MatchResult) => void;
+  onClearMatch: () => void;
 }
 
 export function ResultsPanel({
   results,
   onFocusInvoice,
   onFocusBank,
+  onClearMatch,
 }: ResultsPanelProps) {
   const { t } = useI18n();
   const deferredResults = useDeferredValue(results);
@@ -60,15 +63,26 @@ export function ResultsPanel({
         </div>
         <div className="flex items-center gap-3 px-1">
           {deferredResults.length > 0 && (
-            <button
-              className="dt-button-secondary"
-              onClick={handleExportCsv}
-              type="button"
-              aria-label="Export results to CSV"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              {t("results.exportCsv")}
-            </button>
+            <>
+              <button
+                className="dt-button-secondary"
+                onClick={handleExportCsv}
+                type="button"
+                aria-label="Export results to CSV"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                {t("results.exportCsv")}
+              </button>
+              <button
+                className="dt-button-secondary border-rose-200/60 text-rose-600 hover:border-rose-500/50 hover:bg-rose-50/50 dark:border-rose-950 dark:text-rose-400 dark:hover:bg-rose-950/20"
+                onClick={onClearMatch}
+                type="button"
+                aria-label="Clear match results"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                Clear match
+              </button>
+            </>
           )}
           <span className="dt-badge dt-badge-neutral" aria-live="polite">
             {deferredResults.length} {t("results.rows")}

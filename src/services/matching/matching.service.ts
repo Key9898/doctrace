@@ -258,17 +258,28 @@ function scoreBankEntries(
       let score = 0;
       let referenceMatched = false;
 
-      if (rowInvoiceNumber && entry.reference) {
-        const normalizedReference = normalizeAlphaNumeric(entry.reference);
-        if (rowInvoiceNumber === normalizedReference) {
-          score += Math.round(weights.invoiceNumber * 0.58);
-          referenceMatched = true;
-        } else if (
-          config.fuzzyReferenceMatch &&
-          fuzzyIncludes(rowInvoiceNumber, normalizedReference)
-        ) {
-          score += Math.round(weights.invoiceNumber * 0.33);
-          referenceMatched = true;
+      if (rowInvoiceNumber) {
+        if (entry.reference) {
+          const normalizedReference = normalizeAlphaNumeric(entry.reference);
+          if (rowInvoiceNumber === normalizedReference) {
+            score += Math.round(weights.invoiceNumber * 0.58);
+            referenceMatched = true;
+          } else if (
+            config.fuzzyReferenceMatch &&
+            fuzzyIncludes(rowInvoiceNumber, normalizedReference)
+          ) {
+            score += Math.round(weights.invoiceNumber * 0.33);
+            referenceMatched = true;
+          }
+        }
+
+        // Fallback: check if the row's invoice number is contained within the raw bank statement line text
+        if (!referenceMatched && entry.rawLine) {
+          const normalizedLine = normalizeAlphaNumeric(entry.rawLine);
+          if (normalizedLine.includes(rowInvoiceNumber)) {
+            score += Math.round(weights.invoiceNumber * 0.58);
+            referenceMatched = true;
+          }
         }
       }
 
