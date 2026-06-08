@@ -23,7 +23,7 @@ DocTrace
 - `hooks/`: reusable smart logic.
 - `services/`: Office, parsing, OCR, matching, and template persistence.
 - `utils/`: pure helpers and formatters.
-- `docs/`: planning, architecture, and session summaries.
+- `.antigravity/docs/`: planning, architecture, and session summaries.
 
 ## Data Flow
 

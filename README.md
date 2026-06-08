@@ -14,7 +14,7 @@ DocTrace is a cross-platform Excel Add-in for audit teams that need a DataSnippe
 src/
 public/
 scripts/
-docs/
+.antigravity/
 ```
 
 ## Core decisions

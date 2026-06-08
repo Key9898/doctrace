@@ -242,7 +242,7 @@ export interface SnipLink {
 
 export type ProgressCallback = (message: string) => void;
 
-/* EZAAI Engagements & Dashboard */
+/* DocTrace Engagements & Dashboard */
 
 export type AuditFramework = "ISA" | "IFRS" | "IFRS_SMEs";
 export type EngagementStatus =
@@ -273,3 +273,10 @@ export interface Engagement {
   documents?: ParsedDocument[];
   results?: MatchResult[];
 }
+
+export type AppModule =
+  | "matching"
+  | "engagements"
+  | "trial-balance"
+  | "workpapers"
+  | "client-portal";

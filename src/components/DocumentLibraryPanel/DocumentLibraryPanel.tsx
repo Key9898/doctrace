@@ -1,7 +1,6 @@
 import {
   Braces,
   Eye,
-  FileText,
   FolderOpen,
   ScanSearch,
   Trash2,
@@ -21,11 +20,6 @@ interface DocumentLibraryPanelProps {
   busyMessage?: string;
   onImport: (kind: DocumentKind, files: FileList | null) => void;
   onImportPickedFiles: (kind: DocumentKind, files: File[]) => void;
-  onImportSample: (
-    kind: DocumentKind,
-    sourceUrl: string,
-    fileName: string,
-  ) => void;
   onPreview: (documentId: string, pageNumber?: number, query?: string) => void;
   onRemove: (documentId: string) => void;
 }
@@ -35,7 +29,6 @@ export function DocumentLibraryPanel({
   busyMessage,
   onImport,
   onImportPickedFiles,
-  onImportSample,
   onPreview,
   onRemove,
 }: DocumentLibraryPanelProps) {
@@ -168,48 +161,6 @@ export function DocumentLibraryPanel({
         </div>
       </div>
 
-      <div
-        className="mt-6 flex flex-col gap-3"
-        role="group"
-        aria-label="Quick sample load options"
-      >
-        <p className="dt-kicker">Quick sample load</p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <button
-            className="dt-button-secondary w-full"
-            disabled={importBusy}
-            onClick={() =>
-              onImportSample(
-                "invoice",
-                "/demo/sample-invoices.json",
-                "sample-invoices.json",
-              )
-            }
-            type="button"
-            aria-label="Load sample invoice data"
-          >
-            <FileText className="h-4 w-4" aria-hidden="true" />
-            Sample invoices JSON
-          </button>
-          <button
-            className="dt-button-secondary w-full"
-            disabled={importBusy}
-            onClick={() =>
-              onImportSample(
-                "bank-statement",
-                "/demo/sample-bank-statements.json",
-                "sample-bank-statements.json",
-              )
-            }
-            type="button"
-            aria-label="Load sample bank statement data"
-          >
-            <Landmark className="h-4 w-4" aria-hidden="true" />
-            Sample bank JSON
-          </button>
-        </div>
-      </div>
-
       <div className="mt-6 rounded-[2rem] border border-white/60 bg-white/40 p-4 shadow-inner backdrop-blur-md dark:border-white/5 dark:bg-white/5">
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-500/10">
@@ -221,8 +172,7 @@ export function DocumentLibraryPanel({
             </p>
             <p className="text-xs leading-relaxed font-medium text-slate-600 dark:text-slate-400">
               DocTrace automatically imports multi-document JSON payloads into
-              the matching workflow. If the native file picker is blocked, use
-              the sample buttons to verify the system.
+              the matching workflow. Choose your JSON file via Browse to import.
             </p>
             {importBusy ? (
               <div className="flex items-center gap-2 rounded-lg bg-sky-50 px-2 py-1 dark:bg-sky-500/10">

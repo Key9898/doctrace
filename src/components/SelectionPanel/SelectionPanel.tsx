@@ -96,42 +96,56 @@ export function SelectionPanel({
           </div>
 
           <div className="mt-6 overflow-hidden rounded-[2rem] border border-slate-200/60 bg-white/40 shadow-sm backdrop-blur-md dark:border-white/5 dark:bg-white/5">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-100 text-left text-sm dark:divide-white/5">
+            <div className="max-w-[calc(100vw-4.5rem)] overflow-x-auto">
+              <table className="table-layout-fixed min-w-[950px] divide-y divide-slate-100 text-left text-sm dark:divide-white/5">
                 <thead className="bg-slate-50/50 text-slate-500 dark:bg-white/5 dark:text-slate-400">
                   <tr>
-                    {selection.columns.map((column) => (
-                      <th
-                        className="px-4 py-4 font-bold tracking-wider uppercase"
-                        key={column.id}
-                        scope="col"
-                      >
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-slate-900 dark:text-white">
-                            {column.header}
-                          </span>
-                          <span className="text-[0.65rem] font-bold opacity-60">
-                            Col {column.letter}
-                          </span>
-                        </div>
-                      </th>
-                    ))}
+                    {selection.columns.map((column, colIdx) => {
+                      const isFirst = colIdx === 0;
+                      return (
+                        <th
+                          className={`px-4 py-4 font-bold tracking-wider whitespace-nowrap uppercase ${
+                            isFirst
+                              ? "sticky left-0 z-10 border-r border-slate-200/60 bg-slate-50/90 dark:border-slate-800 dark:bg-slate-900/95"
+                              : ""
+                          }`}
+                          key={column.id}
+                          scope="col"
+                        >
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-slate-900 dark:text-white">
+                              {column.header}
+                            </span>
+                            <span className="text-[0.65rem] font-bold opacity-60">
+                              Col {column.letter}
+                            </span>
+                          </div>
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                   {selection.rows.slice(0, 5).map((row) => (
                     <tr
-                      className="transition-colors hover:bg-slate-50/50 dark:hover:bg-white/5"
+                      className="group transition-colors hover:bg-slate-50/50 dark:hover:bg-white/5"
                       key={row.rowNumber}
                     >
-                      {selection.columns.map((column) => (
-                        <td
-                          className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300"
-                          key={column.id}
-                        >
-                          {formatCellValue(row.values[column.id])}
-                        </td>
-                      ))}
+                      {selection.columns.map((column, colIdx) => {
+                        const isFirst = colIdx === 0;
+                        return (
+                          <td
+                            className={`px-4 py-3 font-medium text-slate-700 dark:text-slate-300 ${
+                              isFirst
+                                ? "sticky left-0 z-10 border-r border-slate-200/60 bg-white/95 group-hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950/95 dark:group-hover:bg-slate-900"
+                                : ""
+                            }`}
+                            key={column.id}
+                          >
+                            {formatCellValue(row.values[column.id])}
+                          </td>
+                        );
+                      })}
                     </tr>
                   ))}
                 </tbody>

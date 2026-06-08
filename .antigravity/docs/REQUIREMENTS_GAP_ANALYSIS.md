@@ -576,14 +576,14 @@ Option C: Separate Products
 
 ### 10.1 File References
 
-| Source          | Path                         |
-| --------------- | ---------------------------- |
-| Product Plan    | PRODUCT_PLAN.md              |
-| Project Rules   | PROJECT_RULES.md             |
-| Architecture    | docs/ARCHITECTURE.md         |
-| Testing Guide   | docs/TESTING.md              |
-| JSON Schema     | docs/JSON_EVIDENCE_SCHEMA.md |
-| Session Summary | docs/last_session_summary.md |
+| Source          | Path                                      |
+| --------------- | ----------------------------------------- |
+| Product Plan    | .antigravity/PRODUCT_PLAN.md              |
+| Project Rules   | .antigravity/PROJECT_RULES.md             |
+| Architecture    | .antigravity/docs/ARCHITECTURE.md         |
+| Testing Guide   | .antigravity/docs/TESTING.md              |
+| JSON Schema     | .antigravity/docs/JSON_EVIDENCE_SCHEMA.md |
+| Session Summary | .antigravity/docs/last_session_summary.md |
 
 ### 10.2 Key Metrics
 

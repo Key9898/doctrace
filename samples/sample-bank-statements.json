@@ -2,25 +2,31 @@
   "documents": [
     {
       "kind": "bank-statement",
-      "fileName": "bank-statement-july.json",
-      "statementEntries": [
+      "fileName": "bank_statement_1.json",
+      "pages": [
         {
-          "date": "2020-07-11",
-          "amount": 1512.4,
-          "reference": "20020098475",
-          "rawLine": "2020-07-11 payment reference 20020098475 amount 1512.40"
-        },
+          "pageNumber": 1,
+          "text": "CB BANK (MYANMAR) Head Office: No. 46, Union Financial Center, Mahabandoola Road, Yangon CORPORATE ACCOUNT STATEMENT Account Name: TZ Assurance Clients Group Account Number: 0010-6001-2098-4721 Statement Period: 2026-05-01 to 2026-05-31 Currency: MMK (Kyat) Opening Balance: 148,500,000 MMK Total Debits: 21,800,500 MMK Total Credits: 35,420,000 MMK Closing Balance: 162,119,500 MMK Value Date Transaction Details / References Withdrawals (Debit) Deposits (Credit) 2026-05-02 Service Charges - Monthly Account Maintenance 25,000 - 2026-05-04 ACH Credit Receipt - Invoice PMT Client Zenith - 12,450,000 2026-05-06 Utility Bill - Yangon Electricity Supply Corporation (YESC) 480,000 - 2026-05-09 Office Supplies - Golden Land Bookstore 125,000 - 2026-05-11 Outward Wire Transfer - FT-901842 Tax Payment 2,500,000 - 2026-05-12 Incoming TT Ref: GOL-0248 Sales Deposit - 8,920,000 2026-05-15 FT GT-2026-9418 GlobeTech Solutions Cloud Setup 4,250,000 - 2026-05-16 Local Cash Deposit - Branch 3 Teller 4 - 5,000,000 2026-05-17 Online Wire Transfer Fees - Outward 15,000 - 2026-05-20 Payment VL-847291 Vanguard Logistics Ocean Freight 1,890,500 - 2026-05-22 Outward Wire Transfer - Office Rent KBZ Transfer 3,500,000 - 2026-05-24 Credit Interest Payment Received - 50,000 2026-05-25 ACH Receipt - Client Apex Holdings Settlement - 9,000,000 2026-05-27 Software License Renewal - Microsoft Office 365 9,000,000 - 2026-05-28 Outward Telegram Transfer Commission Charges 15,000 - 2026-05-30 Corporate Fuel Expense - KBZ Visa Debit Card 1,000,000 -",
+          "snippets": [
+            "CB BANK (MYANMAR)",
+            "Account Number: 0010-6001-2098-4721",
+            "2026-05-15 FT GT-2026-9418 GlobeTech Solutions Cloud Setup 4,250,000",
+            "2026-05-20 Payment VL-847291 Vanguard Logistics Ocean Freight 1,890,500"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "bank-statement",
+      "fileName": "bank_statement_2.json",
+      "pages": [
         {
-          "date": "2020-04-01",
-          "amount": 4270.5,
-          "reference": "47209847",
-          "rawLine": "2020-04-01 transfer reference 47209847 amount 4270.50"
-        },
-        {
-          "date": "2020-09-14",
-          "amount": 213.36,
-          "reference": "INV21436",
-          "rawLine": "2020-09-14 payment reference INV21436 amount 213.36"
+          "pageNumber": 1,
+          "text": "KANBAWZA BANK (KBZ BANK) Head Office: Strand Road, Yangon, Myanmar SAVINGS ACCOUNT STATEMENT Account Name: TZ Assurance Clients Group Account Number: 058-201-058-0091823 Statement Period: 2026-05-01 to 2026-05-31 Currency: MMK (Kyat) Opening Balance: 75,000,000 MMK Total Debits: 15,200,000 MMK Total Credits: 22,050,000 MMK Closing Balance: 81,850,000 MMK Value Date Transaction Details / References Withdrawals (Debit) Deposits (Credit) 2026-05-01 Opening Balance Carried Forward - - 2026-05-03 Monthly Service Charges 10,000 - 2026-05-05 Interest Pay-out Savings Account - 50,000 2026-05-08 Cash Withdrawal - ATM Union Square Branch 500,000 - 2026-05-10 Inward Clearing Cheque Ref #10084729 - 15,000,000 2026-05-14 Online Fund Transfer - KBZ to CB Card Settlement 1,200,000 - 2026-05-18 Monthly Salary Disbursement to Employee payroll 12,480,000 - 2026-05-22 Inward Transfer - Rent from tenant Building B - 3,500,000 2026-05-24 Office Internet Payment - Fiber Link Yangon 80,000 - 2026-05-25 Corporate Dining Expense - KBZ Card Ref #419 120,000 - 2026-05-27 Fulfillment Receipt - Apex Credit Card Payment - 3,500,000 2026-05-28 VAT Tax Payment Output wire 810,000 -",
+          "snippets": [
+            "KANBAWZA BANK (KBZ BANK)",
+            "Account Number: 058-201-058-0091823"
+          ]
         }
       ]
     }

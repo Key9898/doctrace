@@ -17,13 +17,7 @@ import { formatDate } from "@/utils/formatters";
 import { parseFlexibleNumber } from "@/utils/parsing";
 
 const AUDIT_LOG_SHEET_NAME = "DocTrace_Audit_Log";
-const DEMO_SHEET_NAME = "DocTrace Demo";
-const DEMO_MATRIX: ExcelPrimitive[][] = [
-  ["Amount", "Date", "Invoice number"],
-  [1512.4, "2020-07-11", "20020098475"],
-  [4270.5, "2020-04-01", "47209847"],
-  [213.36, "2020-09-14", "INV21436"],
-];
+// Demo sheet variables removed
 
 function mapRowToColumnValues(
   columns: Array<{ id: string; index: number }>,
@@ -35,44 +29,7 @@ function mapRowToColumnValues(
   }, {});
 }
 
-export function buildDemoSelectionSnapshot() {
-  const sheetName = DEMO_SHEET_NAME;
-  const headers = DEMO_MATRIX[0] as string[];
-  const dataRows = DEMO_MATRIX.slice(1);
-  const startColumnIndex = 0;
-  const columnCount = headers.length;
-  const worksheetColumnCount = columnCount;
-  const columns = headers.map((header, index) => ({
-    id: buildColumnId(sheetName, index),
-    index,
-    header: header || buildDefaultHeader(index),
-    letter: toColumnLetter(index),
-    inferredRole: inferColumnRole(header),
-  }));
-
-  return {
-    sheetName,
-    address: `${sheetName}!A1:C4`,
-    hasHeaders: true,
-    headerRowNumber: 1,
-    firstDataRowNumber: 2,
-    startColumnIndex,
-    worksheetColumnCount,
-    rowCount: dataRows.length,
-    columnCount,
-    columns,
-    outputColumnOptions: buildOutputColumnOptions(
-      sheetName,
-      startColumnIndex + columnCount,
-      worksheetColumnCount,
-      headers,
-    ),
-    rows: dataRows.map((row, rowOffset) => ({
-      rowNumber: rowOffset + 2,
-      values: mapRowToColumnValues(columns, row),
-    })),
-  } satisfies SelectionSnapshot;
-}
+// buildDemoSelectionSnapshot removed
 
 function normalizeExcelValue(value: unknown): ExcelPrimitive {
   if (value === undefined || value === "") {
@@ -173,49 +130,7 @@ export async function captureSelection(hasHeaders: boolean) {
   });
 }
 
-export async function seedDemoSelection() {
-  if (!window.Excel) {
-    throw new Error("Excel APIs are not available in this environment.");
-  }
-
-  return Excel.run(async (context) => {
-    let worksheet =
-      context.workbook.worksheets.getItemOrNullObject(DEMO_SHEET_NAME);
-    await context.sync();
-
-    if (worksheet.isNullObject) {
-      worksheet = context.workbook.worksheets.add(DEMO_SHEET_NAME);
-    }
-
-    const clearRange = worksheet.getRange("A1:C16");
-    clearRange.clear();
-
-    const range = worksheet.getRange("A1:C4");
-    range.values = DEMO_MATRIX;
-    range.format.autofitColumns();
-    range.format.autofitRows();
-
-    const headerRange = worksheet.getRange("A1:C1");
-    headerRange.format.fill.color = "#112640";
-    headerRange.format.font.color = "#F8FAFC";
-    headerRange.format.font.bold = true;
-
-    const bodyRange = worksheet.getRange("A2:C4");
-    bodyRange.format.fill.color = "#F8FAFC";
-    bodyRange.format.borders.getItem("EdgeBottom").style =
-      Excel.BorderLineStyle.continuous;
-
-    worksheet.activate();
-    range.select();
-
-    await context.sync();
-
-    return {
-      address: `${DEMO_SHEET_NAME}!A1:C4`,
-      rowCount: 3,
-    };
-  });
-}
+// seedDemoSelection removed
 
 function getHeaderValue(field: MatchOutputField) {
   switch (field) {
@@ -377,7 +292,7 @@ export async function ensureAuditLogSheet() {
     sheet.visibility = Excel.SheetVisibility.hidden;
     await context.sync();
 
-    return sheet.name;
+    return AUDIT_LOG_SHEET_NAME;
   });
 }
 

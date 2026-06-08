@@ -1,9 +1,6 @@
 import { startTransition, useEffect, useCallback, useRef } from "react";
 
-import {
-  sampleBankStatementsPayload,
-  sampleInvoicesPayload,
-} from "@/demo/mocks/sample-evidence";
+// sample-evidence mocks removed
 import { useWorkbookSelectionSync } from "@/hooks/useWorkbookSelectionSync";
 import { parseImportFile } from "@/services/documents/document-parser.service";
 import {
@@ -15,9 +12,7 @@ import {
 import { runDocumentMatchingInWorker } from "@/services/matching/matching-worker.service";
 import {
   appendAuditLog,
-  buildDemoSelectionSnapshot,
   captureSelection,
-  seedDemoSelection,
   writeMatchResults,
   writeSnipToCell,
 } from "@/services/office/excel.service";
@@ -39,7 +34,6 @@ import type {
   MatchTemplate,
   Snip,
   SnipLink,
-  SelectionSnapshot,
   ViewerState,
 } from "@/types/domain";
 import { createId } from "@/utils/id";
@@ -59,29 +53,6 @@ function buildTemplate(config: MatchConfig, name: string): MatchTemplate {
 
 function resolveErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
-}
-
-async function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-  fallbackMessage: string,
-) {
-  let timer: number | undefined;
-
-  try {
-    return await Promise.race([
-      promise,
-      new Promise<T>((_, reject) => {
-        timer = window.setTimeout(() => {
-          reject(new Error(fallbackMessage));
-        }, timeoutMs);
-      }),
-    ]);
-  } finally {
-    if (timer) {
-      window.clearTimeout(timer);
-    }
-  }
 }
 
 async function extractTextFromImageRegion(
@@ -390,216 +361,7 @@ export function useDocTraceController() {
     await importDocumentFiles(kind, files);
   };
 
-  const createSampleFile = async (sourceUrl: string, fileName: string) => {
-    const bundledPayload =
-      sourceUrl.includes("sample-invoices") || fileName.includes("invoice")
-        ? sampleInvoicesPayload
-        : sourceUrl.includes("sample-bank-statements") ||
-            fileName.includes("bank")
-          ? sampleBankStatementsPayload
-          : undefined;
-
-    if (!bundledPayload) {
-      throw new Error(
-        `Bundled sample payload "${fileName}" is not available in this build.`,
-      );
-    }
-
-    const blob = new Blob([JSON.stringify(bundledPayload, null, 2)], {
-      type: "application/json",
-    });
-
-    if (typeof File === "function") {
-      return new File([blob], fileName, {
-        type: blob.type || "application/json",
-        lastModified: Date.now(),
-      });
-    }
-
-    const fallbackBlob = blob.slice(
-      0,
-      blob.size,
-      blob.type || "application/json",
-    );
-    return Object.assign(fallbackBlob, {
-      name: fileName,
-      lastModified: Date.now(),
-    }) as File;
-  };
-
-  const importSampleDocuments = async (
-    kind: DocumentKind,
-    sourceUrl: string,
-    fileName: string,
-  ) => {
-    state.setBusyMessage("Loading bundled sample evidence");
-    recordActivity(
-      "info",
-      kind === "invoice"
-        ? "Loading bundled invoice sample"
-        : "Loading bundled bank sample",
-      fileName,
-    );
-
-    try {
-      const file = await createSampleFile(sourceUrl, fileName);
-      await importDocumentFiles(kind, [file]);
-    } catch (error) {
-      state.pushToast({
-        tone: "error",
-        title: "Bundled sample load failed",
-        description: resolveErrorMessage(
-          error,
-          "The bundled sample could not be loaded.",
-        ),
-      });
-      recordActivity(
-        "error",
-        "Bundled sample load failed",
-        resolveErrorMessage(error, "The bundled sample could not be loaded."),
-      );
-    } finally {
-      state.setBusyMessage(undefined);
-    }
-  };
-
-  const prepareDemoWorkspace = async () => {
-    const localDemoSelection = buildDemoSelectionSnapshot();
-
-    state.setBusyMessage("Preparing the DocTrace demo worksheet");
-    recordActivity(
-      "info",
-      "Preparing demo workspace",
-      "A demo sheet, selection, and sample evidence will be loaded.",
-    );
-
-    try {
-      startTransition(() => {
-        state.setDocuments([]);
-        state.setHasHeaders(true);
-        state.setSelection(localDemoSelection);
-        state.setConfig(
-          suggestInitialConfig(localDemoSelection, state.config.outputFields),
-        );
-        state.setSnips([]);
-        state.setSnipLinks([]);
-        state.setViewer({
-          documentId: undefined,
-          pageNumber: 1,
-          query: undefined,
-          linkedRowId: undefined,
-          activeSnipId: undefined,
-        });
-        state.resetResults();
-      });
-
-      recordActivity(
-        "success",
-        "Demo selection primed",
-        `${localDemoSelection.address} is ready in the sidebar.`,
-      );
-
-      state.documents.forEach((document) => {
-        if (document.objectUrl) {
-          URL.revokeObjectURL(document.objectUrl);
-        }
-
-        void removeBlob(document.id);
-      });
-
-      const invoiceFile = await createSampleFile(
-        "/demo/sample-invoices.json",
-        "sample-invoices.json",
-      );
-      const bankFile = await createSampleFile(
-        "/demo/sample-bank-statements.json",
-        "sample-bank-statements.json",
-      );
-
-      await importDocumentFiles("invoice", [invoiceFile]);
-      await importDocumentFiles("bank-statement", [bankFile]);
-
-      if (!state.officeAvailable) {
-        state.pushToast({
-          tone: "info",
-          title: "Local demo loaded",
-          description:
-            "DocTrace is not connected to Excel, so the local demo dataset was loaded inside the sidebar only.",
-        });
-        recordActivity(
-          "info",
-          "Local demo loaded",
-          "The add-in is not connected to Excel, so only the sidebar demo state was prepared.",
-        );
-        return;
-      }
-
-      let nextSelection: SelectionSnapshot = localDemoSelection;
-
-      try {
-        await withTimeout(
-          seedDemoSelection(),
-          3500,
-          "Excel demo worksheet seeding timed out.",
-        );
-        nextSelection = await withTimeout(
-          captureSelection(true),
-          3500,
-          "Excel selection capture timed out.",
-        );
-
-        startTransition(() => {
-          state.setSelection(nextSelection);
-          state.setConfig(
-            suggestInitialConfig(nextSelection, state.config.outputFields),
-          );
-        });
-
-        recordActivity(
-          "success",
-          "Excel demo sheet synced",
-          `${nextSelection.address} was written into Excel and recaptured.`,
-        );
-      } catch (error) {
-        recordActivity(
-          "error",
-          "Excel demo sheet fallback",
-          resolveErrorMessage(
-            error,
-            "The demo worksheet could not be written to Excel, so the local demo snapshot was used.",
-          ),
-        );
-      }
-
-      state.pushToast({
-        tone: "success",
-        title: "Demo workspace ready",
-        description:
-          "The sample sheet and bundled evidence are loaded. Apply mapping or run the match next.",
-      });
-      recordActivity(
-        "success",
-        "Demo workspace ready",
-        `${nextSelection.address} is active and demo evidence was imported.`,
-      );
-    } catch (error) {
-      state.pushToast({
-        tone: "error",
-        title: "Demo workspace failed",
-        description: resolveErrorMessage(
-          error,
-          "The demo workspace could not be prepared.",
-        ),
-      });
-      recordActivity(
-        "error",
-        "Demo workspace failed",
-        resolveErrorMessage(error, "The demo workspace could not be prepared."),
-      );
-    } finally {
-      state.setBusyMessage(undefined);
-    }
-  };
+  // createSampleFile, importSampleDocuments, and prepareDemoWorkspace removed
 
   const removeDocument = (documentId: string) => {
     const target = state.documents.find(
@@ -1265,8 +1027,6 @@ export function useDocTraceController() {
       captureCurrentSelection,
       importDocuments,
       importPickedDocuments,
-      importSampleDocuments,
-      prepareDemoWorkspace,
       removeDocument,
       runMatching,
       saveTemplate,

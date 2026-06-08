@@ -2,47 +2,39 @@
   "documents": [
     {
       "kind": "invoice",
-      "fileName": "invoice-20020098475.json",
-      "invoiceNumber": "20020098475",
-      "amount": 1512.4,
-      "date": "2020-07-11",
+      "fileName": "invoice_1.json",
+      "invoiceNumber": "GT-2026-9418",
+      "amount": 4250000.0,
+      "date": "2026-05-12",
       "pages": [
         {
           "pageNumber": 1,
-          "text": "Invoice 20020098475 dated 2020-07-11 total 1512.40 from LinkedIn Ireland Limited",
+          "text": "GLOBETECH SOLUTIONS LTD No. 124, Pyay Road, Kamayut Township, Yangon, Myanmar Email: billing@globetechsolutions.com | Tel: +95 1 504931 INVOICE Bill To: TZ Assurance Clients Group Finance Department Yangon Office, Myanmar Invoice Number: GT-2026-9418 Invoice Date: 2026-05-12 Payment Term: Net 30 Due Date: 2026-06-11 Description Qty Unit Price (MMK) Amount (MMK) IT Consultancy Services - Cloud Security Setup 1 2,500,000 2,500,000 Annual Software License Fee - Admin Console (30 Users) 30 50,000 1,500,000 Premium SSL Certificate Installation & Support 1 250,000 250,000 Subtotal: 4,250,000 MMK Tax (0%): 0 MMK Total Amount Due: 4,250,000 MMK Thank you for your business! Payment should be wired directly to our CB Bank Account. For query, contact billing@globetechsolutions.com",
           "snippets": [
-            "Invoice 20020098475",
-            "Date 2020-07-11",
-            "Total 1512.40"
+            "GLOBETECH SOLUTIONS LTD",
+            "Invoice Number: GT-2026-9418",
+            "Invoice Date: 2026-05-12",
+            "Total Amount Due: 4,250,000 MMK"
           ]
         }
       ]
     },
     {
       "kind": "invoice",
-      "fileName": "invoice-47209847.json",
-      "invoiceNumber": "47209847",
-      "amount": 4270.5,
-      "date": "2020-04-01",
+      "fileName": "invoice_2.json",
+      "invoiceNumber": "VL-847291",
+      "amount": 1890500.0,
+      "date": "2026-05-18",
       "pages": [
         {
           "pageNumber": 1,
-          "text": "Invoice 47209847 dated 2020-04-01 total 4270.50",
-          "snippets": ["Invoice 47209847", "Total amount 4270.50"]
-        }
-      ]
-    },
-    {
-      "kind": "invoice",
-      "fileName": "invoice-INV21436.json",
-      "invoiceNumber": "INV21436",
-      "amount": 213.36,
-      "date": "2020-09-14",
-      "pages": [
-        {
-          "pageNumber": 1,
-          "text": "Invoice INV21436 dated 2020-09-14 total 213.36 for audit sample testing",
-          "snippets": ["Invoice INV21436", "Date 2020-09-14", "Total 213.36"]
+          "text": "VANGUARD LOGISTICS SERVICES Aung San Road, Industrial Zone 3, Hlaing Tharyar Township, Yangon Email: operations@vanguardlogistics.com.mm | Tel: +95 1 680224 COMMERCIAL INVOICE Consignee / Bill To: TZ Assurance Clients Group Logistics & Import Dept Yangon Office, Myanmar Invoice Number: VL-847291 Invoice Date: 2026-05-18 PO Number: PO-2026-00418 Payment Due: On Receipt Freight Charge Details Service Code Tax Class Total Cost (MMK) Ocean Freight Charges - 20ft Standard Container FR-0082 Exempt 1,200,000 Customs Brokerage Fees & Import Declaration CS-9402 General 450,000 Port Handling, Demurrage & Documentation Services PH-1082 General 240,500 Subtotal: 1,890,500 MMK Tax Amount: 0 MMK Net Invoice Total: 1,890,500 MMK Please wire payment within 3 business days. Ref Invoice VL-847291 in wire transfer memo.",
+          "snippets": [
+            "VANGUARD LOGISTICS SERVICES",
+            "Invoice Number: VL-847291",
+            "Invoice Date: 2026-05-18",
+            "Net Invoice Total: 1,890,500 MMK"
+          ]
         }
       ]
     }

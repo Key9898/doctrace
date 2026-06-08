@@ -2,6 +2,8 @@ import type { AppLocale } from "@/i18n/locales";
 import { translate } from "@/i18n/translations";
 import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
 
+import type { AppModule } from "@/types/domain";
+
 interface AppShellProps {
   officeReady: boolean;
   officeAvailable: boolean;
@@ -12,8 +14,10 @@ interface AppShellProps {
   selectionAddress?: string;
   buildLabel: string;
   onLocaleChange: (locale: AppLocale) => void;
-  activeModule: "matching" | "engagements";
-  onModuleChange: (module: "matching" | "engagements") => void;
+  activeModule: AppModule;
+  onModuleChange: (module: AppModule) => void;
+  devMode: boolean;
+  onToggleDevMode: () => void;
   children: React.ReactNode;
 }
 
@@ -29,6 +33,8 @@ export function AppShell({
   onLocaleChange,
   activeModule,
   onModuleChange,
+  devMode,
+  onToggleDevMode,
   children,
 }: AppShellProps) {
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
@@ -68,7 +74,9 @@ export function AppShell({
                     {buildLabel}
                   </span>
                   <span
-                    className={`dt-badge ${
+                    onDoubleClick={onToggleDevMode}
+                    title="Double click to toggle Dev Mode"
+                    className={`dt-badge cursor-pointer select-none ${
                       window.location.hostname === "localhost" ||
                       window.location.hostname === "127.0.0.1"
                         ? "border-amber-200/50 bg-amber-100/80 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400"
@@ -80,6 +88,11 @@ export function AppShell({
                       ? "DEV"
                       : "PROD"}
                   </span>
+                  {devMode && (
+                    <span className="dt-badge animate-pulse border-rose-200/50 bg-rose-100/80 text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
+                      DEV ACTIVE
+                    </span>
+                  )}
                 </div>
                 <p className="mt-1 max-w-3xl text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">
                   {t("app.description")}
@@ -162,34 +175,43 @@ export function AppShell({
 
         {/* Workspace Module Selector */}
         <nav
-          className="flex items-center justify-start gap-2 border-b border-slate-200 pb-3 dark:border-slate-800"
+          className="flex flex-wrap items-center justify-start gap-2 border-b border-slate-200 pb-3 dark:border-slate-800"
           role="tablist"
           aria-label="Workspace Modules"
         >
-          <button
-            role="tab"
-            aria-selected={activeModule === "engagements"}
-            onClick={() => onModuleChange("engagements")}
-            className={`flex h-9 items-center gap-1.5 rounded-2xl px-4 text-xs font-bold transition-all ${
-              activeModule === "engagements"
-                ? "bg-sky-600 text-white shadow-sm"
-                : "border border-white/60 bg-white/40 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
-            }`}
-          >
-            {t("nav.engagements")}
-          </button>
-          <button
-            role="tab"
-            aria-selected={activeModule === "matching"}
-            onClick={() => onModuleChange("matching")}
-            className={`flex h-9 items-center gap-1.5 rounded-2xl px-4 text-xs font-bold transition-all ${
-              activeModule === "matching"
-                ? "bg-sky-600 text-white shadow-sm"
-                : "border border-white/60 bg-white/45 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
-            }`}
-          >
-            {t("nav.matching")}
-          </button>
+          {(
+            [
+              "engagements",
+              "matching",
+              "trial-balance",
+              "workpapers",
+              "client-portal",
+            ] as AppModule[]
+          ).map((mod) => (
+            <button
+              key={mod}
+              role="tab"
+              aria-selected={activeModule === mod}
+              onClick={() => onModuleChange(mod)}
+              className={`flex h-9 items-center gap-1.5 rounded-2xl px-4 text-xs font-bold transition-all ${
+                activeModule === mod
+                  ? "bg-sky-600 text-white shadow-sm"
+                  : "border border-white/60 bg-white/45 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
+              }`}
+            >
+              {t(
+                mod === "matching"
+                  ? "nav.matching"
+                  : mod === "engagements"
+                    ? "nav.engagements"
+                    : mod === "trial-balance"
+                      ? "nav.trialBalance"
+                      : mod === "workpapers"
+                        ? "nav.workpapers"
+                        : "nav.clientPortal",
+              )}
+            </button>
+          ))}
         </nav>
 
         <main id="main-content" role="main" className="flex flex-col gap-3">

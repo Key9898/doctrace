@@ -23,7 +23,7 @@
 ## Quality gates
 
 1. Update `CHANGELOG.md` after each meaningful change batch.
-2. Update `docs/last_session_summary.md` after each meaningful change batch.
+2. Update `.antigravity/docs/last_session_summary.md` after each meaningful change batch.
 3. Run Prettier, ESLint, and TypeScript validation before concluding work when possible.
 4. Never commit generated noise, local certificates, or runtime caches.
 5. Keep `.gitignore` current from day one.

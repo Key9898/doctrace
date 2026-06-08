@@ -21,6 +21,7 @@ import type {
   AuditFramework,
   EngagementStatus,
   EngagementTeam,
+  AppModule,
 } from "@/types/domain";
 import { createId } from "@/utils/id";
 
@@ -45,7 +46,8 @@ interface AppState {
   snippingEnabled: boolean;
   engagements: Engagement[];
   activeEngagementId: string | null;
-  activeModule: "matching" | "engagements";
+  activeModule: AppModule;
+  devMode: boolean;
   setOfficeState: (ready: boolean, available: boolean) => void;
   setLocale: (locale: AppLocale) => void;
   setBusyMessage: (message?: string) => void;
@@ -70,7 +72,8 @@ interface AppState {
   addSnipLink: (link: SnipLink) => void;
   removeSnipLink: (linkId: string) => void;
   setSnippingEnabled: (enabled: boolean) => void;
-  setModule: (module: "matching" | "engagements") => void;
+  setModule: (module: AppModule) => void;
+  toggleDevMode: () => void;
   createEngagement: (
     clientName: string,
     financialYear: string,
@@ -123,8 +126,8 @@ function resolveInitialLocale(): AppLocale {
 const initialLocale = resolveInitialLocale();
 setActiveLocale(initialLocale);
 
-const ENGAGEMENTS_STORAGE_KEY = "ezaai.engagements";
-const ACTIVE_ENGAGEMENT_STORAGE_KEY = "ezaai.active_engagement";
+const ENGAGEMENTS_STORAGE_KEY = "doctrace.engagements";
+const ACTIVE_ENGAGEMENT_STORAGE_KEY = "doctrace.active_engagement";
 const ACTIVE_MODULE_STORAGE_KEY = "doctrace.active_module";
 
 const defaultEngagements: Engagement[] = [
@@ -180,7 +183,14 @@ function resolveInitialEngagements(): Engagement[] {
     return defaultEngagements;
   }
   try {
-    const data = window.localStorage.getItem(ENGAGEMENTS_STORAGE_KEY);
+    let data = window.localStorage.getItem(ENGAGEMENTS_STORAGE_KEY);
+    if (!data) {
+      const migrationData = window.localStorage.getItem("ezaai.engagements");
+      if (migrationData) {
+        data = migrationData;
+        window.localStorage.setItem(ENGAGEMENTS_STORAGE_KEY, migrationData);
+      }
+    }
     return data ? JSON.parse(data) : defaultEngagements;
   } catch {
     return defaultEngagements;
@@ -192,8 +202,22 @@ function resolveInitialActiveEngagement(): string | null {
     return "eng_sample_1";
   }
   try {
-    const activeId = window.localStorage.getItem(ACTIVE_ENGAGEMENT_STORAGE_KEY);
-    return activeId !== null ? activeId : "eng_sample_1";
+    let activeId = window.localStorage.getItem(ACTIVE_ENGAGEMENT_STORAGE_KEY);
+    if (activeId === null) {
+      const migrationActiveId = window.localStorage.getItem(
+        "ezaai.active_engagement",
+      );
+      if (migrationActiveId !== null) {
+        activeId = migrationActiveId;
+        window.localStorage.setItem(
+          ACTIVE_ENGAGEMENT_STORAGE_KEY,
+          migrationActiveId,
+        );
+      } else {
+        return "eng_sample_1";
+      }
+    }
+    return activeId;
   } catch {
     return "eng_sample_1";
   }
@@ -224,13 +248,21 @@ function saveActiveEngagementToStorage(id: string | null) {
   }
 }
 
-function resolveInitialActiveModule(): "matching" | "engagements" {
+function resolveInitialActiveModule(): AppModule {
   if (typeof window === "undefined") {
     return "matching";
   }
   try {
-    const module = window.localStorage.getItem(ACTIVE_MODULE_STORAGE_KEY);
-    if (module === "matching" || module === "engagements") {
+    const module = window.localStorage.getItem(
+      ACTIVE_MODULE_STORAGE_KEY,
+    ) as AppModule | null;
+    if (
+      module === "matching" ||
+      module === "engagements" ||
+      module === "trial-balance" ||
+      module === "workpapers" ||
+      module === "client-portal"
+    ) {
       return module;
     }
   } catch {
@@ -239,7 +271,7 @@ function resolveInitialActiveModule(): "matching" | "engagements" {
   return "matching";
 }
 
-function saveActiveModuleToStorage(module: "matching" | "engagements") {
+function saveActiveModuleToStorage(module: AppModule) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(ACTIVE_MODULE_STORAGE_KEY, module);
@@ -275,6 +307,10 @@ export const useDocTraceStore = create<AppState>((set) => ({
   engagements: initialEngagements,
   activeEngagementId: initialActiveId,
   activeModule: resolveInitialActiveModule(),
+  devMode:
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("doctrace.dev_mode") === "true"
+      : false,
   setOfficeState: (ready, available) =>
     set({ officeReady: ready, officeAvailable: available }),
   setLocale: (locale) => {
@@ -406,6 +442,18 @@ export const useDocTraceStore = create<AppState>((set) => ({
     saveActiveModuleToStorage(activeModule);
     set({ activeModule });
   },
+  toggleDevMode: () =>
+    set((state) => {
+      const next = !state.devMode;
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem("doctrace.dev_mode", String(next));
+        } catch {
+          // Fallback if localStorage is blocked
+        }
+      }
+      return { devMode: next };
+    }),
   createEngagement: (clientName, financialYear, framework, status) =>
     set((state) => {
       const newEngagement: Engagement = {

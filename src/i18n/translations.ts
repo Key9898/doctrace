@@ -55,6 +55,9 @@ export type TranslationKey =
   | "status.exception"
   | "nav.matching"
   | "nav.engagements"
+  | "nav.trialBalance"
+  | "nav.workpapers"
+  | "nav.clientPortal"
   | "eng.title"
   | "eng.kicker"
   | "eng.new"
@@ -139,6 +142,9 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.exception": "Exception",
     "nav.matching": "🛠️ စာရင်းတိုက်ဆိုင်စစ်ဆေးရေး",
     "nav.engagements": "📊 စာရင်းစစ်လုပ်ငန်း စီမံခန့်ခွဲမှု",
+    "nav.trialBalance": "⚖️ Trial Balance စစ်ဆေးရေး",
+    "nav.workpapers": "📁 Audit Workpapers",
+    "nav.clientPortal": "🌐 Client PBC Portal",
     "eng.title": "လုပ်ငန်းပရောဂျက်များနှင့် Dashboard",
     "eng.kicker": "DocTrace Modules",
     "eng.new": "Engagement အသစ်ဖန်တီးရန်",
@@ -222,6 +228,9 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.exception": "Exception",
     "nav.matching": "🛠️ Matching Workspace",
     "nav.engagements": "📊 Project Dashboard",
+    "nav.trialBalance": "⚖️ Trial Balance",
+    "nav.workpapers": "📁 Workpapers",
+    "nav.clientPortal": "🌐 Client Portal",
     "eng.title": "Audit Engagements & Dashboard",
     "eng.kicker": "DocTrace Modules",
     "eng.new": "Create New Engagement",

@@ -1,5 +1,5 @@
 import { FileText, Landmark } from "lucide-react";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useDocTraceStore } from "@/state/app-store";
 import { useDocTraceController } from "@/app/useDocTraceController";
@@ -16,6 +16,9 @@ import { TemplateLibraryPanel } from "@/components/TemplateLibraryPanel/Template
 import { ToastViewport } from "@/components/ToastViewport/ToastViewport";
 import { ViewerPane } from "@/components/ViewerPane/ViewerPane";
 import { WorkflowStepper } from "@/components/WorkflowStepper/WorkflowStepper";
+import { TrialBalance } from "@/components/TrialBalance/TrialBalance";
+import { Workpapers } from "@/components/Workpapers/Workpapers";
+import { ClientPortal } from "@/components/ClientPortal/ClientPortal";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/i18n/locales";
 import { translate } from "@/i18n/translations";
 
@@ -23,9 +26,9 @@ const BUILD_LABEL = "prod-2026-04-30-b";
 
 export function App() {
   const controller = useDocTraceController();
-  const { activeModule, setModule } = useDocTraceStore();
+  const { activeModule, setModule, devMode, toggleDevMode } =
+    useDocTraceStore();
   const rootRef = useRef<HTMLDivElement>(null);
-  const busy = Boolean(controller.busyMessage);
   const t = (key: Parameters<typeof translate>[1]) =>
     translate(controller.locale, key);
 
@@ -58,42 +61,6 @@ export function App() {
     window.requestAnimationFrame(() => navigateToStep("step-viewer"));
   };
 
-  const controllerRef = useRef(controller);
-  controllerRef.current = controller;
-
-  const runQuickAction = useCallback((actionName: string) => {
-    const ctrl = controllerRef.current;
-    if (ctrl.busyMessage) {
-      return;
-    }
-
-    switch (actionName) {
-      case "prepare-demo":
-        void ctrl.actions.prepareDemoWorkspace();
-        break;
-      case "capture-selection":
-        void ctrl.actions.captureCurrentSelection();
-        break;
-      case "load-invoices":
-        void ctrl.actions.importSampleDocuments(
-          "invoice",
-          "/demo/sample-invoices.json",
-          "sample-invoices.json",
-        );
-        break;
-      case "load-bank":
-        void ctrl.actions.importSampleDocuments(
-          "bank-statement",
-          "/demo/sample-bank-statements.json",
-          "sample-bank-statements.json",
-        );
-        break;
-      case "suggested-mapping":
-        ctrl.actions.applySuggestedMapping();
-        break;
-    }
-  }, []);
-
   return (
     <div ref={rootRef}>
       <AppShell
@@ -108,87 +75,31 @@ export function App() {
         selectionAddress={controller.selection?.address}
         activeModule={activeModule}
         onModuleChange={setModule}
+        devMode={devMode}
+        onToggleDevMode={toggleDevMode}
       >
-        {activeModule === "engagements" ? (
-          <EngagementManager />
-        ) : (
+        {activeModule === "engagements" && <EngagementManager />}
+
+        {activeModule === "trial-balance" && <TrialBalance />}
+
+        {activeModule === "workpapers" && <Workpapers />}
+
+        {activeModule === "client-portal" && <ClientPortal />}
+
+        {activeModule === "matching" && (
           <>
-            <section className="dt-panel">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p className="dt-kicker">{t("quick.kicker")}</p>
-                  <h2 className="dt-section-title">{t("quick.title")}</h2>
-                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                    {t("quick.description")}
-                  </p>
-                </div>
-                <span className="dt-badge dt-badge-neutral">{BUILD_LABEL}</span>
-              </div>
-
-              <div className="mt-4 grid gap-2">
-                <button
-                  aria-disabled={busy}
-                  className="dt-button-primary w-full"
-                  disabled={busy}
-                  data-doctrace-action="prepare-demo"
-                  onClick={() => runQuickAction("prepare-demo")}
-                  type="button"
-                >
-                  {t("quick.prepare")}
-                </button>
-                <button
-                  aria-disabled={busy}
-                  className="dt-button-secondary w-full"
-                  disabled={busy}
-                  data-doctrace-action="capture-selection"
-                  onClick={() => runQuickAction("capture-selection")}
-                  type="button"
-                >
-                  {t("quick.capture")}
-                </button>
-                <button
-                  aria-disabled={busy}
-                  className="dt-button-secondary w-full"
-                  disabled={busy}
-                  data-doctrace-action="load-invoices"
-                  onClick={() => runQuickAction("load-invoices")}
-                  type="button"
-                >
-                  {t("quick.loadInvoices")}
-                </button>
-                <button
-                  aria-disabled={busy}
-                  className="dt-button-secondary w-full"
-                  disabled={busy}
-                  data-doctrace-action="load-bank"
-                  onClick={() => runQuickAction("load-bank")}
-                  type="button"
-                >
-                  {t("quick.loadBank")}
-                </button>
-                <button
-                  aria-disabled={busy}
-                  className="dt-button-secondary w-full"
-                  disabled={busy}
-                  data-doctrace-action="suggested-mapping"
-                  onClick={() => runQuickAction("suggested-mapping")}
-                  type="button"
-                >
-                  {t("quick.mapping")}
-                </button>
-              </div>
-            </section>
-
             <ActivityPanel
               activityFeed={controller.activityFeed}
               busyMessage={controller.busyMessage}
             />
 
-            <DiagnosticsPanel
-              buildLabel={BUILD_LABEL}
-              officeAvailable={controller.officeAvailable}
-              officeReady={controller.officeReady}
-            />
+            {devMode && (
+              <DiagnosticsPanel
+                buildLabel={BUILD_LABEL}
+                officeAvailable={controller.officeAvailable}
+                officeReady={controller.officeReady}
+              />
+            )}
 
             <div className="grid gap-3 xl:grid-cols-2">
               <div className="grid gap-3">
@@ -213,13 +124,6 @@ export function App() {
                     }
                     onImportPickedFiles={(kind, files) =>
                       void controller.actions.importPickedDocuments(kind, files)
-                    }
-                    onImportSample={(kind, sourceUrl, fileName) =>
-                      void controller.actions.importSampleDocuments(
-                        kind,
-                        sourceUrl,
-                        fileName,
-                      )
                     }
                     onPreview={(documentId, pageNumber, query) =>
                       focusEvidenceViewer(documentId, pageNumber, query)

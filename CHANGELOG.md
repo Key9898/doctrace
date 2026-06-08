@@ -86,7 +86,7 @@
 - Added Phase 0 and Phase 1 planning documents.
 - Began scaffolding the Excel add-in workspace and local-first audit workflow foundation.
 - Flattened the repository into a single-app root structure with `src/` at the project root.
-- Moved session summary tracking into `docs/last_session_summary.md`.
+- Moved session summary tracking into `.antigravity/docs/last_session_summary.md`.
 - Completed the Phase 0 and Phase 1 root scaffold with Excel task pane UI, Office manifest, OCR/PDF parsing, deterministic matching, templates, and audit log services.
 - Verified formatting, linting, type checking, and production build after lazy-splitting heavy document-processing code.
 - Added JSON evidence import support for structured document payloads and JSON bundles with multiple documents.
