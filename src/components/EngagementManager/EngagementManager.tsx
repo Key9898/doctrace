@@ -11,6 +11,8 @@ import {
   Users,
   X,
   FileSpreadsheet,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 import { useDocTraceStore } from "@/state/app-store";
@@ -20,6 +22,7 @@ import type {
   EngagementStatus,
   ParsedDocument,
   MatchResult,
+  EngagementTeam,
 } from "@/types/domain";
 
 export function EngagementManager() {
@@ -31,6 +34,7 @@ export function EngagementManager() {
     selectEngagement,
     updateEngagementStatus,
     updateEngagementTeam,
+    updateEngagementLock,
     deleteEngagement,
     pushToast,
     documents,
@@ -38,10 +42,19 @@ export function EngagementManager() {
   } = useDocTraceStore();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
   const [clientName, setClientName] = useState("");
   const [financialYear, setFinancialYear] = useState("FY 2025-26");
   const [framework, setFramework] = useState<AuditFramework>("ISA");
   const [status, setStatus] = useState<EngagementStatus>("In Progress");
+  const [overallMateriality, setOverallMateriality] = useState(10000);
+  const [performanceMateriality, setPerformanceMateriality] = useState(7500);
+  const [trivialThreshold, setTrivialThreshold] = useState(500);
+  const [teamPartner, setTeamPartner] = useState("");
+  const [teamManager, setTeamManager] = useState("");
+  const [teamSenior, setTeamSenior] = useState("");
+  const [teamAssociate, setTeamAssociate] = useState("");
+  const [teamEqReviewer, setTeamEqReviewer] = useState("");
 
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
 
@@ -89,8 +102,8 @@ export function EngagementManager() {
       }
     : null;
 
-  const handleCreate = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreate = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!clientName.trim()) {
       pushToast({
         tone: "error",
@@ -103,9 +116,35 @@ export function EngagementManager() {
       return;
     }
 
-    createEngagement(clientName.trim(), financialYear, framework, status);
+    createEngagement(
+      clientName.trim(),
+      financialYear,
+      framework,
+      status,
+      overallMateriality,
+      performanceMateriality,
+      trivialThreshold,
+      {
+        partner: teamPartner.trim(),
+        manager: teamManager.trim(),
+        senior: teamSenior.trim(),
+        associate: teamAssociate.trim(),
+        eqReviewer: teamEqReviewer.trim(),
+      },
+    );
+
     setClientName("");
+    setWizardStep(1);
+    setOverallMateriality(10000);
+    setPerformanceMateriality(7500);
+    setTrivialThreshold(500);
+    setTeamPartner("");
+    setTeamManager("");
+    setTeamSenior("");
+    setTeamAssociate("");
+    setTeamEqReviewer("");
     setShowCreateForm(false);
+
     pushToast({
       tone: "success",
       title: locale === "my-MM" ? "အောင်မြင်သည်" : "Success",
@@ -135,10 +174,7 @@ export function EngagementManager() {
     setDeleteTarget(null);
   };
 
-  const handleTeamChange = (
-    role: "partner" | "manager" | "senior" | "associate",
-    name: string,
-  ) => {
+  const handleTeamChange = (role: keyof EngagementTeam, name: string) => {
     if (!activeEngagement) return;
     updateEngagementTeam(activeEngagement.id, { [role]: name });
   };
@@ -244,6 +280,7 @@ export function EngagementManager() {
 
   const getFrameworkLabel = (fw: AuditFramework) => {
     if (fw === "IFRS_SMEs") return "IFRS for SMEs";
+    if (fw === "IAS_IFRS") return "IAS / IFRS";
     return fw;
   };
 
@@ -278,116 +315,370 @@ export function EngagementManager() {
             </button>
           </div>
 
-          {/* New engagement form */}
+          {/* New engagement form (Step-by-step Wizard) */}
           {showCreateForm && (
-            <form
-              onSubmit={handleCreate}
-              className="mt-2 flex flex-col gap-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-900/30"
-            >
-              <h3 className="text-xs font-bold tracking-wider text-slate-800 uppercase dark:text-slate-200">
-                {t("eng.new")}
-              </h3>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                  {t("eng.clientName")}
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. TZ Assurance Client A"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                />
+            <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/50 p-4 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/30">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2 dark:border-slate-800">
+                <h3 className="text-xs font-black tracking-wider text-slate-800 uppercase dark:text-slate-200">
+                  {t("eng.wizard.title")}
+                </h3>
+                <span className="text-[10px] font-bold text-sky-600 dark:text-sky-400">
+                  Step {wizardStep} of 4
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                    {t("eng.financialYear")}
-                  </label>
-                  <select
-                    value={financialYear}
-                    onChange={(e) => setFinancialYear(e.target.value)}
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="FY 2024-25">FY 2024-25</option>
-                    <option value="FY 2025-26">FY 2025-26</option>
-                    <option value="FY 2026-27">FY 2026-27</option>
-                  </select>
+              {/* Step indicator header */}
+              <div className="text-[10px] font-bold text-slate-500 uppercase">
+                {wizardStep === 1 && t("eng.wizard.step1")}
+                {wizardStep === 2 && t("eng.wizard.step2")}
+                {wizardStep === 3 && t("eng.wizard.step3")}
+                {wizardStep === 4 && t("eng.wizard.step4")}
+              </div>
+
+              {/* Step 1: Basics */}
+              {wizardStep === 1 && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.clientName")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. TZ Assurance Client A"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                        {t("eng.financialYear")}
+                      </label>
+                      <select
+                        value={financialYear}
+                        onChange={(e) => setFinancialYear(e.target.value)}
+                        className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                      >
+                        <option value="FY 2024-25">FY 2024-25</option>
+                        <option value="FY 2025-26">FY 2025-26</option>
+                        <option value="FY 2026-27">FY 2026-27</option>
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                        {t("eng.framework")}
+                      </label>
+                      <select
+                        value={framework}
+                        onChange={(e) =>
+                          setFramework(e.target.value as AuditFramework)
+                        }
+                        className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                      >
+                        <option value="ISA">ISA</option>
+                        <option value="IAS_IFRS">IAS / IFRS</option>
+                        <option value="IFRS_SMEs">IFRS for SMEs</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.status")}
+                    </label>
+                    <select
+                      value={status}
+                      onChange={(e) =>
+                        setStatus(e.target.value as EngagementStatus)
+                      }
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    >
+                      <option value="Not Started">Not Started</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Pending Client">Pending Client</option>
+                      <option value="Under Review">Under Review</option>
+                      <option value="Cleared for Partner Review">
+                        Cleared for Partner Review
+                      </option>
+                      <option value="Completed">Completed</option>
+                      <option value="Archived">Archived</option>
+                    </select>
+                  </div>
                 </div>
+              )}
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                    {t("eng.framework")}
-                  </label>
-                  <select
-                    value={framework}
-                    onChange={(e) =>
-                      setFramework(e.target.value as AuditFramework)
-                    }
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  >
-                    <option value="ISA">ISA</option>
-                    <option value="IFRS_SMEs">IFRS for SMEs</option>
-                    <option value="IFRS">IFRS</option>
-                  </select>
+              {/* Step 2: Materiality & Scope */}
+              {wizardStep === 2 && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.overallMateriality")}
+                    </label>
+                    <input
+                      type="number"
+                      value={overallMateriality}
+                      onChange={(e) =>
+                        setOverallMateriality(Number(e.target.value))
+                      }
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.performanceMateriality")}
+                    </label>
+                    <input
+                      type="number"
+                      value={performanceMateriality}
+                      onChange={(e) =>
+                        setPerformanceMateriality(Number(e.target.value))
+                      }
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.trivialThreshold")}
+                    </label>
+                    <input
+                      type="number"
+                      value={trivialThreshold}
+                      onChange={(e) =>
+                        setTrivialThreshold(Number(e.target.value))
+                      }
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                  {t("eng.status")}
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) =>
-                    setStatus(e.target.value as EngagementStatus)
-                  }
-                  className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="Not Started">Not Started</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Pending Client">Pending Client</option>
-                  <option value="Under Review">Under Review</option>
-                  <option value="Cleared for Partner Review">
-                    Cleared for Partner Review
-                  </option>
-                  <option value="Completed">Completed</option>
-                  <option value="Archived">Archived</option>
-                </select>
-              </div>
+              {/* Step 3: Team Assignment */}
+              {wizardStep === 3 && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.partner")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="EP Name"
+                      value={teamPartner}
+                      onChange={(e) => setTeamPartner(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
 
-              <div className="mt-2 flex gap-2">
-                <button
-                  type="submit"
-                  className="dt-button-primary h-9 flex-1 text-xs"
-                >
-                  {t("eng.create")}
-                </button>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.manager")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="EM Name"
+                      value={teamManager}
+                      onChange={(e) => setTeamManager(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.senior")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Senior In-Charge"
+                      value={teamSenior}
+                      onChange={(e) => setTeamSenior(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.associate")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Associate Name"
+                      value={teamAssociate}
+                      onChange={(e) => setTeamAssociate(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                      {t("eng.eqReviewer")}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="EQ Reviewer Name"
+                      value={teamEqReviewer}
+                      onChange={(e) => setTeamEqReviewer(e.target.value)}
+                      className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Summary & Confirm */}
+              {wizardStep === 4 && (
+                <div className="flex flex-col gap-2 rounded-xl bg-slate-100/60 p-3 text-xs dark:bg-slate-800/40">
+                  <div className="grid grid-cols-2 gap-y-2 text-slate-600 dark:text-slate-300">
+                    <span className="font-semibold">
+                      {t("eng.clientName")}:
+                    </span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {clientName}
+                    </span>
+                    <span className="font-semibold">
+                      {t("eng.financialYear")}:
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {financialYear}
+                    </span>
+                    <span className="font-semibold">{t("eng.framework")}:</span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {getFrameworkLabel(framework)}
+                    </span>
+                    <span className="font-semibold">{t("eng.status")}:</span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {status}
+                    </span>
+
+                    <span className="col-span-2 my-1 border-t border-slate-200 dark:border-slate-700"></span>
+
+                    <span className="font-semibold">
+                      {t("eng.overallMateriality")}:
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {overallMateriality.toLocaleString()}
+                    </span>
+                    <span className="font-semibold">
+                      {t("eng.performanceMateriality")}:
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {performanceMateriality.toLocaleString()}
+                    </span>
+                    <span className="font-semibold">
+                      {t("eng.trivialThreshold")}:
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {trivialThreshold.toLocaleString()}
+                    </span>
+
+                    <span className="col-span-2 my-1 border-t border-slate-200 dark:border-slate-700"></span>
+
+                    <span className="font-semibold">{t("eng.partner")}:</span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {teamPartner || "-"}
+                    </span>
+                    <span className="font-semibold">{t("eng.manager")}:</span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {teamManager || "-"}
+                    </span>
+                    <span className="font-semibold">{t("eng.senior")}:</span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {teamSenior || "-"}
+                    </span>
+                    <span className="font-semibold">{t("eng.associate")}:</span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {teamAssociate || "-"}
+                    </span>
+                    <span className="font-semibold">
+                      {t("eng.eqReviewer")}:
+                    </span>
+                    <span className="truncate font-bold text-slate-900 dark:text-white">
+                      {teamEqReviewer || "-"}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Wizard Action Footer */}
+              <div className="mt-3 flex gap-2 border-t border-slate-200 pt-2 dark:border-slate-800">
+                {wizardStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setWizardStep(wizardStep - 1)}
+                    className="dt-button-secondary h-9 px-3 text-xs"
+                  >
+                    {t("eng.wizard.back")}
+                  </button>
+                )}
+
+                {wizardStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (wizardStep === 1 && !clientName.trim()) {
+                        pushToast({
+                          tone: "error",
+                          title: locale === "my-MM" ? "မှားယွင်းမှု" : "Error",
+                          description:
+                            locale === "my-MM"
+                              ? "ကလိုင်းယင့်အမည် ထည့်သွင်းပေးရန် လိုအပ်သည်"
+                              : "Client name is required",
+                        });
+                        return;
+                      }
+                      setWizardStep(wizardStep + 1);
+                    }}
+                    className="dt-button-primary h-9 flex-1 text-xs"
+                  >
+                    {t("eng.wizard.next")}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleCreate()}
+                    className="dt-button-primary h-9 flex-1 text-xs"
+                  >
+                    {t("eng.wizard.finish")}
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  onClick={() => setShowCreateForm(false)}
+                  onClick={() => {
+                    setClientName("");
+                    setWizardStep(1);
+                    setOverallMateriality(10000);
+                    setPerformanceMateriality(7500);
+                    setTrivialThreshold(500);
+                    setTeamPartner("");
+                    setTeamManager("");
+                    setTeamSenior("");
+                    setTeamAssociate("");
+                    setTeamEqReviewer("");
+                    setShowCreateForm(false);
+                  }}
                   className="dt-button-secondary h-9 text-xs"
                 >
                   {t("eng.cancel")}
                 </button>
               </div>
-            </form>
+            </div>
           )}
 
           {/* Engagement Cards List */}
           <div className="flex max-h-[400px] flex-col gap-2 overflow-y-auto pr-1">
             {engagements.map((rawEng) => {
+              const active = rawEng.id === activeEngagementId;
               const eng = {
                 ...rawEng,
                 progressPercentage: getEngagementProgress(
                   rawEng,
-                  documents,
-                  results,
+                  active ? documents : rawEng.documents || [],
+                  active ? results : rawEng.results || [],
                 ),
               };
-              const active = eng.id === activeEngagementId;
               return (
                 <div
                   key={eng.id}
@@ -455,13 +746,14 @@ export function EngagementManager() {
                   {/* Status Dropdown selector */}
                   <select
                     value={activeEngagement.status}
+                    disabled={activeEngagement.isLocked}
                     onChange={(e) =>
                       updateEngagementStatus(
                         activeEngagement.id,
                         e.target.value as EngagementStatus,
                       )
                     }
-                    className="h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                    className="h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
@@ -473,6 +765,38 @@ export function EngagementManager() {
                     <option value="Completed">Completed</option>
                     <option value="Archived">Archived</option>
                   </select>
+
+                  {/* Lock/Unlock Button (EP Control) */}
+                  <button
+                    onClick={() =>
+                      updateEngagementLock(
+                        activeEngagement.id,
+                        !activeEngagement.isLocked,
+                      )
+                    }
+                    className={`flex h-9 items-center gap-1.5 rounded-xl border px-3 text-xs font-bold transition-all ${
+                      activeEngagement.isLocked
+                        ? "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20"
+                    }`}
+                    title={
+                      activeEngagement.isLocked
+                        ? t("eng.unlock")
+                        : t("eng.lock")
+                    }
+                  >
+                    {activeEngagement.isLocked ? (
+                      <>
+                        <Lock className="h-3.5 w-3.5" />
+                        <span>{t("eng.locked")}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Unlock className="h-3.5 w-3.5" />
+                        <span>{t("eng.unlocked")}</span>
+                      </>
+                    )}
+                  </button>
 
                   <button
                     onClick={() =>
@@ -486,6 +810,58 @@ export function EngagementManager() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
+                </div>
+              </div>
+            </section>
+
+            {/* Planning & Materiality Section */}
+            <section className="dt-panel flex flex-col gap-2 p-4 sm:p-5">
+              <h4 className="text-xs font-black tracking-wider text-slate-800 uppercase dark:text-slate-200">
+                {locale === "my-MM"
+                  ? "စာရင်းစစ် အစီအစဉ်နှင့် အတိုင်းအတာ (Planning & Scope)"
+                  : "Planning & Scope"}
+              </h4>
+              <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">
+                    Framework
+                  </span>
+                  <span className="mt-1 block text-sm font-bold text-slate-900 dark:text-white">
+                    {getFrameworkLabel(activeEngagement.framework)}
+                  </span>
+                </div>
+                <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">
+                    {t("eng.overallMateriality")}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold text-sky-600 dark:text-sky-400">
+                    {activeEngagement.overallMateriality
+                      ? activeEngagement.overallMateriality.toLocaleString()
+                      : "10,000"}{" "}
+                    MMK
+                  </span>
+                </div>
+                <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">
+                    {t("eng.performanceMateriality")}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold text-indigo-600 dark:text-indigo-400">
+                    {activeEngagement.performanceMateriality
+                      ? activeEngagement.performanceMateriality.toLocaleString()
+                      : "7,500"}{" "}
+                    MMK
+                  </span>
+                </div>
+                <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">
+                    {t("eng.trivialThreshold")}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold text-amber-600 dark:text-amber-400">
+                    {activeEngagement.trivialThreshold
+                      ? activeEngagement.trivialThreshold.toLocaleString()
+                      : "500"}{" "}
+                    MMK
+                  </span>
                 </div>
               </div>
             </section>
@@ -708,12 +1084,13 @@ export function EngagementManager() {
                   </label>
                   <input
                     type="text"
+                    disabled={activeEngagement.isLocked}
                     value={activeEngagement.teamAssignments.partner}
                     onChange={(e) =>
                       handleTeamChange("partner", e.target.value)
                     }
                     placeholder="Partner Name"
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
 
@@ -724,12 +1101,13 @@ export function EngagementManager() {
                   </label>
                   <input
                     type="text"
+                    disabled={activeEngagement.isLocked}
                     value={activeEngagement.teamAssignments.manager}
                     onChange={(e) =>
                       handleTeamChange("manager", e.target.value)
                     }
                     placeholder="Manager Name"
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
 
@@ -740,10 +1118,11 @@ export function EngagementManager() {
                   </label>
                   <input
                     type="text"
+                    disabled={activeEngagement.isLocked}
                     value={activeEngagement.teamAssignments.senior}
                     onChange={(e) => handleTeamChange("senior", e.target.value)}
                     placeholder="Senior Name"
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
 
@@ -754,12 +1133,30 @@ export function EngagementManager() {
                   </label>
                   <input
                     type="text"
+                    disabled={activeEngagement.isLocked}
                     value={activeEngagement.teamAssignments.associate}
                     onChange={(e) =>
                       handleTeamChange("associate", e.target.value)
                     }
                     placeholder="Associate Name"
-                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="flex items-center gap-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                    <User className="h-3 w-3 text-sky-600" />{" "}
+                    {t("eng.eqReviewer")}
+                  </label>
+                  <input
+                    type="text"
+                    disabled={activeEngagement.isLocked}
+                    value={activeEngagement.teamAssignments.eqReviewer || ""}
+                    onChange={(e) =>
+                      handleTeamChange("eqReviewer", e.target.value)
+                    }
+                    placeholder="EQ Reviewer Name"
+                    className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   />
                 </div>
               </div>

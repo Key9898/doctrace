@@ -79,11 +79,23 @@ interface AppState {
     financialYear: string,
     framework: AuditFramework,
     status: EngagementStatus,
+    overallMateriality: number,
+    performanceMateriality: number,
+    trivialThreshold: number,
+    teamAssignments: EngagementTeam,
   ) => void;
   selectEngagement: (id: string | null) => void;
   updateEngagementStatus: (id: string, status: EngagementStatus) => void;
   updateEngagementTeam: (id: string, team: Partial<EngagementTeam>) => void;
+  updateEngagementMateriality: (
+    id: string,
+    overall: number,
+    performance: number,
+    trivial: number,
+  ) => void;
+  updateEngagementLock: (id: string, isLocked: boolean) => void;
   deleteEngagement: (id: string) => void;
+  mergeResult: (result: MatchResult) => void;
 }
 
 const defaultConfig: MatchConfig = {
@@ -144,7 +156,11 @@ const defaultEngagements: Engagement[] = [
       manager: "Daw Aye Aye",
       senior: "Ko Thura",
       associate: "Ma Thiri",
+      eqReviewer: "Daw Ni Ni",
     },
+    overallMateriality: 10000,
+    performanceMateriality: 7500,
+    trivialThreshold: 500,
   },
   {
     id: "eng_sample_2",
@@ -159,7 +175,11 @@ const defaultEngagements: Engagement[] = [
       manager: "Daw Aye Aye",
       senior: "Ko Nay Win",
       associate: "Maung Min Min",
+      eqReviewer: "Daw Ni Ni",
     },
+    overallMateriality: 5000,
+    performanceMateriality: 3750,
+    trivialThreshold: 250,
   },
   {
     id: "eng_sample_3",
@@ -174,7 +194,11 @@ const defaultEngagements: Engagement[] = [
       manager: "Daw Than Than",
       senior: "Ko Thura",
       associate: "Ma Sandar",
+      eqReviewer: "Ko Aung Gyi",
     },
+    overallMateriality: 12000,
+    performanceMateriality: 9000,
+    trivialThreshold: 600,
   },
 ];
 
@@ -226,9 +250,16 @@ function resolveInitialActiveEngagement(): string | null {
 function saveEngagementsToStorage(engagements: Engagement[]) {
   if (typeof window === "undefined") return;
   try {
+    const serialized = engagements.map((eng) => ({
+      ...eng,
+      documents: eng.documents?.map((doc) => ({
+        ...doc,
+        objectUrl: "", // Do not persist transient blob URLs to localStorage
+      })),
+    }));
     window.localStorage.setItem(
       ENGAGEMENTS_STORAGE_KEY,
-      JSON.stringify(engagements),
+      JSON.stringify(serialized),
     );
   } catch (err) {
     console.error("Error saving engagements:", err);
@@ -377,6 +408,20 @@ export const useDocTraceStore = create<AppState>((set) => ({
       saveEngagementsToStorage(nextEngagements);
       return { results, engagements: nextEngagements };
     }),
+  mergeResult: (result) =>
+    set((state) => {
+      const results = [
+        ...state.results.filter(
+          (entry) => entry.rowNumber !== result.rowNumber,
+        ),
+        result,
+      ].sort((left, right) => left.rowNumber - right.rowNumber);
+      const nextEngagements = state.engagements.map((eng) =>
+        eng.id === state.activeEngagementId ? { ...eng, results } : eng,
+      );
+      saveEngagementsToStorage(nextEngagements);
+      return { results, engagements: nextEngagements };
+    }),
   setViewer: (viewer) =>
     set((state) => ({
       viewer: {
@@ -454,7 +499,16 @@ export const useDocTraceStore = create<AppState>((set) => ({
       }
       return { devMode: next };
     }),
-  createEngagement: (clientName, financialYear, framework, status) =>
+  createEngagement: (
+    clientName,
+    financialYear,
+    framework,
+    status,
+    overallMateriality,
+    performanceMateriality,
+    trivialThreshold,
+    teamAssignments,
+  ) =>
     set((state) => {
       const newEngagement: Engagement = {
         id: createId("eng"),
@@ -464,12 +518,11 @@ export const useDocTraceStore = create<AppState>((set) => ({
         status,
         createdAt: new Date().toISOString(),
         progressPercentage: 0,
-        teamAssignments: {
-          partner: "",
-          manager: "",
-          senior: "",
-          associate: "",
-        },
+        teamAssignments,
+        overallMateriality,
+        performanceMateriality,
+        trivialThreshold,
+        isLocked: false,
       };
       const nextEngagements = [...state.engagements, newEngagement];
       saveEngagementsToStorage(nextEngagements);
@@ -477,6 +530,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
       return {
         engagements: nextEngagements,
         activeEngagementId: newEngagement.id,
+        documents: [],
+        results: [],
       };
     }),
   selectEngagement: (activeEngagementId) => {
@@ -500,6 +555,29 @@ export const useDocTraceStore = create<AppState>((set) => ({
         else if (eng.progressPercentage === 100) progress = 68; // reset from completed if changed status
         return { ...eng, status, progressPercentage: progress };
       });
+      saveEngagementsToStorage(nextEngagements);
+      return { engagements: nextEngagements };
+    }),
+  updateEngagementMateriality: (id, overall, performance, trivial) =>
+    set((state) => {
+      const nextEngagements = state.engagements.map((eng) =>
+        eng.id === id
+          ? {
+              ...eng,
+              overallMateriality: overall,
+              performanceMateriality: performance,
+              trivialThreshold: trivial,
+            }
+          : eng,
+      );
+      saveEngagementsToStorage(nextEngagements);
+      return { engagements: nextEngagements };
+    }),
+  updateEngagementLock: (id, isLocked) =>
+    set((state) => {
+      const nextEngagements = state.engagements.map((eng) =>
+        eng.id === id ? { ...eng, isLocked } : eng,
+      );
       saveEngagementsToStorage(nextEngagements);
       return { engagements: nextEngagements };
     }),

@@ -8,6 +8,7 @@ import {
   hydrateOutputColumnMap,
   suggestInitialConfig,
   validateOutputMapping,
+  matchSingleRow,
 } from "@/services/matching/matching.service";
 import { runDocumentMatchingInWorker } from "@/services/matching/matching-worker.service";
 import {
@@ -16,6 +17,8 @@ import {
   clearMatchResults,
   writeMatchResults,
   writeSnipToCell,
+  getCurrentSelectionRowNumber,
+  writeSingleRowMatchResult,
 } from "@/services/office/excel.service";
 import {
   loadWorkbookTemplates,
@@ -101,6 +104,7 @@ export function useDocTraceController() {
   const state = useDocTraceStore();
   const stateRef = useRef(state);
   stateRef.current = state;
+  const excelRestoredDocIds = useRef<Set<string>>(new Set());
 
   const recordActivity = useCallback(
     (
@@ -291,7 +295,7 @@ export function useDocTraceController() {
 
           importedCount += 1;
 
-          if (parsed.sourceKind !== "json" && !state.officeAvailable) {
+          if (parsed.sourceKind !== "json") {
             const buffer = await file.arrayBuffer();
             await persistBlob(parsed.id, buffer, file.type || parsed.mimeType);
           }
@@ -563,6 +567,193 @@ export function useDocTraceController() {
       );
     } finally {
       state.setBusyMessage(undefined);
+    }
+  };
+
+  const runMatchForSpecificRow = async (rowNumber: number) => {
+    if (!state.selection) {
+      state.pushToast({
+        tone: "error",
+        title: "No sample selected",
+        description: "Capture the Excel sample range before matching.",
+      });
+      return;
+    }
+
+    if (!state.documents.length) {
+      state.pushToast({
+        tone: "error",
+        title: "No evidence imported",
+        description: "Import invoices and bank statements before matching.",
+      });
+      return;
+    }
+
+    if (!state.config.outputFields.length) {
+      state.pushToast({
+        tone: "error",
+        title: "No output fields selected",
+        description: "Choose at least one output field before matching.",
+      });
+      return;
+    }
+
+    const outputMappingCheck = validateOutputMapping(
+      state.selection,
+      state.config,
+    );
+
+    if (outputMappingCheck.missingFields.length) {
+      state.pushToast({
+        tone: "error",
+        title: "Output mapping incomplete",
+        description: "Every enabled output field needs a target Excel column.",
+      });
+      return;
+    }
+
+    if (outputMappingCheck.duplicateColumns.length) {
+      state.pushToast({
+        tone: "error",
+        title: "Output columns are duplicated",
+        description:
+          "Each enabled output field must write to a different Excel column.",
+      });
+      return;
+    }
+
+    const targetRow = state.selection.rows.find(
+      (r) => r.rowNumber === rowNumber,
+    );
+    if (!targetRow) {
+      state.pushToast({
+        tone: "error",
+        title: "Row not found",
+        description: `Row ${rowNumber} is outside the captured selection range.`,
+      });
+      return;
+    }
+
+    state.setBusyMessage(`Matching Row ${rowNumber}`);
+    recordActivity(
+      "info",
+      "Running single-row match",
+      `Row ${rowNumber} from ${state.selection.sheetName}.`,
+    );
+
+    try {
+      const invoiceDocuments = state.documents.filter(
+        (document) =>
+          document.kind === "invoice" && document.status === "parsed",
+      );
+      const bankDocuments = state.documents.filter(
+        (document) =>
+          document.kind === "bank-statement" && document.status === "parsed",
+      );
+
+      const result = matchSingleRow(
+        targetRow,
+        invoiceDocuments,
+        bankDocuments,
+        state.config,
+      );
+
+      state.mergeResult(result);
+
+      if (state.officeAvailable) {
+        await writeSingleRowMatchResult(state.selection, result, {
+          ...state.config,
+          outputColumnMap: outputMappingCheck.hydratedMap,
+        });
+        await appendAuditLog([
+          {
+            timestamp: new Date().toISOString(),
+            rowNumber: result.rowNumber,
+            status: result.status,
+            confidence: result.confidence,
+            invoiceFile: result.invoiceMatch?.fileName,
+            bankFile: result.bankMatch?.fileName,
+            explanation: result.explanation,
+          },
+        ]);
+      }
+
+      state.pushToast({
+        tone: "success",
+        title: `Row ${rowNumber} matched`,
+        description: `Row ${rowNumber} matched successfully (${result.confidence}% confidence).`,
+      });
+      recordActivity(
+        "success",
+        `Row ${rowNumber} matched`,
+        `Status: ${result.status}, Confidence: ${result.confidence}%.`,
+      );
+    } catch (error) {
+      state.pushToast({
+        tone: "error",
+        title: `Row ${rowNumber} match failed`,
+        description: resolveErrorMessage(
+          error,
+          "The matching run did not complete.",
+        ),
+      });
+      recordActivity(
+        "error",
+        `Row ${rowNumber} match failed`,
+        resolveErrorMessage(error, "The matching run did not complete."),
+      );
+    } finally {
+      state.setBusyMessage(undefined);
+    }
+  };
+
+  const runMatchForActiveRow = async () => {
+    if (!state.officeAvailable) {
+      state.pushToast({
+        tone: "error",
+        title: "Excel connection required",
+        description: "Active row matching is only available inside Excel.",
+      });
+      return;
+    }
+
+    if (!state.selection) {
+      state.pushToast({
+        tone: "error",
+        title: "No sample selected",
+        description: "Capture the Excel sample range before matching.",
+      });
+      return;
+    }
+
+    try {
+      const activeRowNumber = await getCurrentSelectionRowNumber();
+      if (!activeRowNumber) {
+        throw new Error("Could not read current selection row index.");
+      }
+
+      const minRow = state.selection.firstDataRowNumber;
+      const maxRow = minRow + state.selection.rowCount - 1;
+
+      if (activeRowNumber < minRow || activeRowNumber > maxRow) {
+        state.pushToast({
+          tone: "error",
+          title: "Selection out of bounds",
+          description: `Place your Excel cursor inside the captured range (Rows ${minRow} - ${maxRow}).`,
+        });
+        return;
+      }
+
+      await runMatchForSpecificRow(activeRowNumber);
+    } catch (error) {
+      state.pushToast({
+        tone: "error",
+        title: "Could not match active row",
+        description: resolveErrorMessage(
+          error,
+          "Failed to resolve Excel cursor row.",
+        ),
+      });
     }
   };
 
@@ -1059,6 +1250,55 @@ export function useDocTraceController() {
     state.viewer,
   ]);
 
+  // Excel-mode document URL restoration from IndexedDB on startup or engagement switch.
+  const { officeAvailable, documents, setDocuments } = state;
+  useEffect(() => {
+    if (!officeAvailable) return;
+
+    let active = true;
+
+    const restoreUrls = async () => {
+      const unresolved = documents.filter(
+        (doc) =>
+          doc.sourceKind !== "json" &&
+          !doc.objectUrl &&
+          !excelRestoredDocIds.current.has(doc.id),
+      );
+
+      if (unresolved.length === 0) return;
+
+      // Mark them as processed immediately to prevent duplicate concurrent restoration tasks
+      unresolved.forEach((doc) => excelRestoredDocIds.current.add(doc.id));
+
+      const restored = await Promise.all(
+        documents.map(async (doc) => {
+          if (doc.sourceKind === "json" || doc.objectUrl) {
+            return doc;
+          }
+
+          const stored = await loadBlob(doc.id);
+          if (stored) {
+            const blob = new Blob([stored.data], { type: stored.mimeType });
+            return { ...doc, objectUrl: URL.createObjectURL(blob) };
+          }
+          // If loadBlob failed, clear objectUrl to "" but since its ID is now
+          // in excelRestoredDocIds, it won't be queried again.
+          return { ...doc, objectUrl: "" };
+        }),
+      );
+
+      if (active) {
+        setDocuments(restored);
+      }
+    };
+
+    void restoreUrls();
+
+    return () => {
+      active = false;
+    };
+  }, [officeAvailable, documents, setDocuments]);
+
   return {
     ...state,
     actions: {
@@ -1068,6 +1308,8 @@ export function useDocTraceController() {
       importPickedDocuments,
       removeDocument,
       runMatching,
+      runMatchForSpecificRow,
+      runMatchForActiveRow,
       clearResults,
       saveTemplate,
       loadTemplate,

@@ -1,14 +1,40 @@
 # Last Session Summary
 
-- **Latest session (All Today's Fixes)**: Restored Excel cell gridlines, resolved bank reference matching exceptions, and verified invoice column population:
-  - **Excel Gridlines Restoration ([excel.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/office/excel.service.ts))**: Set EdgeTop, EdgeBottom, EdgeLeft, EdgeRight, InsideHorizontal, and InsideVertical borders to light gray (`#D1D5DB`) on output cell ranges. This restores visible gridlines inside filled table cells in Excel.
-  - **Matching Exception Reference Fallback ([matching.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/matching/matching.service.ts))**: Added a fallback matching check inside `scoreBankEntries` to search for the ledger row's invoice number inside the raw bank statement line text (`entry.rawLine`) if the primary reference parser extracted a different code. This successfully resolved the 0% confidence exceptions for Row 6 (`TAX-2026-05`) and Row 7 (`REC-GOL-02`), achieving 100% match confidence across all 16 rows.
-  - **PDF Text Layer Line-Splitting Bugfix ([pdf.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/documents/pdf.service.ts))**: Tracked changes in vertical translation coordinates (`translateY` or `item.transform[5]`) for text content items during PDF.js parsing, injecting newline characters (`\n`) to reconstruct original lines instead of flattening pages.
-  - **Reference/Invoice Identifier Collisions Fix ([parsing.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/utils/parsing.ts))**: Excluded dates, short year-like numbers, and form headers (such as "Bill", "To", "Consignee", "Date", etc.) from being parsed as fallback reference numbers, ensuring correct invoice matches.
-  - **Clear Match Action & UI Button ([ResultsPanel.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/ResultsPanel/ResultsPanel.tsx) & [useDocTraceController.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/useDocTraceController.ts))**: Added a "Clear match" button next to "Export CSV" that resets the matched results state in memory and uses `bodyRange.clear()` / `headerRange.clear()` to wipe output columns and styling in the active Excel worksheet.
-  - **Quality Assurance & Verification**: Confirmed that `npm run test` (64/64 tests passing), ESLint, typechecking, and production build compiles cleanly via `npm run validate`. Verified using a custom Excel test runner script that all 16 rows match with 100% confidence.
+- **Latest Session (All Today's Fixes & Enhancements)**: Implemented surgical Row-by-Row matching, resolved the persistent Excel PDF loading exception, cleaned up Step 1 Selection Panel layout, and integrated full materiality assessment and locking controls:
+  - **PDF Document Loading & URL Restoration Fix ([useDocTraceController.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/useDocTraceController.ts) & [app-store.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/state/app-store.ts))**:
+    1. Removed the `!state.officeAvailable` guard inside `importDocumentFiles` so that PDF/image blobs are always persisted to IndexedDB regardless of Excel/browser mode.
+    2. Modified `saveEngagementsToStorage` inside `app-store.ts` to clear `objectUrl` properties before serialization to `localStorage` (setting them to `""`), preventing stale session-specific blob URLs from being persisted.
+    3. Added a startup/load `useEffect` hook in Excel mode that checks for any documents missing an active `objectUrl`, fetches their binary buffer from IndexedDB, and creates a fresh, valid `objectUrl` in the current session.
+    4. Utilized a React `useRef` (`excelRestoredDocIds`) to track processed document IDs and prevent infinite store update loops.
+    5. Cleaned up ESLint React hook warning by destructuring `officeAvailable`, `documents`, and `setDocuments` from state.
 
-- **Previous session (Excel Add-in Stability)**: Resolved critical Excel Add-in layout, scroll, click, and runtime issues to achieve 100% functional stability:
+  - **Row-by-Row & Active Cursor Matching ([matching.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/matching/matching.service.ts), [excel.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/office/excel.service.ts), & [app-store.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/state/app-store.ts))**:
+    1. Extracted matching rules into `matchSingleRow(...)` so that both bulk and single-row matching execute the identical algorithm.
+    2. Created `writeSingleRowMatchResult(...)` to write outputs and light gray borders (`#D1D5DB`) only to the targeted Excel row index, preserving gridlines.
+    3. Created `mergeResult(...)` inside Zustand store `app-store.ts` to merge/insert single row updates into the state.
+    4. Added `runMatchForActiveRow()` to resolve the active cursor index using `getCurrentSelectionRowNumber()` and match only that row.
+    5. Integrated `"Match active row"` button inside `MatchConfigPanel` footer (visible but disabled when no selection is present).
+    6. Removed the "Action" column from Step 1 SelectionPanel table and App.tsx, keeping the "Re-match" button inside ResultsPanel results cards.
+
+  - **Locking & Materiality Assessment Features ([ResultsPanel.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/ResultsPanel/ResultsPanel.tsx), [App.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/App.tsx), [SelectionPanel.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/SelectionPanel/SelectionPanel.tsx), [MatchConfigPanel.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/MatchConfigPanel/MatchConfigPanel.tsx), [translations.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/i18n/translations.ts))**:
+    1. Added `isLocked` prop to SelectionPanel, MatchConfigPanel, ResultsPanel, and App.tsx to freeze actions (disabling selection capture, header toggle, config mappings, clearing matches, and rematching).
+    2. Added default materiality values (`overallMateriality`, `performanceMateriality`, `trivialThreshold`) to mock engagements.
+    3. Calculated matched discrepancy amounts and checked them against materiality thresholds inside results cards.
+    4. Displayed materiality info boxes at the top of ResultsPanel showing the Overall, Performance, and Trivial limits.
+    5. Rendered materiality assessment badges (Clearly Trivial, Below Performance, Material Exception, Above Overall) inside Results cards.
+    6. Added translations for materiality terms in English and Burmese in `translations.ts`.
+
+  - **Excel Gridlines Restoration ([excel.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/office/excel.service.ts))**: Set EdgeTop, EdgeBottom, EdgeLeft, EdgeRight, InsideHorizontal, and InsideVertical borders to light gray (`#D1D5DB`) on output ranges so gridlines stay visible under the colored background fill.
+
+  - **Matching Exception Reference Fallback ([matching.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/matching/matching.service.ts))**: Added a fallback check to verify if the row's invoice number is contained anywhere inside the raw bank statement line text (`entry.rawLine`), bringing the match confidence of Row 6 (`TAX-2026-05`) and Row 7 (`REC-GOL-02`) to 100% and eliminating exceptions.
+
+  - **PDF Text Layer Line-Splitting & Identifier Collisions Fix ([pdf.service.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/services/documents/pdf.service.ts) & [parsing.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/utils/parsing.ts))**: Preserved Y-coordinate newline breaks during PDF parsing and excluded dates, short years, and common form headers from invoice identifiers.
+
+  - **Quality Assurance & Verification**: Added a dedicated `matchSingleRow` unit test in `matching.service.test.ts` (suite now stands at 65 passing tests) and ensured all lints, formatting, manifests, and production builds compile successfully via `npm run validate`.
+
+---
+
+- **Previous Session (Excel Add-in Stability)**: Resolved critical Excel Add-in layout, scroll, click, and runtime issues to achieve 100% functional stability:
   - **Natural Viewport Scrolling Fix ([styles.css](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/styles.css))**: Solved the WebView2 repaint freeze and hit-testing misalignment by adopting natural document scrolling. Set `height: auto !important`, `min-height: 100% !important`, and `overflow: visible !important` on `body` and `#root`, allowing WebView2 to paint the entire document height smoothly and align cursor coordinates perfectly for click events.
   - **Zustand Infinite Loop Resolution ([useDocTraceController.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/useDocTraceController.ts))**: Resolved a CPU-blocking infinite rendering loop where template loading depended on the entire store `state` object and updated it via `setTemplates`. Saturated 100% of the CPU thread, freezing all buttons and scroll repaints without throwing console errors. Removed `state` from the useEffect dependency array, relying only on stable booleans `officeAvailable`/`officeReady`, and updated the store using `useDocTraceStore.getState()`.
   - **React 19 Compatibility ([useDocTraceController.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/useDocTraceController.ts) & [useWorkbookSelectionSync.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/hooks/useWorkbookSelectionSync.ts))**: Removed the experimental `useEffectEvent` API (which is not exported in stable React 19) to prevent a silent TypeError that crashed the React event loop inside Excel. Replaced it with stable `useRef` + `useCallback` patterns.
@@ -17,146 +43,3 @@
   - **Environment Distinction Badge ([AppShell.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/AppShell/AppShell.tsx))**: Added a dynamic environment badge (`DEV` in Amber for localhost, `PROD` in Emerald for Vercel) next to the status header to clarify active manifest connections.
   - **Excel Click Clipping Overrides ([styles.css](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/styles.css))**: Overrode panel and hero overflows to `visible !important` inside `.dt-excel-host` to prevent clipped GPU-composited layers from trapping clicks.
   - **Vite Port Conflict Resolution**: Stopped the port-blocking background process on port 3000 to ensure fresh code compilation is served instead of stale cached assets.
-
-- **Previous session**: Built and polished the **Engagement Management & Project Dashboard (Step 3)** module to support a robust, local-first multi-client auditing workflow:
-  - **Project Scoped Workspaces**: Scoped `documents` and `results` store states to each active engagement. Switching between projects now dynamically saves, loads, and resets their respective loaded files and matching configurations, persisting them locally in `LocalStorage`.
-  - **Dynamic Workspace Sync**: Fully linked the dashboard stats (Workpapers Done, Review Notes, PBC Requests) and progress percentage to the live workspace state (documents count and results), implementing 3 realistic storytelling lifecycle phases:
-    1. _Planning Phase (0 files loaded)_: Displays `1 / 6` completed workpaper (Planning done), baseline planning review notes (`Open: 1, Responded: 0, Closed: 3`), and waiting for client files (`Pending: 4`).
-    2. _Setup Phase (files loaded)_: Increments workpapers to `2 / 6`, displays Cash & Bank review notes (`Open: 3, Responded: 1, Closed: 6`), and updates PBC files to `Uploaded: 2`.
-    3. _Execution Phase (matching complete)_: Increments workpapers to `4 / 6` (matching done), resolves review notes (`Open: 1, Responded: 2, Closed: 10`), and shifts files to `Approved: 2`.
-  - **Custom Delete Confirmation Modal**: Replaced native browser `confirm()` with a custom React glassmorphism modal overlay, bypassing Excel's WebView2 sandbox policy that blocks native dialogs and resolving the engagement deletion bug.
-  - **Input Text Visibility Fix**: Corrected an invalid Tailwind color class (`dark:bg-slate-850` -> `dark:bg-slate-800`) and added explicit `text-slate-900` to wizard inputs/selects, resolving the bug where typed text was white-on-white (invisible) until selected in dark mode.
-  - **State Tab Persistence**: Saved `activeModule` to LocalStorage (`doctrace.active_module`) so page reloads maintain the user's active navigation tab context.
-  - **Professional Localization**: Changed kicker brand labels from `EZAAI Modules` to `DocTrace Modules`, renamed the tab to `Project Dashboard`, and fully localized Burmese navigation tabs to clean auditing terms (`🛠️ စာရင်းတိုက်ဆိုင်စစ်ဆေးရေး` and `📊 စာရင်းစစ်လုပ်ငန်း စီမံခန့်ခွဲမှု`).
-  - **Quality Assurance**: Verified all unit tests (64/64 passing), TypeScript typecheck (`tsc --noEmit`), and production compilation (`vite build`) succeed without warnings or errors.
-
-- **Previous session**: Completely fixed and polished the **Data Snipping workflow** across all supported file types (PDF, Image, and JSON) to achieve 100% correct, interactive, and smooth performance:
-  - **WebView2 Event Bridge Refinement**: Fixed the double-click/toggle-off bug for switcher and toggle buttons inside the Excel Task Pane (WebView2) by ensuring native trusted click events cancel the scheduled synthetic fallback click.
-  - **Image Drag-to-Draw Custom Bounding Box**: Refactored `ImageSnipLayer` to support pointer event capture dragging, drawing a dynamic dashed preview box, and falling back to a default centered box on click.
-  - **Asynchronous OCR Text Extraction**: Integrated asynchronous OCR in `addSnip` for manual regions on images, cropping the selected area and running local Tesseract OCR to automatically replace coordinates with actual text.
-  - **React Hook Stale Closure Resolution**: Solved a state synchronization bug where newly captured snips disappeared from the queue during async OCR by directly using Zustand's `useDocTraceStore.getState()` instead of stale closed-over variables.
-  - **Interactive JSON Snipping**: Completely overhauled the JSON evidence viewer by splitting raw JSON into interactive line-by-line blocks. Added hover highlights, cursor crosshairs, and a line click handler to easily capture individual lines as snips.
-  - **Custom JSON Text Selection**: Implemented an `onMouseUp` listener to capture custom highlighted text selections inside the JSON viewer and auto-bypass line clicks when text is selected.
-  - **Visual Highlights & Auto-Scroll Viewport Focus**: Added color-coded highlight indicators for captured JSON lines (Emerald) and the active snip (Amber). Wired auto-scroll logic so that clicking "View" on any snip card in the review queue:
-    1. Smoothly scrolls the main outer panel viewport back to the top of the Document Viewer (`#step-viewer`).
-    2. Smoothly scrolls the inner document canvas or line container to center the active highlighted element (`bg-amber-500/25` or `fill-amber-400/25`).
-  - **Validation & Compilation**: Ensured 100% Quality Assurance (QA) pass. Verified that TypeScript type-checking (`tsc --noEmit`), unit tests (`59/59 passing`), and optimized production compilation (`vite build`) all succeed without error.
-  - **Segmented Language Switcher Toggle**: Replaced the native select dropdown in `AppShell.tsx` with a custom Segmented Toggle Pill switcher (`မြန်မာ` / `EN`) to support 1-click language switching, better visual feedback with tactile glassmorphic card highlights, and a clean, responsive layout suited for narrow task panes.
-- Latest session: Fixed Excel Task Pane button/input click interactions not responding inside WebView2 on Windows Desktop.
-- Root cause: `backdrop-filter` and `transition-all` create GPU-composited layers in WebView2 that silently swallow pointer/click events while still allowing scroll.
-- Applied `dt-excel-host` CSS class to `<html>` IMMEDIATELY when Office.js is present (synchronous, before any async detection). CSS overrides: disable all `backdrop-filter`, replace `transition-all` with safe `transition-colors`, kill GPU-promoting transforms, force `pointer-events: auto` on all interactive elements, remove stacking context traps (`isolation`, `contain`).
-- Installed `installNativeClickBridge()` in `main.tsx` — a document-level `pointerdown`/`pointerup` listener that synthetically dispatches `click` events to the correct target element when WebView2 swallows native clicks. Includes tap detection (< 600ms, < 10px movement) to avoid interfering with scrolling.
-- Added `touch-action: manipulation` to root elements to prevent WebView2 click-delay.
-- Replaced `overflow: hidden` with `overflow: clip` on `.dt-hero` and `.dt-panel`.
-- Replaced experimental `useEffectEvent` with stable `useCallback` + `useRef` for `runQuickAction` in `App.tsx`.
-- Removed redundant `onTouchEnd` handlers from Quick Actions buttons.
-- `ToastViewport` returns `null` when no toasts visible (eliminates phantom overlay).
-- Added `data-doctrace-action` debug attributes to `SelectionPanel` and `MatchConfigPanel` buttons.
-- Validation: TypeScript check passed, 59/59 unit tests passed, production build succeeded.
-- Latest session: Added `manifest.production.xml` for the Vercel domain `https://doctrace-one.vercel.app/` and added `npm.cmd run validate:manifest:prod` so local and production manifests can be validated separately.
-- Added Myanmar-first internationalization foundations with centralized locale config, task-pane language switching, locale-aware formatters, and Myanmar+English OCR preference with English fallback.
-- Upgraded Step 4 results review with deferred, batch-loaded result cards rendered through `VirtualList` so 1000+ row review workflows remain usable in the Excel task pane.
-- Promoted the build marker to `prod-2026-04-30-b`.
-- Latest session: Deep-scanned the Viewer/Snip workflow and upgraded it from a single last-snip interaction into a standard multi-snip review queue.
-- Added duplicate snip prevention, active snip focus/highlighting, and clear snip source labels for PDF text, manual regions, and extracted snippets.
-- Added new snip capture scenarios: PDF text-layer snips, PDF blank-region manual snips, image-region snips, and extracted-snippet snips from the viewer's relevant snippets list.
-- Redesigned `SnipPanel` with captured/linked/open counters, clearer link state, grouped Excel cell links, and explicit View/Link/Remove actions.
-- Persisted snips, snip links, and viewer focus in Browser Preview state so refreshes keep the review queue intact.
-- Stabilized Prettier scripts by replacing `prettier --write .` / `prettier --check .` with explicit file globs.
-- Added snip utility tests for manual bounding boxes and duplicate detection, bringing the suite to 57 passing tests.
-- Latest session: Aligned the project plan and rules with the current lightweight animation strategy: `framer-motion` remains out of the Excel task pane bundle, and native Tailwind/CSS animation is now the documented standard for Windows, Mac, and Web.
-- Added XML-aware formatting for `manifest.xml` with `@prettier/plugin-xml`, a `.prettierignore`, and a `format:check` gate in `npm.cmd run validate`.
-- Wired matching through `runDocumentMatchingInWorker(...)` so the main match flow uses a Web Worker when available and safely falls back to main-thread matching when a host blocks workers.
-- Added a 1000-row matching smoke test to validate the large-workbook fallback path and progress reporting.
-- Fully wired PDF text-layer snipping into the task pane viewer through a lazy-loaded `PdfTextLayer` overlay backed by `readPdfTextLayerItems(...)`.
-- Verified and hardened the PDF/image blob restore fix: raw file blobs are stored in IndexedDB before import completion, restored documents rebuild fresh object URLs, and removed/reset documents clean up blob entries.
-- Reworked task-pane width rules from fixed viewport sizing to host-width sizing so Browser Preview and Excel WebView hosts can resize more predictably.
-- Restored production-facing ribbon labels to `DocTrace` / `Open DocTrace`, bumped the manifest to `1.0.0.3`, and promoted the build marker to `prod-2026-04-29-a`.
-- Confirmed the local dev recovery path: `ERR_CONNECTION_REFUSED` means the Vite dev server is not running or did not start cleanly; after certificate verification and `npm.cmd run dev`, `https://127.0.0.1:3000/` responds.
-- Validation completed: `npm.cmd run format`, `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run test`, `npm.cmd run build`, `npm.cmd run validate:manifest`, `npm.cmd run format:check`, and `npm.cmd audit --omit=dev`.
-- Browser Preview is the current showcase path while Excel live smoke testing is blocked by the local Microsoft license state; keep Excel Diagnostics in-app until a licensed Excel host can be tested again.
-- Latest session: Optimized performance by removing the unused `framer-motion` dependency to reduce bundle size for the Excel sidebar. Achieved 100% Quality Assurance (QA) PASS with zero ESLint errors and consistent Prettier formatting. Implemented "Final Polish" enhancements, including an overhaul of the AppShell with a glassy BrandMark and responsive stats grid, and a complete revamp of the Toast system with Dark Mode support and visual progress bars.
-- Synchronized global vertical gaps across the entire taskpane (44px visual gap between sections) and unified panel padding (py-4) to fix inconsistent white space throughout the application in `styles.css`.
-- Enhanced all interactive elements with tactile feedback (scaling, hover translations, and refined shadow transitions) for a premium "Pro" software experience.
-- Overhauled "Workflow Section" and "Project Status" (Current Shape) sections with premium glassmorphism, professional step markers, and brand-colored icons (Sky/Emerald) in `WorkflowStepper.tsx` and `App.tsx`.
-- Overhauled "Viewer Pane" with a premium document preview container (deep dark background, 2.5rem corners), glassy metadata cards with icon-driven headers (Sparkles/FileText), and a professional icon-driven empty state in `ViewerPane.tsx`.
-- Overhauled "Templates Section" with premium glassmorphism, fixing non-standard Dark Mode backgrounds (replaced solid gray with glassy cards) and upgrading inputs in `TemplateLibraryPanel.tsx`.
-- Overhauled "Step 4: Results Panel" with color-coded confidence scores, professional evidence inspection cards (Sky/Emerald themes), and a refined information hierarchy in `ResultsPanel.tsx`.
-- Upgraded "Step 3: Match Configuration" with a full custom checkbox system, icon-driven section headers, glassmorphism containers, and a redesigned action footer with a glowing status indicator in `MatchConfigPanel.tsx`.
-- Overhauled "Step 2: Document Library" with premium aesthetics and glassmorphism, fixing non-standard Dark Mode backgrounds and restacking upload cards vertically in `DocumentLibraryPanel.tsx`.
-- Upgraded the "Step 1: Selection Panel" with a custom-styled checkbox system, refined header card contrast, and a professional icon-driven empty state in `SelectionPanel.tsx`.
-- Overhauled the Excel Diagnostics panel with premium aesthetics, fixing non-standard background colors in Dark Mode and grouping metrics into logical, icon-driven sections in `DiagnosticsPanel.tsx`.
-- Enhanced the "Live Activity" empty state with a professional layout and icon-driven hierarchy in `ActivityPanel.tsx`.
-- Standardized layout spacing across the task pane and improved visual depth for stats boxes using refined shadows and borders in `AppShell.tsx` and `styles.css`.
-- Fixed the theme toggle double-click issue in `ThemeToggle.tsx` by ensuring every click results in an immediate visual theme change and skipping the redundant "system" state.
-- Forced class-based Dark Mode strategy in Tailwind CSS for more reliable theme switching.
-- Updated the latest host verification marker to `dev-2026-04-26-a`.
-- Previous session: rotated the local development manifest ID, bumped the manifest version to `1.0.0.2`, and promoted the Excel verification marker to `dev-2026-04-25-b` so Excel can be forced to load a fresh DocTrace sideload identity.
-- Temporarily labeled the local verification ribbon command as `Open DocTrace B` to distinguish the fresh sideload from any stale `Open DocTrace` button still cached by Excel.
-- Added an in-task-pane Excel diagnostics smoke-test panel and promoted the verification marker to `dev-2026-04-25-c` so width, click, and `Excel.run` behavior can be verified directly inside the Excel sidebar.
-- Promoted the diagnostics marker to `dev-2026-04-25-d` and moved click/`Excel.run` results directly under the diagnostic buttons for easier Excel task pane verification.
-- Previous session: promoted the Excel verification marker to `dev-2026-04-25-a`.
-- Deep-scanned the Excel-only failure path and found a likely WebView compatibility bug: `crypto.randomUUID()` could fail in some Excel Desktop task panes, causing clicks that create activity/toast/document IDs to look like static no-ops.
-- Added `src/utils/id.ts` as a safe ID fallback and replaced `crypto.randomUUID()` usage in store, templates, parser, and matching results.
-- Removed `.at(...)`, `matchAll`, `flatMap`, and `Object.fromEntries` usage from document parsing, Excel, and matching paths to reduce older embedded WebView runtime risk.
-- Hardened task-pane width behavior with viewport-based shell sizing so dragging the Excel sidebar wider has a better chance to expand the real UI instead of leaving a blank right gutter.
-- Updated `manifest.xml` to version `1.0.0.1` and changed the manifest description from the old DataSnipper wording to DocTrace wording.
-- Verified with targeted Prettier, `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run validate:manifest`, and `npm.cmd run build`.
-
-- Project initialized for `DocTrace`, a DataSnipper-style Excel add-in for audit teams.
-- Locked the first wedge use case to `Test of Details` with inline output columns, task pane viewer, and hidden audit log storage.
-- Started Phase 0 and Phase 1 implementation from an empty repository.
-- Flattened the app structure so `src/` now lives at the repository root.
-- Moved `last_session_summary.md` into `docs/` and removed the `.antigravity` folder.
-- Finished a clean validation pass: `prettier`, `eslint`, `tsc`, and production `vite build`.
-- Added structured JSON evidence import and JSON viewer support.
-- Added explicit Excel output column mapping in the task pane and mapped write-back logic in Office.js.
-- Added manifest validation tooling and a Windows/Web/Mac testing guide for sideload and smoke tests.
-- Confirmed zero known production dependency vulnerabilities with `npm audit --omit=dev`.
-- Switched local HTTPS from Vite `basicSsl` to Microsoft `office-addin-dev-certs` for a trusted Excel-friendly localhost dev flow.
-- Added a timeout-based browser preview fallback so plain browser loads no longer remain stuck in `Booting`.
-- Locked Vite dev and secure HMR to port `3000` so Excel sideload testing cannot silently drift to `3001` or another fallback port.
-- Fixed task pane initialization in Excel by using `Office.initialize`, `Office.onReady`, and host fallback probing together, so the add-in can progress past the `Booting` state.
-- Added direct `Excel.run` startup probing against the active worksheet so the add-in can confirm a real Excel host even if Office metadata stays delayed.
-- Moved Office readiness detection into the bootstrap path before React renders, replacing the earlier effect-based approach that could race with Excel task pane initialization.
-- Replaced the hero logo image request with inline SVG rendering so the DocTrace brand mark appears consistently inside Excel.
-- Reordered the task pane so actionable controls appear before the static workflow summary, making the add-in immediately usable in narrow Excel sidebars.
-- Made the workflow step cards navigate to the real sections in the task pane so users can click `Step 1-4` and land on working controls.
-- Switched import actions to explicit button-driven file pickers and added built-in sample JSON loaders to reduce Excel webview file-dialog friction during testing.
-- Added ready-to-use three-row sample invoice and bank JSON files in both `public/demo/` and a new top-level `samples/` folder for easier manual testing.
-- Added a visible `Live activity` panel inside the Excel sidebar so action results and failures are preserved in the UI instead of relying only on transient toast messages.
-- Instrumented the controller so selection capture, sample imports, template actions, viewer focus, and matching all emit explicit success/error activity messages.
-- Added a `Prepare demo workspace` action that creates a dedicated `DocTrace Demo` worksheet, selects seeded sample rows, and imports the bundled invoice/bank JSON evidence automatically.
-- Replaced evidence uploads with native visible file inputs to improve PDF, image, and JSON import reliability inside Excel's embedded webview.
-- Improved narrow task-pane responsiveness by letting section headers and action buttons wrap cleanly instead of cramping into broken horizontal layouts.
-- Added global runtime diagnostics for browser errors and unhandled promise rejections so unexpected client-side failures show up inside the sidebar.
-- Confirmed the latest patch batch passes `npm.cmd run format`, `npm.cmd run lint`, `npx tsc --noEmit`, and `npm.cmd run build`.
-- Embedded the bundled sample invoice and bank JSON payloads directly into the app so sample-loading buttons no longer rely on Excel webview fetch behavior.
-- Updated the latest host verification marker to `dev-2026-04-23-e` for the current bundled-sample import fix.
-- Fixed the initial blank Excel task pane by rendering the React app immediately and resolving Office readiness in the background.
-- Added a local selection fallback for `Prepare demo workspace` so the task pane can still populate sample rows and evidence even when Excel worksheet seeding fails.
-- Updated the latest host verification marker to `dev-2026-04-23-f`.
-- Reworked `Prepare demo workspace` so the sidebar applies the local demo state immediately before any Excel host calls, eliminating the previous dead-no-op path when worksheet seeding stalled.
-- Added timeout guards around demo worksheet seeding and recapture so the add-in visibly falls back instead of appearing frozen.
-- Updated the latest host verification marker to `dev-2026-04-23-g`.
-- Reduced Office readiness fallback timing and added an immediate Office-context short-circuit so startup leaves `Booting` faster.
-- Added a system file picker helper with native input fallback to make PDF, image, and JSON evidence importing more reliable inside Excel.
-- Added disabled/loading states across the selection, import, config, and template panels so actions no longer feel static while work is in progress.
-- Hardened PDF worker startup errors, switched OCR to a reusable worker, fixed selection-sync cleanup, and replaced corrupted separator/empty-value glyphs with ASCII-safe labels.
-- Added template JSON validation and updated the latest host verification marker to `dev-2026-04-23-h`.
-- Switched PDF.js from a Vite worker instance on `workerPort` to an explicit `workerSrc` URL so PDF parsing is more compatible with `pdfjs-dist@5` inside Excel's embedded WebView.
-- Removed the remaining bundled-sample `fetch(...)` fallback so quick sample buttons now rely only on embedded invoice and bank JSON payloads.
-- Updated the latest host verification marker to `dev-2026-04-24-a`.
-- Made toast notifications click-through so they cannot intercept task-pane button clicks while stacked over content.
-- Updated preview actions so they focus the requested evidence and scroll directly to the viewer panel.
-- Enforced the invoice/reference alignment setting in deterministic matching and corrected output-column header lookup to use the captured header row.
-- Updated the latest host verification marker to `dev-2026-04-24-b`.
-- Hardened Office startup fallback so the task pane records a fallback state instead of staying in `Booting` when Office readiness throws.
-- Forced the task pane into a single-column layout and simplified output-field rendering to avoid Excel WebView breakpoint/layout glitches.
-- Updated the latest host verification marker to `dev-2026-04-24-c`.
-- Added a native event bridge for quick-start actions so Excel WebView click delegation issues cannot block demo, sample import, capture, or mapping buttons.
-- Updated the latest host verification marker to `dev-2026-04-24-d`.
-- Restored normal button `onClick` handlers alongside the native Excel WebView bridge so cursor and click semantics remain correct.
-- Restored responsive task-pane content width with a bounded max width so resizing the pane expands the usable UI instead of leaving a blank right gutter.
-- Updated the latest host verification marker to `dev-2026-04-24-e`.
-- Removed the Office `GetStarted` teaching callout from the manifest because the Excel first-run overlay can intercept task pane clicks during local sideload testing.

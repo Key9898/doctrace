@@ -1,5 +1,6 @@
 import type {
   BankMatch,
+  ExcelPrimitive,
   MatchConfig,
   MatchFieldRole,
   MatchOutputField,
@@ -348,6 +349,53 @@ function buildOutputValues(
   };
 }
 
+export function matchSingleRow(
+  row: { rowNumber: number; values: Record<string, ExcelPrimitive> },
+  invoiceDocuments: ParsedDocument[],
+  bankDocuments: ParsedDocument[],
+  config: MatchConfig,
+): MatchResult {
+  const invoiceCandidates = invoiceDocuments
+    .map((document) => scoreInvoiceDocument(row.values, config, document))
+    .sort((left, right) => right.score - left.score);
+  const invoiceCandidate = invoiceCandidates[0];
+
+  const bankCandidate = scoreBankEntries(row.values, config, bankDocuments);
+
+  const totalScore =
+    (invoiceCandidate?.score ?? 0) + (bankCandidate?.score ?? 0);
+  const status =
+    totalScore >= 90 ? "matched" : totalScore >= 45 ? "partial" : "exception";
+  const confidence = Math.min(100, totalScore);
+
+  const explanationParts = [
+    invoiceCandidate?.matchedFields.length
+      ? `Invoice matched by ${invoiceCandidate.matchedFields.join(", ")}`
+      : "No strong invoice match",
+    bankCandidate
+      ? "bank statement evidence identified"
+      : "no bank statement hit",
+  ];
+
+  const result: MatchResult = {
+    id: createId("match"),
+    rowNumber: row.rowNumber,
+    inputValues: row.values,
+    status,
+    confidence,
+    explanation: explanationParts.join("; "),
+    invoiceMatch: invoiceCandidate?.match,
+    bankMatch: bankCandidate,
+    outputValues: {} as Record<
+      MatchOutputField,
+      string | number | boolean | null
+    >,
+  };
+
+  result.outputValues = buildOutputValues(result);
+  return result;
+}
+
 export function runDocumentMatching(
   selection: SelectionSnapshot,
   documents: ParsedDocument[],
@@ -368,44 +416,7 @@ export function runDocumentMatching(
 
   for (let index = 0; index < selection.rows.length; index += 1) {
     const row = selection.rows[index];
-    const invoiceCandidates = invoiceDocuments
-      .map((document) => scoreInvoiceDocument(row.values, config, document))
-      .sort((left, right) => right.score - left.score);
-    const invoiceCandidate = invoiceCandidates[0];
-
-    const bankCandidate = scoreBankEntries(row.values, config, bankDocuments);
-
-    const totalScore =
-      (invoiceCandidate?.score ?? 0) + (bankCandidate?.score ?? 0);
-    const status =
-      totalScore >= 90 ? "matched" : totalScore >= 45 ? "partial" : "exception";
-    const confidence = Math.min(100, totalScore);
-
-    const explanationParts = [
-      invoiceCandidate?.matchedFields.length
-        ? `Invoice matched by ${invoiceCandidate.matchedFields.join(", ")}`
-        : "No strong invoice match",
-      bankCandidate
-        ? "bank statement evidence identified"
-        : "no bank statement hit",
-    ];
-
-    const result: MatchResult = {
-      id: createId("match"),
-      rowNumber: row.rowNumber,
-      inputValues: row.values,
-      status,
-      confidence,
-      explanation: explanationParts.join("; "),
-      invoiceMatch: invoiceCandidate?.match,
-      bankMatch: bankCandidate,
-      outputValues: {} as Record<
-        MatchOutputField,
-        string | number | boolean | null
-      >,
-    };
-
-    result.outputValues = buildOutputValues(result);
+    const result = matchSingleRow(row, invoiceDocuments, bankDocuments, config);
     results.push(result);
 
     const processed = index + 1;

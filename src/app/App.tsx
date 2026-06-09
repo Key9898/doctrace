@@ -26,8 +26,16 @@ const BUILD_LABEL = "prod-2026-04-30-b";
 
 export function App() {
   const controller = useDocTraceController();
-  const { activeModule, setModule, devMode, toggleDevMode } =
-    useDocTraceStore();
+  const {
+    activeModule,
+    setModule,
+    devMode,
+    toggleDevMode,
+    engagements,
+    activeEngagementId,
+  } = useDocTraceStore();
+  const activeEngagement = engagements.find((e) => e.id === activeEngagementId);
+  const isLocked = activeEngagement?.isLocked ?? false;
   const rootRef = useRef<HTMLDivElement>(null);
   const t = (key: Parameters<typeof translate>[1]) =>
     translate(controller.locale, key);
@@ -112,6 +120,7 @@ export function App() {
                     }
                     onHeadersChange={controller.setHasHeaders}
                     selection={controller.selection}
+                    isLocked={isLocked}
                   />
                 </div>
 
@@ -129,6 +138,7 @@ export function App() {
                       focusEvidenceViewer(documentId, pageNumber, query)
                     }
                     onRemove={controller.actions.removeDocument}
+                    isLocked={isLocked}
                   />
                 </div>
 
@@ -154,7 +164,11 @@ export function App() {
                     onApplySuggested={controller.actions.applySuggestedMapping}
                     onConfigChange={controller.patchConfig}
                     onRunMatch={() => void controller.actions.runMatching()}
+                    onRunActiveRowMatch={() =>
+                      void controller.actions.runMatchForActiveRow()
+                    }
                     selection={controller.selection}
+                    isLocked={isLocked}
                   />
                 </div>
 
@@ -182,6 +196,17 @@ export function App() {
                     }}
                     results={controller.results}
                     onClearMatch={controller.actions.clearResults}
+                    onRunRowMatch={(rowNumber) =>
+                      void controller.actions.runMatchForSpecificRow(rowNumber)
+                    }
+                    busyMessage={controller.busyMessage}
+                    isLocked={isLocked}
+                    overallMateriality={activeEngagement?.overallMateriality}
+                    performanceMateriality={
+                      activeEngagement?.performanceMateriality
+                    }
+                    trivialThreshold={activeEngagement?.trivialThreshold}
+                    amountColumnId={controller.config.amountColumnId}
                   />
                 </div>
 

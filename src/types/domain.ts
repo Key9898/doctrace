@@ -244,7 +244,7 @@ export type ProgressCallback = (message: string) => void;
 
 /* DocTrace Engagements & Dashboard */
 
-export type AuditFramework = "ISA" | "IFRS" | "IFRS_SMEs";
+export type AuditFramework = "ISA" | "IFRS_SMEs" | "IAS_IFRS";
 export type EngagementStatus =
   | "Not Started"
   | "In Progress"
@@ -259,6 +259,7 @@ export interface EngagementTeam {
   manager: string;
   senior: string;
   associate: string;
+  eqReviewer: string;
 }
 
 export interface Engagement {
@@ -272,6 +273,10 @@ export interface Engagement {
   teamAssignments: EngagementTeam;
   documents?: ParsedDocument[];
   results?: MatchResult[];
+  overallMateriality?: number;
+  performanceMateriality?: number;
+  trivialThreshold?: number;
+  isLocked?: boolean;
 }
 
 export type AppModule =

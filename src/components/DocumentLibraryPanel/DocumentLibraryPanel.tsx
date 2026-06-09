@@ -22,6 +22,7 @@ interface DocumentLibraryPanelProps {
   onImportPickedFiles: (kind: DocumentKind, files: File[]) => void;
   onPreview: (documentId: string, pageNumber?: number, query?: string) => void;
   onRemove: (documentId: string) => void;
+  isLocked?: boolean;
 }
 
 export function DocumentLibraryPanel({
@@ -31,6 +32,7 @@ export function DocumentLibraryPanel({
   onImportPickedFiles,
   onPreview,
   onRemove,
+  isLocked = false,
 }: DocumentLibraryPanelProps) {
   const invoiceInputRef = useRef<HTMLInputElement>(null);
   const bankInputRef = useRef<HTMLInputElement>(null);
@@ -97,7 +99,7 @@ export function DocumentLibraryPanel({
           </div>
           <button
             className="dt-button-secondary mt-4 w-full"
-            disabled={importBusy}
+            disabled={importBusy || isLocked}
             onClick={() => void handleBrowse("invoice", invoiceInputRef)}
             type="button"
             aria-label="Browse invoice files"
@@ -109,7 +111,7 @@ export function DocumentLibraryPanel({
             accept=".pdf,image/*,.json,application/json"
             aria-label="Select invoice files to import"
             className="dt-file-input"
-            disabled={importBusy}
+            disabled={importBusy || isLocked}
             multiple
             onChange={(event) => {
               onImport("invoice", event.target.files);
@@ -137,7 +139,7 @@ export function DocumentLibraryPanel({
           </div>
           <button
             className="dt-button-secondary mt-4 w-full"
-            disabled={importBusy}
+            disabled={importBusy || isLocked}
             onClick={() => void handleBrowse("bank-statement", bankInputRef)}
             type="button"
             aria-label="Browse bank statement files"
@@ -149,7 +151,7 @@ export function DocumentLibraryPanel({
             accept=".pdf,image/*,.json,application/json"
             aria-label="Select bank statement files to import"
             className="dt-file-input"
-            disabled={importBusy}
+            disabled={importBusy || isLocked}
             multiple
             onChange={(event) => {
               onImport("bank-statement", event.target.files);
@@ -193,6 +195,7 @@ export function DocumentLibraryPanel({
           onPreview={onPreview}
           onRemove={onRemove}
           title="Invoices"
+          isLocked={isLocked}
         />
         <DocumentGroup
           documents={bankStatements}
@@ -200,6 +203,7 @@ export function DocumentLibraryPanel({
           onPreview={onPreview}
           onRemove={onRemove}
           title="Bank statements"
+          isLocked={isLocked}
         />
       </div>
     </section>
@@ -212,6 +216,7 @@ interface DocumentGroupProps {
   documents: ParsedDocument[];
   onPreview: (documentId: string, pageNumber?: number, query?: string) => void;
   onRemove: (documentId: string) => void;
+  isLocked?: boolean;
 }
 
 function DocumentGroup({
@@ -220,6 +225,7 @@ function DocumentGroup({
   documents,
   onPreview,
   onRemove,
+  isLocked = false,
 }: DocumentGroupProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -322,6 +328,7 @@ function DocumentGroup({
                   </button>
                   <button
                     className="dt-button-ghost py-2"
+                    disabled={isLocked}
                     onClick={() => onRemove(document.id)}
                     type="button"
                   >

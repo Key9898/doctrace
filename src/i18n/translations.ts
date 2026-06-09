@@ -50,6 +50,12 @@ export type TranslationKey =
   | "results.inspectTrace"
   | "results.noResults"
   | "results.noResultsDescription"
+  | "results.clearlyTrivial"
+  | "results.belowPerformance"
+  | "results.materialException"
+  | "results.aboveOverall"
+  | "results.discrepancyAmount"
+  | "results.materialityAssessment"
   | "status.matched"
   | "status.partial"
   | "status.exception"
@@ -76,7 +82,23 @@ export type TranslationKey =
   | "eng.workpapers"
   | "eng.reviewNotes"
   | "eng.pbcRequests"
-  | "eng.delete";
+  | "eng.delete"
+  | "eng.eqReviewer"
+  | "eng.overallMateriality"
+  | "eng.performanceMateriality"
+  | "eng.trivialThreshold"
+  | "eng.lock"
+  | "eng.unlock"
+  | "eng.locked"
+  | "eng.unlocked"
+  | "eng.wizard.title"
+  | "eng.wizard.step1"
+  | "eng.wizard.step2"
+  | "eng.wizard.step3"
+  | "eng.wizard.step4"
+  | "eng.wizard.next"
+  | "eng.wizard.back"
+  | "eng.wizard.finish";
 
 const translations: Record<AppLocale, Record<TranslationKey, string>> = {
   "my-MM": {
@@ -137,6 +159,14 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "results.noResults": "ရလဒ် မရှိသေးပါ",
     "results.noResultsDescription":
       "Step 3 မှာ document match run လုပ်ပြီး audit trail result ထုတ်ပါ။",
+    "results.clearlyTrivial": "ဂရုမပြုလောက်သော လွဲမှားမှု (Clearly Trivial)",
+    "results.belowPerformance":
+      "လုပ်ငန်းဆောင်ရွက်မှု အရေးကြီးမှုအဆင့်အောက် လွဲမှားမှု (Below Performance)",
+    "results.materialException": "အရေးကြီးသော လွဲမှားမှု (Material Exception)",
+    "results.aboveOverall":
+      "အလုံးစုံ အရေးကြီးမှုအဆင့်အထက် လွဲမှားမှု (Above Overall)",
+    "results.discrepancyAmount": "ကွာဟချက်ပမာဏ",
+    "results.materialityAssessment": "အရေးကြီးမှု ဆန်းစစ်ချက်",
     "status.matched": "Matched",
     "status.partial": "Partial",
     "status.exception": "Exception",
@@ -164,6 +194,23 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "eng.reviewNotes": "ကျန်ရှိနေသော Review Notes",
     "eng.pbcRequests": "Client PBC တောင်းဆိုမှုများ",
     "eng.delete": "ဖျက်မည်",
+    "eng.eqReviewer": "EQ Reviewer (လွတ်လပ်သော အဆင့်မြင့်စစ်ဆေးသူ)",
+    "eng.overallMateriality": "Overall Materiality (အလုံးစုံ အရေးကြီးမှုအဆင့်)",
+    "eng.performanceMateriality":
+      "Performance Materiality (လုပ်ငန်းဆောင်ရွက်မှု အရေးကြီးမှုအဆင့်)",
+    "eng.trivialThreshold": "Trivial Threshold (ဂရုမပြုလောက်သော ပမာဏအောက်)",
+    "eng.lock": "ပရောဂျက် ပိတ်သိမ်းရန် (Lock)",
+    "eng.unlock": "ပရောဂျက် ပြန်ဖွင့်ရန် (Unlock)",
+    "eng.locked": "ပရောဂျက် ပိတ်သိမ်းပြီး",
+    "eng.unlocked": "ပရောဂျက် ဖွင့်ထားဆဲ",
+    "eng.wizard.title": "Engagement Setup Wizard",
+    "eng.wizard.step1": "လုပ်ငန်းအခြေခံအချက်အလက်များ",
+    "eng.wizard.step2": "အရေးကြီးမှုအဆင့်သတ်မှတ်ချက် (Materiality)",
+    "eng.wizard.step3": "စာရင်းစစ်အဖွဲ့ဝင်များသတ်မှတ်ခြင်း",
+    "eng.wizard.step4": "အကျဉ်းချုပ်နှင့် အတည်ပြုခြင်း",
+    "eng.wizard.next": "ရှေ့သို့",
+    "eng.wizard.back": "နောက်သို့",
+    "eng.wizard.finish": "စတင်မည်",
   },
   "en-US": {
     "app.skip": "Skip to main content",
@@ -223,6 +270,12 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "results.noResults": "No results yet",
     "results.noResultsDescription":
       "Run a document match in Step 3 to generate discrepancies and reviewable audit trails.",
+    "results.clearlyTrivial": "Clearly Trivial Discrepancy",
+    "results.belowPerformance": "Below Performance Materiality",
+    "results.materialException": "Material Exception",
+    "results.aboveOverall": "Above Overall Materiality",
+    "results.discrepancyAmount": "Discrepancy Amount",
+    "results.materialityAssessment": "Materiality Assessment",
     "status.matched": "Matched",
     "status.partial": "Partial",
     "status.exception": "Exception",
@@ -250,6 +303,22 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "eng.reviewNotes": "Outstanding Review Notes",
     "eng.pbcRequests": "Client PBC Requests",
     "eng.delete": "Delete",
+    "eng.eqReviewer": "EQ Reviewer (Quality Reviewer)",
+    "eng.overallMateriality": "Overall Materiality",
+    "eng.performanceMateriality": "Performance Materiality",
+    "eng.trivialThreshold": "Trivial Threshold",
+    "eng.lock": "Lock Engagement",
+    "eng.unlock": "Unlock Engagement",
+    "eng.locked": "Locked",
+    "eng.unlocked": "Unlocked",
+    "eng.wizard.title": "Engagement Setup Wizard",
+    "eng.wizard.step1": "Basic Info",
+    "eng.wizard.step2": "Materiality & Scope",
+    "eng.wizard.step3": "Team Assignment",
+    "eng.wizard.step4": "Summary & Confirm",
+    "eng.wizard.next": "Next",
+    "eng.wizard.back": "Back",
+    "eng.wizard.finish": "Finish",
   },
 };
 

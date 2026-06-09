@@ -11,6 +11,7 @@ import {
   AlertCircle,
   XCircle,
   Trash2,
+  Zap,
 } from "lucide-react";
 
 import { buildResultsSummary } from "@/services/matching/matching.service";
@@ -19,6 +20,7 @@ import { formatCellValue, statusLabel } from "@/utils/formatters";
 import { exportMatchResultsToCsv, downloadCsv } from "@/utils/export";
 import { useI18n } from "@/hooks/useI18n";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
+import { parseFlexibleNumber } from "@/utils/parsing";
 
 const INITIAL_RESULT_BATCH = 80;
 const RESULT_BATCH_SIZE = 80;
@@ -28,6 +30,13 @@ interface ResultsPanelProps {
   onFocusInvoice: (result: MatchResult) => void;
   onFocusBank: (result: MatchResult) => void;
   onClearMatch: () => void;
+  onRunRowMatch?: (rowNumber: number) => void;
+  busyMessage?: string;
+  isLocked?: boolean;
+  overallMateriality?: number;
+  performanceMateriality?: number;
+  trivialThreshold?: number;
+  amountColumnId?: string;
 }
 
 export function ResultsPanel({
@@ -35,6 +44,13 @@ export function ResultsPanel({
   onFocusInvoice,
   onFocusBank,
   onClearMatch,
+  onRunRowMatch,
+  busyMessage,
+  isLocked = false,
+  overallMateriality,
+  performanceMateriality,
+  trivialThreshold,
+  amountColumnId,
 }: ResultsPanelProps) {
   const { t } = useI18n();
   const deferredResults = useDeferredValue(results);
@@ -75,6 +91,7 @@ export function ResultsPanel({
               </button>
               <button
                 className="dt-button-secondary border-rose-200/60 text-rose-600 hover:border-rose-500/50 hover:bg-rose-50/50 dark:border-rose-950 dark:text-rose-400 dark:hover:bg-rose-950/20"
+                disabled={isLocked}
                 onClick={onClearMatch}
                 type="button"
                 aria-label="Clear match results"
@@ -89,6 +106,29 @@ export function ResultsPanel({
           </span>
         </div>
       </div>
+
+      {overallMateriality !== undefined && (
+        <div className="mt-4 flex flex-wrap gap-2 px-2 text-[0.65rem] font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400">
+          <span className="flex items-center gap-1.5 rounded-xl border border-slate-200/50 bg-slate-50/50 px-3 py-1.5 dark:border-white/5 dark:bg-white/5">
+            {t("eng.overallMateriality")}:{" "}
+            <strong className="text-slate-900 dark:text-white">
+              ${overallMateriality.toLocaleString()}
+            </strong>
+          </span>
+          <span className="flex items-center gap-1.5 rounded-xl border border-slate-200/50 bg-slate-50/50 px-3 py-1.5 dark:border-white/5 dark:bg-white/5">
+            {t("eng.performanceMateriality")}:{" "}
+            <strong className="text-slate-900 dark:text-white">
+              ${performanceMateriality?.toLocaleString()}
+            </strong>
+          </span>
+          <span className="flex items-center gap-1.5 rounded-xl border border-slate-200/50 bg-slate-50/50 px-3 py-1.5 dark:border-white/5 dark:bg-white/5">
+            {t("eng.trivialThreshold")}:{" "}
+            <strong className="text-slate-900 dark:text-white">
+              ${trivialThreshold?.toLocaleString()}
+            </strong>
+          </span>
+        </div>
+      )}
 
       {deferredResults.length ? (
         <>
@@ -162,6 +202,13 @@ export function ResultsPanel({
                 result={result}
                 onFocusBank={onFocusBank}
                 onFocusInvoice={onFocusInvoice}
+                onRunRowMatch={onRunRowMatch}
+                busy={Boolean(busyMessage)}
+                isLocked={isLocked}
+                overallMateriality={overallMateriality}
+                performanceMateriality={performanceMateriality}
+                trivialThreshold={trivialThreshold}
+                amountColumnId={amountColumnId}
               />
             )}
           />
@@ -191,12 +238,89 @@ function ResultCard({
   result,
   onFocusInvoice,
   onFocusBank,
+  onRunRowMatch,
+  busy,
+  isLocked = false,
+  overallMateriality,
+  performanceMateriality,
+  trivialThreshold,
+  amountColumnId,
 }: {
   result: MatchResult;
   onFocusInvoice: (result: MatchResult) => void;
   onFocusBank: (result: MatchResult) => void;
+  onRunRowMatch?: (rowNumber: number) => void;
+  busy: boolean;
+  isLocked?: boolean;
+  overallMateriality?: number;
+  performanceMateriality?: number;
+  trivialThreshold?: number;
+  amountColumnId?: string;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+
+  const glAmountValue = amountColumnId
+    ? result.inputValues[amountColumnId]
+    : undefined;
+  const glAmount =
+    typeof glAmountValue === "number"
+      ? glAmountValue
+      : glAmountValue !== undefined
+        ? (parseFlexibleNumber(glAmountValue) ?? 0)
+        : 0;
+
+  const invoiceAmt = result.invoiceMatch?.extractedAmount;
+  const bankAmt = result.bankMatch?.extractedAmount;
+
+  let discrepancy = 0;
+  if (result.status === "exception") {
+    discrepancy = Math.abs(glAmount);
+  } else {
+    const matchedAmt =
+      typeof invoiceAmt === "number"
+        ? invoiceAmt
+        : typeof bankAmt === "number"
+          ? bankAmt
+          : null;
+    if (matchedAmt !== null) {
+      discrepancy = Math.abs(glAmount - matchedAmt);
+    } else {
+      discrepancy = 0;
+    }
+  }
+
+  let assessmentKey:
+    | "results.clearlyTrivial"
+    | "results.belowPerformance"
+    | "results.materialException"
+    | "results.aboveOverall"
+    | null = null;
+  let badgeClass = "";
+
+  if (
+    discrepancy > 0 &&
+    overallMateriality !== undefined &&
+    performanceMateriality !== undefined &&
+    trivialThreshold !== undefined
+  ) {
+    if (discrepancy <= trivialThreshold) {
+      assessmentKey = "results.clearlyTrivial";
+      badgeClass =
+        "bg-slate-100 text-slate-700 border-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
+    } else if (discrepancy <= performanceMateriality) {
+      assessmentKey = "results.belowPerformance";
+      badgeClass =
+        "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/35 dark:text-amber-300 dark:border-amber-900/50";
+    } else if (discrepancy <= overallMateriality) {
+      assessmentKey = "results.materialException";
+      badgeClass =
+        "bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/35 dark:text-rose-300 dark:border-rose-900/50";
+    } else {
+      assessmentKey = "results.aboveOverall";
+      badgeClass =
+        "bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-950/60 dark:text-rose-200 dark:border-rose-900";
+    }
+  }
 
   return (
     <article className="rounded-[2.5rem] border border-white/80 bg-white/60 p-5 shadow-sm transition-all hover:bg-white hover:shadow-md dark:border-white/5 dark:bg-slate-900/40 dark:hover:bg-slate-900/60">
@@ -217,10 +341,40 @@ function ResultCard({
             >
               {statusLabel(result.status)}
             </span>
+            {onRunRowMatch && (
+              <button
+                className="inline-flex cursor-pointer items-center gap-1 rounded-xl border border-slate-200/60 bg-white/40 px-3 py-1 text-[0.65rem] font-bold tracking-wider text-slate-600 uppercase transition-all hover:border-sky-500/50 hover:bg-white dark:border-white/5 dark:bg-white/5 dark:text-slate-400 dark:hover:border-sky-500/40 dark:hover:bg-white/10"
+                disabled={busy || isLocked}
+                onClick={() => onRunRowMatch(result.rowNumber)}
+                type="button"
+              >
+                <Zap className="h-3 w-3 text-amber-500" />
+                Re-match
+              </button>
+            )}
           </div>
           <p className="mt-4 text-sm leading-relaxed font-bold text-slate-900 dark:text-white">
             {result.explanation}
           </p>
+          {assessmentKey && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="text-[0.65rem] font-bold tracking-wider text-slate-400 uppercase">
+                {t("results.materialityAssessment")}:
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold ${badgeClass}`}
+              >
+                {t(assessmentKey)}
+                <span className="font-semibold opacity-80">
+                  ({t("results.discrepancyAmount")}: $
+                  {discrepancy.toLocaleString(
+                    locale === "my-MM" ? "my-MM" : "en-US",
+                  )}
+                  )
+                </span>
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex flex-col items-end">
           <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 uppercase">

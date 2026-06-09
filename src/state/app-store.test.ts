@@ -139,6 +139,7 @@ describe("app store", () => {
               manager: "",
               senior: "",
               associate: "",
+              eqReviewer: "",
             },
           },
         ],
@@ -158,7 +159,22 @@ describe("app store", () => {
 
     it("should create new engagement", () => {
       const store = useDocTraceStore.getState();
-      store.createEngagement("New Client", "FY 2026-27", "IFRS", "Not Started");
+      store.createEngagement(
+        "New Client",
+        "FY 2026-27",
+        "IAS_IFRS",
+        "Not Started",
+        10000,
+        7500,
+        500,
+        {
+          partner: "U Tin Hla",
+          manager: "Daw Aye Aye",
+          senior: "Ko Thura",
+          associate: "Ma Thiri",
+          eqReviewer: "Daw Ni Ni",
+        },
+      );
       const state = useDocTraceStore.getState();
       expect(state.engagements.length).toBe(2);
       expect(state.engagements[1].clientName).toBe("New Client");

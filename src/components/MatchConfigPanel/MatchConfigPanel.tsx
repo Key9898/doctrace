@@ -40,6 +40,8 @@ interface MatchConfigPanelProps {
   onConfigChange: (patch: Partial<MatchConfig>) => void;
   onApplySuggested: () => void;
   onRunMatch: () => void;
+  onRunActiveRowMatch?: () => void;
+  isLocked?: boolean;
 }
 
 export function MatchConfigPanel({
@@ -50,8 +52,10 @@ export function MatchConfigPanel({
   onConfigChange,
   onApplySuggested,
   onRunMatch,
+  onRunActiveRowMatch,
+  isLocked = false,
 }: MatchConfigPanelProps) {
-  const busy = Boolean(busyMessage);
+  const busy = Boolean(busyMessage) || isLocked;
   const invoiceCount = documents.filter(
     (document) => document.kind === "invoice" && document.status === "parsed",
   ).length;
@@ -363,16 +367,30 @@ export function MatchConfigPanel({
               loaded.
             </p>
           </div>
-          <button
-            className="dt-button-primary w-full py-4 sm:w-auto"
-            data-doctrace-action="run-match"
-            disabled={busy}
-            onClick={onRunMatch}
-            type="button"
-          >
-            <PlayCircle className="h-5 w-5" />
-            {busy ? "Working..." : "Match all rows"}
-          </button>
+          <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:items-center">
+            {onRunActiveRowMatch && (
+              <button
+                className="dt-button-secondary w-full border-amber-300 py-4 hover:bg-amber-500/10 sm:w-auto dark:border-amber-700/50"
+                data-doctrace-action="run-active-row-match"
+                disabled={busy || !selection}
+                onClick={onRunActiveRowMatch}
+                type="button"
+              >
+                <Zap className="h-5 w-5 text-amber-500" />
+                {busy ? "Working..." : "Match active row"}
+              </button>
+            )}
+            <button
+              className="dt-button-primary w-full py-4 sm:w-auto"
+              data-doctrace-action="run-match"
+              disabled={busy}
+              onClick={onRunMatch}
+              type="button"
+            >
+              <PlayCircle className="h-5 w-5" />
+              {busy ? "Working..." : "Match all rows"}
+            </button>
+          </div>
         </div>
       </div>
     </section>

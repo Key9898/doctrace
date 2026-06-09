@@ -282,6 +282,58 @@ export async function writeMatchResults(
   });
 }
 
+export async function writeSingleRowMatchResult(
+  selection: SelectionSnapshot,
+  result: MatchResult,
+  config: MatchConfig,
+) {
+  if (!window.Excel) {
+    throw new Error("Excel APIs are not available in this environment.");
+  }
+
+  return Excel.run(async (context) => {
+    const worksheet = context.workbook.worksheets.getItem(selection.sheetName);
+    const resolvedMap = resolveOutputColumnMap(selection, config);
+    const targetRowIndex = result.rowNumber - 1;
+
+    for (const field of config.outputFields) {
+      const targetColumnIndex = resolvedMap[field];
+
+      if (typeof targetColumnIndex !== "number") {
+        continue;
+      }
+
+      const cellRange = worksheet.getRangeByIndexes(
+        targetRowIndex,
+        targetColumnIndex,
+        1,
+        1,
+      );
+      cellRange.values = toOutputMatrix([result], [field]);
+      cellRange.format.fill.color = "#F8FAFC";
+      cellRange.format.wrapText = true;
+
+      const borderNames = [
+        "EdgeTop",
+        "EdgeBottom",
+        "EdgeLeft",
+        "EdgeRight",
+      ] as const;
+      for (const borderName of borderNames) {
+        try {
+          const border = cellRange.format.borders.getItem(borderName);
+          border.style = Excel.BorderLineStyle.continuous;
+          border.color = "#D1D5DB"; // Light gray gridlines
+        } catch {
+          // Ignore
+        }
+      }
+    }
+
+    await context.sync();
+  });
+}
+
 export async function ensureAuditLogSheet() {
   return Excel.run(async (context) => {
     let sheet =

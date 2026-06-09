@@ -3,6 +3,7 @@ import {
   hydrateOutputColumnMap,
   buildOutputMappingSummary,
   validateOutputMapping,
+  matchSingleRow,
 } from "./matching.service";
 import type { MatchConfig, SelectionSnapshot } from "@/types/domain";
 
@@ -86,6 +87,72 @@ describe("matching service", () => {
     it("should return hydrated map", () => {
       const result = validateOutputMapping(mockSelection, mockConfig);
       expect(result.hydratedMap.invoiceDocument).toBe(3);
+    });
+  });
+
+  describe("matchSingleRow", () => {
+    it("should match single row with document evidence", () => {
+      const row = {
+        rowNumber: 2,
+        values: {
+          "col-1": "INV-100",
+          "col-2": 1500,
+          "col-3": "2026-05-10",
+        },
+      };
+
+      const invoiceDocs = [
+        {
+          id: "doc-1",
+          fileName: "invoice_1.pdf",
+          kind: "invoice" as const,
+          sourceKind: "pdf" as const,
+          mimeType: "application/pdf",
+          objectUrl: "",
+          importedAt: "",
+          size: 100,
+          pageCount: 1,
+          status: "parsed" as const,
+          extractedText: "",
+          pages: [],
+          invoiceNumber: {
+            value: "INV-100",
+            confidence: 100,
+            pageNumber: 1,
+            sourceText: "",
+          },
+          amount: {
+            value: 1500,
+            confidence: 100,
+            pageNumber: 1,
+            sourceText: "",
+          },
+          date: {
+            value: "2026-05-10",
+            confidence: 100,
+            pageNumber: 1,
+            sourceText: "",
+          },
+          statementEntries: [],
+        },
+      ];
+
+      const config: MatchConfig = {
+        amountColumnId: "col-2",
+        dateColumnId: "col-3",
+        invoiceNumberColumnId: "col-1",
+        amountTolerance: 1,
+        dateToleranceDays: 5,
+        requireInvoiceNumber: true,
+        fuzzyReferenceMatch: true,
+        outputFields: ["invoiceDocument", "status", "confidence"],
+        outputColumnMap: {},
+      };
+
+      const result = matchSingleRow(row, invoiceDocs, [], config);
+      expect(result.status).toBe("matched");
+      expect(result.confidence).toBe(100);
+      expect(result.outputValues.invoiceDocument).toBe("invoice_1.pdf");
     });
   });
 });

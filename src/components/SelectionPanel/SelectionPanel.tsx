@@ -8,6 +8,7 @@ interface SelectionPanelProps {
   selection?: SelectionSnapshot;
   onHeadersChange: (value: boolean) => void;
   onCapture: () => void;
+  isLocked?: boolean;
 }
 
 export function SelectionPanel({
@@ -16,6 +17,7 @@ export function SelectionPanel({
   selection,
   onHeadersChange,
   onCapture,
+  isLocked = false,
 }: SelectionPanelProps) {
   const busy = Boolean(busyMessage);
 
@@ -29,7 +31,7 @@ export function SelectionPanel({
         <button
           className="dt-button-primary w-full sm:w-auto"
           data-doctrace-action="capture-selection"
-          disabled={busy}
+          disabled={busy || isLocked}
           onClick={onCapture}
           type="button"
         >
@@ -56,7 +58,8 @@ export function SelectionPanel({
         <button
           className="group flex items-center gap-3"
           data-doctrace-action="toggle-headers"
-          onClick={() => onHeadersChange(!hasHeaders)}
+          disabled={isLocked}
+          onClick={() => !isLocked && onHeadersChange(!hasHeaders)}
           type="button"
         >
           <span className="text-xs font-bold tracking-wider text-slate-500 uppercase group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-white">
