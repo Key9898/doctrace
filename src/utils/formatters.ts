@@ -88,3 +88,41 @@ export function statusLabel(status: MatchStatus) {
       return translate(id, "status.exception");
   }
 }
+
+export function formatExplanation(explanation: string, locale: string): string {
+  if (locale !== "my-MM" || !explanation) {
+    return explanation;
+  }
+
+  const parts = explanation.split("; ");
+  if (parts.length !== 2) {
+    return explanation;
+  }
+
+  let part1 = parts[0];
+  let part2 = parts[1];
+
+  if (part1 === "No strong invoice match") {
+    part1 = "ကိုက်ညီသည့် ပြေစာ မရှိပါ";
+  } else if (part1.startsWith("Invoice matched by ")) {
+    const fieldsStr = part1.substring("Invoice matched by ".length);
+    const fields = fieldsStr.split(", ").map((f) => {
+      const field = f.trim();
+      if (field === "invoice number") return "ပြေစာနံပါတ်";
+      if (field === "invoice number (fuzzy)")
+        return "ပြေစာနံပါတ် (အနီးစပ်ဆုံး)";
+      if (field === "amount") return "ပမာဏ";
+      if (field === "date") return "ရက်စွဲ";
+      return field;
+    });
+    part1 = `ပြေစာပါ ${fields.join("၊ ")} ဖြင့် တိုက်ဆိုင်ကိုက်ညီမှုရှိသည်`;
+  }
+
+  if (part2 === "bank statement evidence identified") {
+    part2 = "ဘဏ်ရှင်းတမ်း သက်သေခံချက် တွေ့ရှိရသည်";
+  } else if (part2 === "no bank statement hit") {
+    part2 = "ဘဏ်ရှင်းတမ်း တိုက်ဆိုင်မှု မရှိပါ";
+  }
+
+  return `${part1}; ${part2}`;
+}

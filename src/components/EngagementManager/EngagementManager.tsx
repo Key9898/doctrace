@@ -58,6 +58,27 @@ export function EngagementManager() {
 
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
 
+  const getStatusLabel = (status: EngagementStatus) => {
+    switch (status) {
+      case "Not Started":
+        return t("eng.status.notStarted");
+      case "In Progress":
+        return t("eng.status.inProgress");
+      case "Pending Client":
+        return t("eng.status.pendingClient");
+      case "Under Review":
+        return t("eng.status.underReview");
+      case "Cleared for Partner Review":
+        return t("eng.status.clearedPartner");
+      case "Completed":
+        return t("eng.status.completed");
+      case "Archived":
+        return t("eng.status.archived");
+      default:
+        return status;
+    }
+  };
+
   const getEngagementProgress = (
     eng: (typeof engagements)[0],
     docs: ParsedDocument[],
@@ -107,11 +128,8 @@ export function EngagementManager() {
     if (!clientName.trim()) {
       pushToast({
         tone: "error",
-        title: locale === "my-MM" ? "မှားယွင်းမှု" : "Error",
-        description:
-          locale === "my-MM"
-            ? "ကလိုင်းယင့်အမည် ထည့်သွင်းပေးရန် လိုအပ်သည်"
-            : "Client name is required",
+        title: t("app.error"),
+        description: t("eng.clientRequired"),
       });
       return;
     }
@@ -147,11 +165,8 @@ export function EngagementManager() {
 
     pushToast({
       tone: "success",
-      title: locale === "my-MM" ? "အောင်မြင်သည်" : "Success",
-      description:
-        locale === "my-MM"
-          ? "Engagement အသစ်ကို အောင်မြင်စွာ ဖန်တီးပြီးပါပြီ"
-          : "New engagement created successfully",
+      title: t("app.success"),
+      description: t("eng.createdSuccess"),
     });
   };
 
@@ -165,11 +180,8 @@ export function EngagementManager() {
     deleteEngagement(deleteTarget.id);
     pushToast({
       tone: "info",
-      title: locale === "my-MM" ? "အသိပေးချက်" : "Notice",
-      description:
-        locale === "my-MM"
-          ? "Engagement ကို ဖျက်ပြီးပါပြီ"
-          : "Engagement deleted successfully",
+      title: t("app.notice"),
+      description: t("eng.deletedSuccess"),
     });
     setDeleteTarget(null);
   };
@@ -297,9 +309,7 @@ export function EngagementManager() {
           <div className="flex items-center justify-between gap-2">
             <div>
               <p className="dt-kicker">{t("eng.kicker")}</p>
-              <h2 className="dt-section-title">
-                {locale === "my-MM" ? "လုပ်ငန်းများ" : "Engagements"}
-              </h2>
+              <h2 className="dt-section-title">{t("eng.listTitle")}</h2>
             </div>
             <button
               onClick={() => setShowCreateForm(!showCreateForm)}
@@ -396,15 +406,27 @@ export function EngagementManager() {
                       }
                       className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                     >
-                      <option value="Not Started">Not Started</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Pending Client">Pending Client</option>
-                      <option value="Under Review">Under Review</option>
-                      <option value="Cleared for Partner Review">
-                        Cleared for Partner Review
+                      <option value="Not Started">
+                        {t("eng.status.notStarted")}
                       </option>
-                      <option value="Completed">Completed</option>
-                      <option value="Archived">Archived</option>
+                      <option value="In Progress">
+                        {t("eng.status.inProgress")}
+                      </option>
+                      <option value="Pending Client">
+                        {t("eng.status.pendingClient")}
+                      </option>
+                      <option value="Under Review">
+                        {t("eng.status.underReview")}
+                      </option>
+                      <option value="Cleared for Partner Review">
+                        {t("eng.status.clearedPartner")}
+                      </option>
+                      <option value="Completed">
+                        {t("eng.status.completed")}
+                      </option>
+                      <option value="Archived">
+                        {t("eng.status.archived")}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -620,11 +642,8 @@ export function EngagementManager() {
                       if (wizardStep === 1 && !clientName.trim()) {
                         pushToast({
                           tone: "error",
-                          title: locale === "my-MM" ? "မှားယွင်းမှု" : "Error",
-                          description:
-                            locale === "my-MM"
-                              ? "ကလိုင်းယင့်အမည် ထည့်သွင်းပေးရန် လိုအပ်သည်"
-                              : "Client name is required",
+                          title: t("app.error"),
+                          description: t("eng.clientRequired"),
                         });
                         return;
                       }
@@ -701,7 +720,7 @@ export function EngagementManager() {
                     <span
                       className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${getStatusColor(eng.status)}`}
                     >
-                      {eng.status}
+                      {getStatusLabel(eng.status)}
                     </span>
                   </div>
 
@@ -755,15 +774,25 @@ export function EngagementManager() {
                     }
                     className="h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Pending Client">Pending Client</option>
-                    <option value="Under Review">Under Review</option>
-                    <option value="Cleared for Partner Review">
-                      Cleared for Partner Review
+                    <option value="Not Started">
+                      {t("eng.status.notStarted")}
                     </option>
-                    <option value="Completed">Completed</option>
-                    <option value="Archived">Archived</option>
+                    <option value="In Progress">
+                      {t("eng.status.inProgress")}
+                    </option>
+                    <option value="Pending Client">
+                      {t("eng.status.pendingClient")}
+                    </option>
+                    <option value="Under Review">
+                      {t("eng.status.underReview")}
+                    </option>
+                    <option value="Cleared for Partner Review">
+                      {t("eng.status.clearedPartner")}
+                    </option>
+                    <option value="Completed">
+                      {t("eng.status.completed")}
+                    </option>
+                    <option value="Archived">{t("eng.status.archived")}</option>
                   </select>
 
                   {/* Lock/Unlock Button (EP Control) */}
@@ -817,14 +846,12 @@ export function EngagementManager() {
             {/* Planning & Materiality Section */}
             <section className="dt-panel flex flex-col gap-2 p-4 sm:p-5">
               <h4 className="text-xs font-black tracking-wider text-slate-800 uppercase dark:text-slate-200">
-                {locale === "my-MM"
-                  ? "စာရင်းစစ် အစီအစဉ်နှင့် အတိုင်းအတာ (Planning & Scope)"
-                  : "Planning & Scope"}
+                {t("eng.planningScope")}
               </h4>
               <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-4">
                 <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
                   <span className="text-[10px] font-bold text-slate-500 uppercase">
-                    Framework
+                    {t("eng.framework")}
                   </span>
                   <span className="mt-1 block text-sm font-bold text-slate-900 dark:text-white">
                     {getFrameworkLabel(activeEngagement.framework)}
@@ -838,7 +865,7 @@ export function EngagementManager() {
                     {activeEngagement.overallMateriality
                       ? activeEngagement.overallMateriality.toLocaleString()
                       : "10,000"}{" "}
-                    MMK
+                    {locale === "my-MM" ? "ကျပ်" : "MMK"}
                   </span>
                 </div>
                 <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
@@ -849,7 +876,7 @@ export function EngagementManager() {
                     {activeEngagement.performanceMateriality
                       ? activeEngagement.performanceMateriality.toLocaleString()
                       : "7,500"}{" "}
-                    MMK
+                    {locale === "my-MM" ? "ကျပ်" : "MMK"}
                   </span>
                 </div>
                 <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-900/20">
@@ -860,7 +887,7 @@ export function EngagementManager() {
                     {activeEngagement.trivialThreshold
                       ? activeEngagement.trivialThreshold.toLocaleString()
                       : "500"}{" "}
-                    MMK
+                    {locale === "my-MM" ? "ကျပ်" : "MMK"}
                   </span>
                 </div>
               </div>
@@ -970,7 +997,7 @@ export function EngagementManager() {
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   <div className="rounded-2xl bg-rose-50 p-3 text-center dark:bg-rose-500/10">
                     <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
-                      Open
+                      {t("snips.statOpen")}
                     </span>
                     <p className="mt-1 text-2xl font-black text-rose-700 dark:text-rose-300">
                       {
@@ -984,7 +1011,7 @@ export function EngagementManager() {
                   </div>
                   <div className="rounded-2xl bg-amber-50 p-3 text-center dark:bg-amber-500/10">
                     <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
-                      Responded
+                      {t("eng.responded")}
                     </span>
                     <p className="mt-1 text-2xl font-black text-amber-700 dark:text-amber-300">
                       {
@@ -998,7 +1025,7 @@ export function EngagementManager() {
                   </div>
                   <div className="rounded-2xl bg-emerald-50 p-3 text-center dark:bg-emerald-500/10">
                     <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                      Closed
+                      {t("eng.closed")}
                     </span>
                     <p className="mt-1 text-2xl font-black text-emerald-700 dark:text-emerald-300">
                       {
@@ -1022,8 +1049,8 @@ export function EngagementManager() {
                 <div className="mt-4 flex flex-col gap-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                      <Clock className="h-3 w-3 text-amber-500" /> Pending
-                      Client
+                      <Clock className="h-3 w-3 text-amber-500" />{" "}
+                      {t("eng.status.pendingClient")}
                     </span>
                     <span className="font-bold text-slate-800 dark:text-slate-200">
                       {
@@ -1037,8 +1064,8 @@ export function EngagementManager() {
                   </div>
                   <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-                      <Activity className="h-3 w-3 text-sky-500" /> Uploaded
-                      (Needs Review)
+                      <Activity className="h-3 w-3 text-sky-500" />{" "}
+                      {t("eng.pbc.uploaded")}
                     </span>
                     <span className="font-bold text-slate-800 dark:text-slate-200">
                       {
@@ -1053,7 +1080,7 @@ export function EngagementManager() {
                   <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
                       <CheckCircle2 className="h-3 w-3 text-emerald-500" />{" "}
-                      Approved evidence
+                      {t("eng.pbc.approved")}
                     </span>
                     <span className="font-bold text-slate-800 dark:text-slate-200">
                       {
@@ -1166,9 +1193,7 @@ export function EngagementManager() {
           <section className="dt-panel flex flex-col items-center justify-center border-2 border-dashed border-slate-300 bg-transparent py-16 text-center dark:border-slate-700">
             <Users className="h-12 w-12 stroke-1 text-slate-400" />
             <p className="mt-4 text-sm font-semibold text-slate-500 dark:text-slate-400">
-              {locale === "my-MM"
-                ? "အသေးစိတ်အချက်အလက်များနှင့် Dashboard ကိုကြည့်ရှုရန် ဘယ်ဘက်မှ Engagement တစ်ခု ရွေးချယ်ပါ သို့မဟုတ် အသစ်ဖန်တီးပါ။"
-                : "Please select or create an engagement from the left panel to view the dashboard."}
+              {t("eng.selectEngagementPrompt")}
             </p>
           </section>
         )}
@@ -1178,14 +1203,10 @@ export function EngagementManager() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
           <div className="dt-panel animate-in fade-in zoom-in-95 flex w-full max-w-sm flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/90 p-6 shadow-2xl duration-150">
             <h3 className="text-base font-bold text-white">
-              {locale === "my-MM"
-                ? "ပရောဂျက်ကို ဖျက်မလား။"
-                : "Delete Engagement?"}
+              {t("eng.deleteTitle")}
             </h3>
             <p className="text-xs leading-relaxed text-slate-300">
-              {locale === "my-MM"
-                ? `"${deleteTarget.name}" ကို ဖျက်ရန် သေချာပါသလား။ ဤလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍မရပါ။`
-                : `Are you sure you want to delete "${deleteTarget.name}"? This action cannot be undone.`}
+              {t("eng.deleteDesc").replace("{name}", deleteTarget.name)}
             </p>
             <div className="mt-2 flex justify-end gap-2">
               <button
@@ -1193,14 +1214,14 @@ export function EngagementManager() {
                 onClick={() => setDeleteTarget(null)}
                 className="dt-button-secondary h-9 rounded-xl px-4 py-2 text-xs"
               >
-                {locale === "my-MM" ? "မလုပ်တော့ပါ" : "Cancel"}
+                {t("eng.cancelBtn")}
               </button>
               <button
                 type="button"
                 onClick={confirmDelete}
                 className="dt-button-primary h-9 rounded-xl bg-rose-600 px-4 py-2 text-xs shadow-rose-600/20 hover:bg-rose-500 hover:shadow-rose-500/30"
               >
-                {locale === "my-MM" ? "ဖျက်မည်" : "Delete"}
+                {t("eng.deleteBtn")}
               </button>
             </div>
           </div>

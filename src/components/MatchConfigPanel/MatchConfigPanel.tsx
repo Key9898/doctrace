@@ -18,18 +18,20 @@ import {
   Wand2,
   PlayCircle,
 } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
+import type { TranslationKey } from "@/i18n/translations";
 
-const outputFieldLabels: Record<MatchOutputField, string> = {
-  invoiceDocument: "Invoice document",
-  invoiceAmount: "Invoice amount",
-  invoiceDate: "Invoice date",
-  invoiceNumber: "Invoice number",
-  bankDocument: "Bank document",
-  bankAmount: "Bank amount",
-  bankDate: "Bank date",
-  bankReference: "Bank reference",
-  status: "Status",
-  confidence: "Confidence",
+const outputFieldKeys: Record<MatchOutputField, TranslationKey> = {
+  invoiceDocument: "config.out.invoiceDocument",
+  invoiceAmount: "config.out.invoiceAmount",
+  invoiceDate: "config.out.invoiceDate",
+  invoiceNumber: "config.out.invoiceNumber",
+  bankDocument: "config.out.bankDocument",
+  bankAmount: "config.out.bankAmount",
+  bankDate: "config.out.bankDate",
+  bankReference: "config.out.bankReference",
+  status: "config.out.status",
+  confidence: "config.out.confidence",
 };
 
 interface MatchConfigPanelProps {
@@ -55,6 +57,7 @@ export function MatchConfigPanel({
   onRunActiveRowMatch,
   isLocked = false,
 }: MatchConfigPanelProps) {
+  const { t } = useI18n();
   const busy = Boolean(busyMessage) || isLocked;
   const invoiceCount = documents.filter(
     (document) => document.kind === "invoice" && document.status === "parsed",
@@ -102,10 +105,10 @@ export function MatchConfigPanel({
     <section className="dt-panel" aria-labelledby="finalize-match-title">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="dt-kicker">Step 3</p>
-          <h2 className="dt-section-title">Finalize your document match</h2>
+          <p className="dt-kicker">{t("config.step")}</p>
+          <h2 className="dt-section-title">{t("config.title")}</h2>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-            Configure how DocTrace should match and write back to your workbook.
+            {t("config.desc")}
           </p>
         </div>
         <button
@@ -116,7 +119,7 @@ export function MatchConfigPanel({
           type="button"
         >
           <Wand2 className="h-4 w-4" />
-          Suggested mapping
+          {t("config.suggested")}
         </button>
       </div>
 
@@ -126,12 +129,12 @@ export function MatchConfigPanel({
           <div className="flex items-center gap-2 px-1">
             <LayoutList className="h-4 w-4 text-sky-500" />
             <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
-              Source Columns
+              {t("config.sourceColumns")}
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-1">
             <label className="dt-field">
-              <span>Amount column</span>
+              <span>{t("config.amountCol")}</span>
               <select
                 className="dt-select"
                 disabled={busy}
@@ -142,7 +145,7 @@ export function MatchConfigPanel({
                 }
                 value={config.amountColumnId ?? ""}
               >
-                <option value="">Select a column</option>
+                <option value="">{t("config.selectCol")}</option>
                 {selection?.columns.map((column) => (
                   <option key={column.id} value={column.id}>
                     {column.letter} - {column.header}
@@ -152,7 +155,7 @@ export function MatchConfigPanel({
             </label>
 
             <label className="dt-field">
-              <span>Date column</span>
+              <span>{t("config.dateCol")}</span>
               <select
                 className="dt-select"
                 disabled={busy}
@@ -163,7 +166,7 @@ export function MatchConfigPanel({
                 }
                 value={config.dateColumnId ?? ""}
               >
-                <option value="">Select a column</option>
+                <option value="">{t("config.selectCol")}</option>
                 {selection?.columns.map((column) => (
                   <option key={column.id} value={column.id}>
                     {column.letter} - {column.header}
@@ -173,7 +176,7 @@ export function MatchConfigPanel({
             </label>
 
             <label className="dt-field">
-              <span>Invoice/reference column</span>
+              <span>{t("config.refCol")}</span>
               <select
                 className="dt-select"
                 disabled={busy}
@@ -184,7 +187,7 @@ export function MatchConfigPanel({
                 }
                 value={config.invoiceNumberColumnId ?? ""}
               >
-                <option value="">Select a column</option>
+                <option value="">{t("config.selectCol")}</option>
                 {selection?.columns.map((column) => (
                   <option key={column.id} value={column.id}>
                     {column.letter} - {column.header}
@@ -200,12 +203,12 @@ export function MatchConfigPanel({
           <div className="flex items-center gap-2 px-1">
             <Settings2 className="h-4 w-4 text-emerald-500" />
             <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
-              Matching Logic
+              {t("config.matchingLogic")}
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="dt-field">
-              <span>Amount tolerance</span>
+              <span>{t("config.amountTol")}</span>
               <input
                 className="dt-input"
                 disabled={busy}
@@ -222,7 +225,7 @@ export function MatchConfigPanel({
             </label>
 
             <label className="dt-field">
-              <span>Date tolerance (days)</span>
+              <span>{t("config.dateTol")}</span>
               <input
                 className="dt-input"
                 disabled={busy}
@@ -240,7 +243,7 @@ export function MatchConfigPanel({
 
             <div className="grid gap-3 sm:col-span-2 sm:grid-cols-2">
               <CustomCheckbox
-                label="Require invoice alignment"
+                label={t("config.requireInvoice")}
                 checked={config.requireInvoiceNumber}
                 onChange={(val) =>
                   onConfigChange({ requireInvoiceNumber: val })
@@ -248,7 +251,7 @@ export function MatchConfigPanel({
                 disabled={busy}
               />
               <CustomCheckbox
-                label="Allow fuzzy text matching"
+                label={t("config.allowFuzzy")}
                 checked={config.fuzzyReferenceMatch}
                 onChange={(val) => onConfigChange({ fuzzyReferenceMatch: val })}
                 disabled={busy}
@@ -263,28 +266,26 @@ export function MatchConfigPanel({
             <div className="flex items-center gap-2">
               <Database className="h-4 w-4 text-sky-500" />
               <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
-                Output Fields
+                {t("config.outputFields")}
               </p>
             </div>
             <span className="dt-badge dt-badge-neutral">
-              {config.outputFields.length} enabled
+              {config.outputFields.length} {t("config.enabledCount")}
             </span>
           </div>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {Object.entries(outputFieldLabels).map(([field, label]) => (
-              <CustomCheckbox
-                key={field}
-                label={label}
-                checked={config.outputFields.includes(
-                  field as MatchOutputField,
-                )}
-                onChange={(val) =>
-                  toggleOutputField(field as MatchOutputField, val)
-                }
-                disabled={busy}
-                compact
-              />
-            ))}
+            {(Object.keys(outputFieldKeys) as MatchOutputField[]).map(
+              (field) => (
+                <CustomCheckbox
+                  key={field}
+                  label={t(outputFieldKeys[field])}
+                  checked={config.outputFields.includes(field)}
+                  onChange={(val) => toggleOutputField(field, val)}
+                  disabled={busy}
+                  compact
+                />
+              ),
+            )}
           </div>
         </div>
 
@@ -294,11 +295,11 @@ export function MatchConfigPanel({
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-amber-500" />
               <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
-                Excel Output Mapping
+                {t("config.excelMapping")}
               </p>
             </div>
             <span className="dt-badge dt-badge-neutral">
-              {selection?.outputColumnOptions.length ?? 0} targets
+              {selection?.outputColumnOptions.length ?? 0} {t("config.targets")}
             </span>
           </div>
 
@@ -311,10 +312,10 @@ export function MatchConfigPanel({
                 >
                   <div>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">
-                      {outputFieldLabels[field]}
+                      {t(outputFieldKeys[field])}
                     </p>
                     <p className="text-[0.65rem] font-bold tracking-widest text-slate-400 uppercase">
-                      Writes into {label}
+                      {t("config.writesInto")} {label}
                     </p>
                   </div>
                   <select
@@ -331,7 +332,7 @@ export function MatchConfigPanel({
                     value={hydratedOutputMap[field] ?? ""}
                   >
                     <option value="" disabled>
-                      Select target column
+                      {t("config.selectTarget")}
                     </option>
                     {selection.outputColumnOptions.map((option) => (
                       <option key={option.id} value={option.columnIndex}>
@@ -347,10 +348,7 @@ export function MatchConfigPanel({
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5">
                 <MousePointer2 className="h-6 w-6 text-slate-400" />
               </div>
-              <p className="max-w-[240px]">
-                Capture the Excel sample first to unlock editor-side output
-                mapping.
-              </p>
+              <p className="max-w-[240px]">{t("config.emptyState")}</p>
             </div>
           )}
         </div>
@@ -360,11 +358,12 @@ export function MatchConfigPanel({
           <div className="min-w-0 flex-1 px-2">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-950 dark:text-white">
               <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
-              Ready to match
+              {t("config.readyMatch")}
             </div>
             <p className="mt-1 text-xs leading-relaxed font-medium text-slate-600 dark:text-slate-400">
-              {invoiceCount} invoice(s) and {bankCount} bank statement(s)
-              loaded.
+              {t("config.loadedSummary")
+                .replace("{invoiceCount}", String(invoiceCount))
+                .replace("{bankCount}", String(bankCount))}
             </p>
           </div>
           <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:items-center">
@@ -377,7 +376,7 @@ export function MatchConfigPanel({
                 type="button"
               >
                 <Zap className="h-5 w-5 text-amber-500" />
-                {busy ? "Working..." : "Match active row"}
+                {busy ? t("app.working") : t("config.matchActive")}
               </button>
             )}
             <button
@@ -388,7 +387,7 @@ export function MatchConfigPanel({
               type="button"
             >
               <PlayCircle className="h-5 w-5" />
-              {busy ? "Working..." : "Match all rows"}
+              {busy ? t("app.working") : t("config.matchAll")}
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import type { SelectionSnapshot } from "@/types/domain";
 import { formatCellValue } from "@/utils/formatters";
 import { MousePointer2, Check, LayoutPanelTop } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
 
 interface SelectionPanelProps {
   hasHeaders: boolean;
@@ -19,14 +20,15 @@ export function SelectionPanel({
   onCapture,
   isLocked = false,
 }: SelectionPanelProps) {
+  const { t } = useI18n();
   const busy = Boolean(busyMessage);
 
   return (
     <section className="dt-panel">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="dt-kicker">Step 1</p>
-          <h2 className="dt-section-title">Select your sample data</h2>
+          <p className="dt-kicker">{t("selection.step")}</p>
+          <h2 className="dt-section-title">{t("selection.title")}</h2>
         </div>
         <button
           className="dt-button-primary w-full sm:w-auto"
@@ -36,7 +38,7 @@ export function SelectionPanel({
           type="button"
         >
           <LayoutPanelTop className="h-4 w-4" />
-          {busy ? "Working..." : "Capture selection"}
+          {busy ? t("app.working") : t("selection.captureBtn")}
         </button>
       </div>
 
@@ -49,10 +51,10 @@ export function SelectionPanel({
       <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 px-4 py-4 shadow-sm transition-all hover:bg-white dark:border-white/5 dark:bg-white/5 dark:hover:bg-white/[0.08]">
         <div>
           <p className="text-sm font-bold text-slate-950 dark:text-white">
-            First row includes headers
+            {t("selection.headersTitle")}
           </p>
           <p className="mt-0.5 text-xs font-medium text-slate-600 dark:text-slate-400">
-            Recommended for deterministic field mapping.
+            {t("selection.headersDesc")}
           </p>
         </div>
         <button
@@ -63,7 +65,7 @@ export function SelectionPanel({
           type="button"
         >
           <span className="text-xs font-bold tracking-wider text-slate-500 uppercase group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-white">
-            {hasHeaders ? "Enabled" : "Disabled"}
+            {hasHeaders ? t("app.enabled") : t("app.disabled")}
           </span>
           <div
             className={`flex h-6 w-6 items-center justify-center rounded-lg border-2 transition-all ${
@@ -81,19 +83,21 @@ export function SelectionPanel({
         <>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="dt-stat">
-              <span className="dt-stat-label">Address</span>
+              <span className="dt-stat-label">{t("selection.address")}</span>
               <strong className="dt-stat-value">{selection.address}</strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Sheet</span>
+              <span className="dt-stat-label">{t("selection.sheet")}</span>
               <strong className="dt-stat-value">{selection.sheetName}</strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Rows</span>
+              <span className="dt-stat-label">{t("selection.rowsCount")}</span>
               <strong className="dt-stat-value">{selection.rowCount}</strong>
             </div>
             <div className="dt-stat">
-              <span className="dt-stat-label">Columns</span>
+              <span className="dt-stat-label">
+                {t("selection.columnsCount")}
+              </span>
               <strong className="dt-stat-value">{selection.columnCount}</strong>
             </div>
           </div>
@@ -120,7 +124,7 @@ export function SelectionPanel({
                               {column.header}
                             </span>
                             <span className="text-[0.65rem] font-bold opacity-60">
-                              Col {column.letter}
+                              {t("selection.col")} {column.letter}
                             </span>
                           </div>
                         </th>
@@ -156,7 +160,10 @@ export function SelectionPanel({
             </div>
             {selection.rowCount > 5 && (
               <div className="border-t border-slate-100 bg-slate-50/30 px-4 py-2 text-center text-[0.65rem] font-bold tracking-widest text-slate-400 uppercase dark:border-white/5 dark:bg-white/5">
-                Showing first 5 of {selection.rowCount} rows
+                {t("selection.showingSubset").replace(
+                  "{rowCount}",
+                  String(selection.rowCount),
+                )}
               </div>
             )}
           </div>
@@ -166,10 +173,7 @@ export function SelectionPanel({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5">
             <MousePointer2 className="h-6 w-6 text-slate-400" />
           </div>
-          <p className="max-w-[240px]">
-            Select a sample range in Excel, then capture it here to unlock
-            matching.
-          </p>
+          <p className="max-w-[240px]">{t("selection.emptyState")}</p>
         </div>
       )}
     </section>

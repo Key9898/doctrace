@@ -16,7 +16,11 @@ import {
 
 import { buildResultsSummary } from "@/services/matching/matching.service";
 import type { MatchResult } from "@/types/domain";
-import { formatCellValue, statusLabel } from "@/utils/formatters";
+import {
+  formatCellValue,
+  statusLabel,
+  formatExplanation,
+} from "@/utils/formatters";
 import { exportMatchResultsToCsv, downloadCsv } from "@/utils/export";
 import { useI18n } from "@/hooks/useI18n";
 import { VirtualList } from "@/components/VirtualList/VirtualList";
@@ -97,7 +101,7 @@ export function ResultsPanel({
                 aria-label="Clear match results"
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
-                Clear match
+                {t("results.clear")}
               </button>
             </>
           )}
@@ -349,12 +353,12 @@ function ResultCard({
                 type="button"
               >
                 <Zap className="h-3 w-3 text-amber-500" />
-                Re-match
+                {t("results.rematch")}
               </button>
             )}
           </div>
           <p className="mt-4 text-sm leading-relaxed font-bold text-slate-900 dark:text-white">
-            {result.explanation}
+            {formatExplanation(result.explanation, locale)}
           </p>
           {assessmentKey && (
             <div className="mt-3 flex flex-wrap items-center gap-2">

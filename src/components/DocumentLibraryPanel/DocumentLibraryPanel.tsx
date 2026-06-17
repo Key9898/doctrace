@@ -13,7 +13,8 @@ import { useRef } from "react";
 
 import { pickEvidenceFiles } from "@/services/files/file-picker.service";
 import type { DocumentKind, ParsedDocument } from "@/types/domain";
-import { formatDate, formatRelativeCount } from "@/utils/formatters";
+import { formatDate } from "@/utils/formatters";
+import { useI18n } from "@/hooks/useI18n";
 
 interface DocumentLibraryPanelProps {
   documents: ParsedDocument[];
@@ -34,6 +35,7 @@ export function DocumentLibraryPanel({
   onRemove,
   isLocked = false,
 }: DocumentLibraryPanelProps) {
+  const { t, locale } = useI18n();
   const invoiceInputRef = useRef<HTMLInputElement>(null);
   const bankInputRef = useRef<HTMLInputElement>(null);
   const invoices = documents.filter((document) => document.kind === "invoice");
@@ -60,20 +62,26 @@ export function DocumentLibraryPanel({
     }
   };
 
+  const getDocCountText = (count: number) => {
+    return locale === "my-MM"
+      ? `သက်သေခံစာရွက်စာတမ်း ${count} ခု`
+      : `${count} document${count === 1 ? "" : "s"}`;
+  };
+
   return (
     <section className="dt-panel" aria-labelledby="import-evidence-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="dt-kicker">Step 2</p>
+          <p className="dt-kicker">{t("import.step")}</p>
           <h2 className="dt-section-title" id="import-evidence-title">
-            Import your evidence
+            {t("import.title")}
           </h2>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-            Support for PDF, image, and structured JSON evidence bundles.
+            {t("import.desc")}
           </p>
         </div>
         <span className="dt-badge dt-badge-neutral" aria-live="polite">
-          {formatRelativeCount(documents.length, "document")}
+          {getDocCountText(documents.length)}
         </span>
       </div>
 
@@ -91,10 +99,10 @@ export function DocumentLibraryPanel({
           </div>
           <div className="mt-2">
             <span className="block font-bold text-slate-950 dark:text-white">
-              Invoice Evidence
+              {t("import.invoiceEvidence")}
             </span>
             <span className="text-[0.7rem] font-medium text-slate-500 dark:text-slate-400">
-              PDFs, scans, or JSON bundles
+              {t("import.invoiceDesc")}
             </span>
           </div>
           <button
@@ -105,7 +113,7 @@ export function DocumentLibraryPanel({
             aria-label="Browse invoice files"
           >
             <CloudUpload className="h-4 w-4" />
-            Browse invoices
+            {t("import.browseInvoices")}
           </button>
           <input
             accept=".pdf,image/*,.json,application/json"
@@ -131,10 +139,10 @@ export function DocumentLibraryPanel({
           </div>
           <div className="mt-2">
             <span className="block font-bold text-slate-950 dark:text-white">
-              Bank Statements
+              {t("import.bankStatements")}
             </span>
             <span className="text-[0.7rem] font-medium text-slate-500 dark:text-slate-400">
-              Transaction scans or exports
+              {t("import.bankDesc")}
             </span>
           </div>
           <button
@@ -145,7 +153,7 @@ export function DocumentLibraryPanel({
             aria-label="Browse bank statement files"
           >
             <CloudUpload className="h-4 w-4" />
-            Browse bank files
+            {t("import.browseBank")}
           </button>
           <input
             accept=".pdf,image/*,.json,application/json"
@@ -170,11 +178,10 @@ export function DocumentLibraryPanel({
           </div>
           <div className="grid gap-2">
             <p className="text-sm font-bold text-slate-900 dark:text-white">
-              JSON Evidence Support
+              {t("import.jsonSupportTitle")}
             </p>
             <p className="text-xs leading-relaxed font-medium text-slate-600 dark:text-slate-400">
-              DocTrace automatically imports multi-document JSON payloads into
-              the matching workflow. Choose your JSON file via Browse to import.
+              {t("import.jsonSupportDesc")}
             </p>
             {importBusy ? (
               <div className="flex items-center gap-2 rounded-lg bg-sky-50 px-2 py-1 dark:bg-sky-500/10">
@@ -194,7 +201,7 @@ export function DocumentLibraryPanel({
           icon={<HardDrive className="h-4 w-4 text-sky-500" />}
           onPreview={onPreview}
           onRemove={onRemove}
-          title="Invoices"
+          title={t("import.invoiceLibrary")}
           isLocked={isLocked}
         />
         <DocumentGroup
@@ -202,7 +209,7 @@ export function DocumentLibraryPanel({
           icon={<Landmark className="h-4 w-4 text-emerald-500" />}
           onPreview={onPreview}
           onRemove={onRemove}
-          title="Bank statements"
+          title={t("import.bankLibrary")}
           isLocked={isLocked}
         />
       </div>
@@ -227,15 +234,23 @@ function DocumentGroup({
   onRemove,
   isLocked = false,
 }: DocumentGroupProps) {
+  const { t, locale } = useI18n();
+
+  const getFileCountText = (count: number) => {
+    return locale === "my-MM"
+      ? `ဖိုင် ${count} ခု`
+      : `${count} file${count === 1 ? "" : "s"}`;
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
           {icon}
-          <span>{title} Library</span>
+          <span>{title}</span>
         </div>
         <span className="dt-badge dt-badge-neutral">
-          {formatRelativeCount(documents.length, "file")}
+          {getFileCountText(documents.length)}
         </span>
       </div>
 
@@ -256,7 +271,7 @@ function DocumentGroup({
                       {document.fileName}
                     </h3>
                     <p className="mt-1 text-[0.7rem] font-medium text-slate-500 dark:text-slate-400">
-                      {document.pageCount || 1} page(s) - Imported{" "}
+                      {document.pageCount || 1} {t("import.pageImported")}{" "}
                       {formatDate(document.importedAt)}
                     </p>
                   </div>
@@ -280,12 +295,12 @@ function DocumentGroup({
                 >
                   {document.invoiceNumber?.value ? (
                     <span className="dt-chip" role="listitem">
-                      ID: {document.invoiceNumber.value}
+                      {t("import.id")}: {document.invoiceNumber.value}
                     </span>
                   ) : null}
                   {typeof document.amount?.value === "number" ? (
                     <span className="dt-chip" role="listitem">
-                      Amount:{" "}
+                      {t("import.amount")}:{" "}
                       {document.amount.value.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       })}
@@ -293,7 +308,7 @@ function DocumentGroup({
                   ) : null}
                   {document.date?.value ? (
                     <span className="dt-chip" role="listitem">
-                      Date: {document.date.value}
+                      {t("import.date")}: {document.date.value}
                     </span>
                   ) : null}
                   {document.sourceKind === "json" ? (
@@ -301,7 +316,7 @@ function DocumentGroup({
                       className="dt-chip border-sky-500/20 bg-sky-500/5 text-sky-600 dark:text-sky-400"
                       role="listitem"
                     >
-                      JSON Source
+                      {t("import.jsonSource")}
                     </span>
                   ) : null}
                 </div>
@@ -324,7 +339,7 @@ function DocumentGroup({
                     type="button"
                   >
                     <Eye className="h-4 w-4" />
-                    Preview
+                    {t("app.preview")}
                   </button>
                   <button
                     className="dt-button-ghost py-2"
@@ -333,7 +348,7 @@ function DocumentGroup({
                     type="button"
                   >
                     <Trash2 className="h-4 w-4" />
-                    Remove
+                    {t("app.remove")}
                   </button>
                 </div>
               </article>
@@ -345,9 +360,7 @@ function DocumentGroup({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5">
             <CloudUpload className="h-6 w-6 text-slate-400" />
           </div>
-          <p className="max-w-[240px]">
-            No files in this folder. Import some evidence to get started.
-          </p>
+          <p className="max-w-[240px]">{t("import.emptyState")}</p>
         </div>
       )}
     </div>
