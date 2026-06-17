@@ -35,5 +35,4 @@ CHANGELOG.md
 .antigravity/docs/REQUIREMENTS_GAP_ANALYSIS.md
 .antigravity/docs/TESTING.md
 .antigravity/docs/JSON_EVIDENCE_SCHEMA.md
-scripts/generate-sample-ledgers.js
-scripts/generate-sample-pdfs.js
+scripts/
