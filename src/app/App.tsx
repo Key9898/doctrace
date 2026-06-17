@@ -19,8 +19,6 @@ import { WorkflowStepper } from "@/components/WorkflowStepper/WorkflowStepper";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/i18n/locales";
 import { translate } from "@/i18n/translations";
 
-const BUILD_LABEL = "prod-2026-04-30-b";
-
 export function App() {
   const controller = useDocTraceController();
   const {
@@ -69,7 +67,6 @@ export function App() {
   return (
     <div ref={rootRef}>
       <AppShell
-        buildLabel={BUILD_LABEL}
         busyMessage={controller.busyMessage}
         documentCount={controller.documents.length}
         locale={controller.locale}
@@ -94,7 +91,7 @@ export function App() {
 
             {devMode && (
               <DiagnosticsPanel
-                buildLabel={BUILD_LABEL}
+                buildLabel="v1.0.0"
                 officeAvailable={controller.officeAvailable}
                 officeReady={controller.officeReady}
               />
@@ -235,7 +232,7 @@ export function App() {
             />
 
             <section className="dt-panel" aria-labelledby="current-shape-title">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="dt-kicker">{t("project.kicker")}</p>
                   <h2 className="dt-section-title" id="current-shape-title">
@@ -245,6 +242,9 @@ export function App() {
                     {t("project.description")}
                   </p>
                 </div>
+                <span className="dt-badge dt-badge-neutral shrink-0">
+                  v1.0.0
+                </span>
               </div>
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <article className="rounded-[2.5rem] border border-white/80 bg-white/40 p-6 shadow-sm transition-all hover:bg-white dark:border-white/5 dark:bg-slate-900/40 dark:hover:bg-slate-900/60">

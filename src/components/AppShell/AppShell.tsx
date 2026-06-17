@@ -12,7 +12,6 @@ interface AppShellProps {
   documentCount: number;
   resultCount: number;
   selectionAddress?: string;
-  buildLabel: string;
   onLocaleChange: (locale: AppLocale) => void;
   activeModule: AppModule;
   onModuleChange: (module: AppModule) => void;
@@ -29,7 +28,6 @@ export function AppShell({
   documentCount,
   resultCount,
   selectionAddress,
-  buildLabel,
   onLocaleChange,
   activeModule,
   onModuleChange,
@@ -69,9 +67,6 @@ export function AppShell({
                         ? t("app.excelConnected")
                         : t("app.browserPreview")
                       : t("app.booting")}
-                  </span>
-                  <span className="dt-badge dt-badge-neutral">
-                    {buildLabel}
                   </span>
                   <span
                     onDoubleClick={onToggleDevMode}
