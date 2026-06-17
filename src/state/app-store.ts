@@ -289,10 +289,7 @@ function resolveInitialActiveModule(): AppModule {
     ) as AppModule | null;
     if (
       module === "matching" ||
-      module === "engagements" ||
-      module === "trial-balance" ||
-      module === "workpapers" ||
-      module === "client-portal"
+      module === "engagements"
     ) {
       return module;
     }

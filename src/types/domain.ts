@@ -281,7 +281,4 @@ export interface Engagement {
 
 export type AppModule =
   | "matching"
-  | "engagements"
-  | "trial-balance"
-  | "workpapers"
-  | "client-portal";
+  | "engagements";

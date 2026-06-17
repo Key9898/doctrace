@@ -16,9 +16,6 @@ import { TemplateLibraryPanel } from "@/components/TemplateLibraryPanel/Template
 import { ToastViewport } from "@/components/ToastViewport/ToastViewport";
 import { ViewerPane } from "@/components/ViewerPane/ViewerPane";
 import { WorkflowStepper } from "@/components/WorkflowStepper/WorkflowStepper";
-import { TrialBalance } from "@/components/TrialBalance/TrialBalance";
-import { Workpapers } from "@/components/Workpapers/Workpapers";
-import { ClientPortal } from "@/components/ClientPortal/ClientPortal";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/i18n/locales";
 import { translate } from "@/i18n/translations";
 
@@ -87,12 +84,6 @@ export function App() {
         onToggleDevMode={toggleDevMode}
       >
         {activeModule === "engagements" && <EngagementManager />}
-
-        {activeModule === "trial-balance" && <TrialBalance />}
-
-        {activeModule === "workpapers" && <Workpapers />}
-
-        {activeModule === "client-portal" && <ClientPortal />}
 
         {activeModule === "matching" && (
           <>

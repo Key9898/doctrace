@@ -183,9 +183,6 @@ export function AppShell({
             [
               "engagements",
               "matching",
-              "trial-balance",
-              "workpapers",
-              "client-portal",
             ] as AppModule[]
           ).map((mod) => (
             <button
