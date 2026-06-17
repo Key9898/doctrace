@@ -11,6 +11,7 @@ import {
 
 import type { Snip, SnipLink } from "@/types/domain";
 import { formatSnipLocation, formatSnipSourceType } from "@/utils/snips";
+import { useI18n } from "@/hooks/useI18n";
 
 interface SnipPanelProps {
   snips: Snip[];
@@ -31,6 +32,7 @@ export function SnipPanel({
   onRemoveLink,
   onFocusSnip,
 }: SnipPanelProps) {
+  const { t, locale } = useI18n();
   const linkedSnipIds = new Set(snipLinks.map((link) => link.snipId));
   const linkedCount = linkedSnipIds.size;
   const pendingCount = Math.max(0, snips.length - linkedCount);
@@ -46,21 +48,20 @@ export function SnipPanel({
           <Crosshair className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="dt-kicker">Visual Snipping</p>
+          <p className="dt-kicker">{t("snips.kicker")}</p>
           <h2 className="dt-section-title" id="snip-panel-title">
-            Snip review queue
+            {t("snips.title")}
           </h2>
           <p className="mt-1 text-xs leading-5 font-medium text-slate-500 dark:text-slate-400">
-            Capture multiple evidence points, review each source, then link the
-            right values back to Excel.
+            {t("snips.desc")}
           </p>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
-        <SnipStat label="Captured" value={snips.length} />
-        <SnipStat label="Linked" value={linkedCount} />
-        <SnipStat label="Open" value={pendingCount} />
+        <SnipStat label={t("snips.statCaptured")} value={snips.length} />
+        <SnipStat label={t("snips.statLinked")} value={linkedCount} />
+        <SnipStat label={t("snips.statOpen")} value={pendingCount} />
       </div>
 
       {snips.length === 0 ? (
@@ -68,11 +69,7 @@ export function SnipPanel({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5">
             <Sparkles className="h-6 w-6 text-slate-400" />
           </div>
-          <p className="max-w-[250px]">
-            Turn on <strong>Snip mode</strong> in the viewer, then click PDF
-            text, image regions, or extracted snippets to build your evidence
-            queue.
-          </p>
+          <p className="max-w-[250px]">{t("snips.emptyState")}</p>
         </div>
       ) : (
         <div className="mt-4 grid gap-3">
@@ -115,7 +112,7 @@ export function SnipPanel({
                         ) : (
                           <FileText className="h-2.5 w-2.5" />
                         )}
-                        {isLinked ? "Linked" : "Needs link"}
+                        {isLinked ? t("snips.linked") : t("snips.needsLink")}
                       </span>
                       <span className="text-[0.62rem] font-bold tracking-wider text-slate-400 uppercase">
                         {formatSnipLocation(snip)}
@@ -128,7 +125,11 @@ export function SnipPanel({
                     <button
                       className="mt-2 block w-full text-left text-sm leading-5 font-semibold text-slate-900 transition-colors hover:text-sky-600 dark:text-white dark:hover:text-sky-400"
                       onClick={() => onFocusSnip(snip)}
-                      title={`Go to page ${snip.pageNumber} of ${snip.fileName}`}
+                      title={
+                        locale === "my-MM"
+                          ? `${snip.fileName} ၏ စာမျက်နှာ ${snip.pageNumber} သို့ သွားရန်`
+                          : `Go to page ${snip.pageNumber} of ${snip.fileName}`
+                      }
                       type="button"
                     >
                       &ldquo;{snip.text}&rdquo;
@@ -150,7 +151,7 @@ export function SnipPanel({
                             <button
                               className="rounded-md p-0.5 text-sky-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500/10"
                               onClick={() => onRemoveLink(link.id)}
-                              title="Unlink this Excel cell"
+                              title={t("snips.unlinkCell")}
                               type="button"
                             >
                               <Unlink className="h-3 w-3" />
@@ -167,25 +168,27 @@ export function SnipPanel({
                         type="button"
                       >
                         <Eye className="h-3 w-3" />
-                        View
+                        {t("app.preview")}
                       </button>
                       <button
                         className="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-2.5 py-1.5 text-[0.65rem] font-bold text-white transition-all hover:bg-emerald-700 active:scale-95"
                         onClick={() => onLinkToCell(snip)}
-                        title="Link to the selected Excel cell"
+                        title={t("snips.linkTooltip")}
                         type="button"
                       >
                         <Link2 className="h-3 w-3" />
-                        {isLinked ? "Link another" : "Link cell"}
+                        {isLinked
+                          ? t("snips.linkAnother")
+                          : t("snips.linkCell")}
                       </button>
                       <button
                         className="inline-flex items-center gap-1 rounded-xl bg-rose-50 px-2.5 py-1.5 text-[0.65rem] font-bold text-rose-600 transition-colors hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/20"
                         onClick={() => onRemoveSnip(snip.id)}
-                        title="Remove this snip"
+                        title={t("snips.removeTooltip")}
                         type="button"
                       >
                         <Trash2 className="h-3 w-3" />
-                        Remove
+                        {t("app.remove")}
                       </button>
                     </div>
                   </div>

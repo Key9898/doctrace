@@ -287,10 +287,7 @@ function resolveInitialActiveModule(): AppModule {
     const module = window.localStorage.getItem(
       ACTIVE_MODULE_STORAGE_KEY,
     ) as AppModule | null;
-    if (
-      module === "matching" ||
-      module === "engagements"
-    ) {
+    if (module === "matching" || module === "engagements") {
       return module;
     }
   } catch {

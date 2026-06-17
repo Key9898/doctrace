@@ -279,6 +279,4 @@ export interface Engagement {
   isLocked?: boolean;
 }
 
-export type AppModule =
-  | "matching"
-  | "engagements";
+export type AppModule = "matching" | "engagements";

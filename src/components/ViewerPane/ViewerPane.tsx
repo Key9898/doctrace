@@ -23,6 +23,7 @@ import type { ParsedDocument, Snip, ViewerState } from "@/types/domain";
 import { createId } from "@/utils/id";
 import { buildManualSnipBoundingBox, normalizeSnipText } from "@/utils/snips";
 import { SnipToolbar } from "./SnipToolbar";
+import { useI18n } from "@/hooks/useI18n";
 
 const PdfTextLayer = lazy(() =>
   import("./PdfTextLayer").then((module) => ({
@@ -53,6 +54,7 @@ export function ViewerPane({
   onLinkSnipToCell,
   onDismissSnip,
 }: ViewerPaneProps) {
+  const { t } = useI18n();
   const activeDocument = useMemo(
     () =>
       documents.find((document) => document.id === viewer.documentId) ??
@@ -105,7 +107,7 @@ export function ViewerPane({
       .catch((error) => {
         if (!cancelled) {
           setRenderError(
-            error instanceof Error ? error.message : "PDF preview failed.",
+            error instanceof Error ? error.message : t("viewer.pdfFailed"),
           );
         }
       })
@@ -155,12 +157,12 @@ export function ViewerPane({
     return (
       <section className="dt-panel" aria-labelledby="viewer-title">
         <div>
-          <p className="dt-kicker">Viewer</p>
+          <p className="dt-kicker">{t("viewer.kicker")}</p>
           <h2 className="dt-section-title" id="viewer-title">
-            Evidence preview
+            {t("viewer.title")}
           </h2>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-            Real-time visual inspection of extracted audit evidence.
+            {t("viewer.desc")}
           </p>
         </div>
         <div className="dt-empty-state mt-8 py-16">
@@ -169,11 +171,10 @@ export function ViewerPane({
           </div>
           <div className="max-w-[280px] space-y-2">
             <p className="text-center text-lg font-bold text-slate-900 dark:text-white">
-              No active preview
+              {t("viewer.noPreview")}
             </p>
             <p className="text-center text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">
-              Import evidence files or select a matched row to unlock the task
-              pane viewer.
+              {t("viewer.emptyState")}
             </p>
           </div>
         </div>
@@ -261,7 +262,7 @@ export function ViewerPane({
         <div className="min-w-0 flex-1">
           <p className="dt-kicker flex items-center gap-1.5">
             <Eye className="h-3 w-3" />
-            Viewer
+            {t("viewer.kicker")}
           </p>
           <h2 className="dt-section-title truncate" id="active-viewer-title">
             {activeDocument.fileName}
@@ -295,11 +296,11 @@ export function ViewerPane({
           type="button"
         >
           <ChevronLeft className="h-4 w-4" />
-          Prev
+          {t("app.prev")}
         </button>
         <div className="flex min-w-0 items-center gap-2 truncate px-2 text-[0.65rem] font-bold tracking-widest text-slate-400 uppercase">
           <Search className="h-3.5 w-3.5 shrink-0" />
-          {viewer.query ? `Query: ${viewer.query}` : "Live Inspection"}
+          {viewer.query ? `Query: ${viewer.query}` : t("viewer.liveInspection")}
         </div>
         <button
           className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-xs font-bold text-slate-600 transition-colors hover:bg-white hover:text-slate-900 disabled:opacity-30 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
@@ -311,7 +312,7 @@ export function ViewerPane({
           }
           type="button"
         >
-          Next
+          {t("app.next")}
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
@@ -324,7 +325,7 @@ export function ViewerPane({
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
                   <span className="text-xs font-bold tracking-widest text-slate-600 uppercase">
-                    Rendering PDF...
+                    {t("viewer.renderingPdf")}
                   </span>
                 </div>
               </div>
@@ -476,27 +477,28 @@ export function ViewerPane({
         <div className="rounded-[2rem] border border-white/60 bg-white/40 p-5 dark:border-white/5 dark:bg-slate-900/40">
           <div className="flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
             <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-            Detected Metadata
+            {t("viewer.detectedMetadata")}
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {activeDocument.invoiceNumber?.value ? (
               <span className="dt-chip font-bold">
-                Invoice {activeDocument.invoiceNumber.value}
+                {t("viewer.invoiceNum")} {activeDocument.invoiceNumber.value}
               </span>
             ) : null}
             {typeof activeDocument.amount?.value === "number" ? (
               <span className="dt-chip font-bold">
-                Amount {activeDocument.amount.value.toFixed(2)}
+                {t("viewer.amountVal")} {activeDocument.amount.value.toFixed(2)}
               </span>
             ) : null}
             {activeDocument.date?.value ? (
               <span className="dt-chip font-bold">
-                Date {activeDocument.date.value}
+                {t("viewer.dateVal")} {activeDocument.date.value}
               </span>
             ) : null}
             {activeDocument.statementEntries.length ? (
               <span className="dt-chip font-bold">
-                {activeDocument.statementEntries.length} statement entries
+                {activeDocument.statementEntries.length}{" "}
+                {t("viewer.statementEntries")}
               </span>
             ) : null}
           </div>
@@ -505,7 +507,7 @@ export function ViewerPane({
         <div className="rounded-[2rem] border border-white/60 bg-white/40 p-5 dark:border-white/5 dark:bg-slate-900/40">
           <div className="flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
             <FileText className="h-3.5 w-3.5 text-sky-500" />
-            Relevant Snippets
+            {t("viewer.relevantSnippets")}
           </div>
           <div className="mt-4 grid gap-3">
             {(
@@ -529,10 +531,10 @@ export function ViewerPane({
                       <button
                         className="shrink-0 rounded-lg bg-emerald-50 px-2 py-1 text-[0.62rem] font-bold text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20"
                         onClick={() => createSnippetSnip(snippet, index)}
-                        title="Capture this extracted snippet"
+                        title={t("viewer.captureSnippet")}
                         type="button"
                       >
-                        Snip
+                        {t("viewer.snipBtn")}
                       </button>
                     ) : null}
                   </div>
@@ -568,6 +570,7 @@ function ImageSnipLayer({
   activeSnips,
   onSnip,
 }: ImageSnipLayerProps) {
+  const { locale } = useI18n();
   const [drawingStart, setDrawingStart] = useState<{
     x: number;
     y: number;
@@ -634,7 +637,10 @@ function ImageSnipLayer({
       documentId,
       fileName,
       pageNumber,
-      text: `Image region - page ${pageNumber} (${Math.round(boundingBox.x)}, ${Math.round(boundingBox.y)})`,
+      text:
+        locale === "my-MM"
+          ? `ပုံရိပ်အပိုင်းအခြား - စာမျက်နှာ ${pageNumber} (${Math.round(boundingBox.x)}, ${Math.round(boundingBox.y)})`
+          : `Image region - page ${pageNumber} (${Math.round(boundingBox.x)}, ${Math.round(boundingBox.y)})`,
       boundingBox,
       createdAt: new Date().toISOString(),
       sourceType: "manual-region",
@@ -687,7 +693,9 @@ function ImageSnipLayer({
           y="0"
         >
           <title>
-            Drag to draw a custom image region, or click to use default box
+            {locale === "my-MM"
+              ? "ပုံရိပ်အကွက်အသစ်ဆွဲရန် ဖိဆွဲပါ သို့မဟုတ် သတ်မှတ်ပြီးသားအကွက်သုံးရန် ကလစ်နှိပ်ပါ"
+              : "Drag to draw a custom image region, or click to use default box"}
           </title>
         </rect>
       ) : null}

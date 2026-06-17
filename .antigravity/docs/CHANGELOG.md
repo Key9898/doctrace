@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-06-17
+
+- Relocated the repository `CHANGELOG.md` to `.antigravity/docs/CHANGELOG.md` to consolidate documentation assets.
+- **Branch Restructuring & Isolation**: Cleaned up the `development` branch to focus strictly on Phase 1 (Engagement Dashboard & Matching Workspace) features by removing pre-scaffolded Phase 2 components (`ClientPortal.tsx`, `TrialBalance.tsx`, `Workpapers.tsx`). Created and isolated these files in a dedicated `phase-2` branch to keep Phase 1 development clean, lightweight, and production-ready.
+- **Repository & Git Tracking Cleanups**: Untracked temporary development and build files (`scratch/` directory contents and `lint_output.txt`) from Git index while keeping them safe on the local disk. Updated `.gitignore` to permanently ignore these paths to avoid accidental tracking.
+- Completed full bilingual localization support for English and Myanmar (`en-US` and `my-MM`) locales on the `development` branch across all Phase 1 panels (Selection, Match Config, Document Library, Results, Templates, Snips, Viewer, Workflow Stepper, Activity Feed).
+- Polished auditing terminology in `translations.ts` to use professional Myanmar terminology (e.g., "အလုံးစုံ အရေးကြီးမှုအဆင့်", "လုပ်ငန်းဆောင်ရွက်မှု အရေးကြီးမှုအဆင့်", "ဂရုမပြုလောက်သည့် အဆင့်").
+- Added dynamic explanation translations in `formatters.ts` (`formatExplanation`) to dynamically translate system-generated matching explanations into Burmese.
+- Completely removed trademarked competitor references ("DataSnipper-style") and references to "MVP" from `WorkflowStepper.tsx`.
+- Removed the "MVP" badge from the Project Header, replacing it with the clean version badge `Phase 1 (v1.0.0)` in the stepper controls.
+- Updated the Project Status section with proper versioning and localized descriptors.
+- Verified development branch changes via vitest (65/65 tests passing) and ran clean production builds.
+
 ## 2026-06-02
 
 - Fixed Excel Task Pane button/input click interactions not responding inside WebView2 on Windows Desktop.
@@ -64,7 +77,7 @@
 - Overhauled the Excel Diagnostics panel with premium aesthetics, fixing non-standard background colors in Dark Mode and grouping metrics into logical, icon-driven sections.
 - Enhanced the "Live Activity" empty state with a professional layout and icon-driven hierarchy.
 - Standardized layout spacing across the task pane and improved visual depth for stats boxes using refined shadows and borders.
-- Forced class-based Dark Mode strategy in Tailwind CSS for more reliable theme switching.
+- Enforced class-based Dark Mode strategy in Tailwind CSS for more reliable theme switching.
 - Promoted the latest Excel verification marker to `dev-2026-04-26-a`.
 
 ## 2026-04-25
@@ -105,6 +118,11 @@
 - Replaced label-based hidden file uploads with explicit button-triggered file pickers and added direct bundled JSON sample loaders for Excel webviews where file dialogs are unreliable.
 - Expanded the bundled sample JSON evidence to cover three matching rows and duplicated the files into a top-level `samples/` folder so local Excel testing has ready-to-use invoice and bank datasets.
 - Added a persistent in-pane `Live activity` feed so Excel-side actions and failures remain visible even when toast messages are easy to miss inside the task pane.
+- Instrumented selection capture, sample import, template actions, viewer focus, and matching with explicit success/error activity events instead of silent no-ops.
+- Added a one-click `Prepare demo workspace` flow that seeds a dedicated `DocTrace Demo` worksheet in Excel, captures the sample range, and loads bundled invoice and bank evidence automatically.
+- Replaced evidence upload triggers with native visible file inputs to improve PDF, image, and JSON importing reliability inside Excel's embedded webview.
+- Tightened narrow-sidebar responsive layout behavior so section headers, action buttons, and mapping controls no longer feel cramped in the Excel task pane.
+- Added runtime error and unhandled-promise diagnostics so unexpected client-side failures surface in both toast notifications and the new activity feed.
 - Instrumented selection capture, sample import, template actions, viewer focus, and matching with explicit success/error activity events instead of silent no-ops.
 - Added a one-click `Prepare demo workspace` flow that seeds a dedicated `DocTrace Demo` worksheet in Excel, captures the sample range, and loads bundled invoice and bank evidence automatically.
 - Replaced evidence upload triggers with native visible file inputs to improve PDF, image, and JSON importing reliability inside Excel's embedded webview.

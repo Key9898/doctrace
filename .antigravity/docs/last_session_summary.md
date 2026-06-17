@@ -1,6 +1,29 @@
 # Last Session Summary
 
-- **Latest Session (All Today's Fixes & Enhancements)**: Implemented surgical Row-by-Row matching, resolved the persistent Excel PDF loading exception, cleaned up Step 1 Selection Panel layout, and integrated full materiality assessment and locking controls:
+- **Latest Session (Bilingual Localization & Phase 1 Refinements)**: Completed branch restructuring/cleanup, full translation support for English and Myanmar locales, dynamic matching explanation translating helper, competitor/MVP branding removal, and updated documentation structures:
+  - **Branch Restructuring & Isolation**:
+    1. Cleaned up the `development` branch to focus strictly on Phase 1 (Engagement Dashboard & Matching Workspace) features by removing pre-scaffolded Phase 2 components (`ClientPortal.tsx`, `TrialBalance.tsx`, `Workpapers.tsx`).
+    2. Created and isolated these files in a dedicated `phase-2` branch to keep Phase 1 development clean, lightweight, and production-ready.
+    3. Untracked temporary workspace directories (`scratch/`) and build artifacts (`lint_output.txt`) from Git tracking while preserving local copies on disk, and updated `.gitignore` to prevent them from being tracked.
+  - **Full Phase 1 Bilingual Localization ([translations.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/i18n/translations.ts))**:
+    1. Localized all hardcoded English UI strings, buttons, descriptions, tooltips, and placeholders across all Phase 1 components: `SelectionPanel`, `MatchConfigPanel`, `DocumentLibraryPanel`, `ResultsPanel`, `TemplateLibraryPanel`, `SnipPanel`, `ViewerPane`, `WorkflowStepper`, and `ActivityPanel`.
+    2. Polished Myanmar auditing terminology inside translations dictionary (e.g. converting materiality concepts, workpapers, bank statements, discrepancy assessments, and exception labels to professional, standard Burmese auditing terms).
+    3. Restored missing translation keys: `"workflow.step3Desc"` and `"eng.status.completed"`.
+  - **Dynamic Explanation Localization ([formatters.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/utils/formatters.ts))**:
+    1. Created a runtime parser `formatExplanation(...)` in formatters utility that parses English match explanations (e.g. `"Invoice matched by invoice number, amount; bank statement evidence identified"`) and dynamically translates them to Burmese when the active locale is set to `my-MM`.
+    2. Wrapped all match result explanations inside `ResultsPanel` cards with `formatExplanation`.
+  - **Branding and Versioning Refinements ([WorkflowStepper.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/WorkflowStepper/WorkflowStepper.tsx) & [EngagementManager.tsx](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/components/EngagementManager/EngagementManager.tsx))**:
+    1. Removed competitor brand references ("DataSnipper-style sidebar flow") and "Phase 1 MVP" text from `WorkflowStepper.tsx`.
+    2. Updated the stepper kicker/badge to represent versioning as `Phase 1 (v1.0.0)`.
+    3. Fully localized the setup wizard, status dropdown selectors, toast notifications, team assignments, and deletion confirmation modal elements in `EngagementManager.tsx`.
+  - **Changelog Relocation**:
+    1. Relocated `CHANGELOG.md` from the project root to `.antigravity/docs/CHANGELOG.md` to keep documentation centralized inside `.antigravity/docs/`.
+    2. Updated the changelog with a new entry detailing today's changes.
+  - **Verification**: Verified all changes by writing unit tests for `formatExplanation` in `formatters.test.ts`, passing all 65 vitest test assertions, and successfully compiling the project via production build (`npm run build`).
+
+---
+
+- **Previous Session (Row-by-Row Matching & Excel PDF Loading Fix)**: Implemented surgical Row-by-Row matching, resolved the persistent Excel PDF loading exception, cleaned up Step 1 Selection Panel layout, and integrated full materiality assessment and locking controls:
   - **PDF Document Loading & URL Restoration Fix ([useDocTraceController.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/app/useDocTraceController.ts) & [app-store.ts](file:///c:/Users/keych/Development/Projects/Personal/doctrace/src/state/app-store.ts))**:
     1. Removed the `!state.officeAvailable` guard inside `importDocumentFiles` so that PDF/image blobs are always persisted to IndexedDB regardless of Excel/browser mode.
     2. Modified `saveEngagementsToStorage` inside `app-store.ts` to clear `objectUrl` properties before serialization to `localStorage` (setting them to `""`), preventing stale session-specific blob URLs from being persisted.

@@ -1,6 +1,7 @@
 import { AlertTriangle, CheckCircle2, Clock3, Info } from "lucide-react";
 
 import type { ActivityEvent } from "@/types/domain";
+import { useI18n } from "@/hooks/useI18n";
 
 interface ActivityPanelProps {
   activityFeed: ActivityEvent[];
@@ -11,19 +12,17 @@ export function ActivityPanel({
   activityFeed,
   busyMessage,
 }: ActivityPanelProps) {
+  const { t } = useI18n();
   return (
     <section className="dt-panel">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="dt-kicker">Live activity</p>
-          <h2 className="dt-section-title">What DocTrace is doing now</h2>
-          <p className="mt-1 text-xs text-slate-500">
-            Every click reports here so Excel-side failures are visible without
-            opening DevTools.
-          </p>
+          <p className="dt-kicker">{t("activity.kicker")}</p>
+          <h2 className="dt-section-title">{t("activity.title")}</h2>
+          <p className="mt-1 text-xs text-slate-500">{t("activity.desc")}</p>
         </div>
         <span className="dt-badge dt-badge-neutral">
-          {activityFeed.length} event(s)
+          {activityFeed.length} {t("activity.events")}
         </span>
       </div>
 
@@ -57,7 +56,7 @@ export function ActivityPanel({
                     </p>
                     <span className="inline-flex items-center gap-1 text-[0.7rem] font-medium tracking-[0.12em] text-slate-400 uppercase">
                       <Clock3 className="h-3 w-3" />
-                      {formatEventTime(activity.createdAt)}
+                      {formatEventTime(activity.createdAt, t)}
                     </span>
                   </div>
                   {activity.description ? (
@@ -75,21 +74,18 @@ export function ActivityPanel({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5">
             <Clock3 className="h-6 w-6 text-slate-400" />
           </div>
-          <p className="max-w-[240px]">
-            Click an action like <strong>Prepare demo workspace</strong> and the
-            results will appear here.
-          </p>
+          <p className="max-w-[240px]">{t("activity.emptyState")}</p>
         </div>
       )}
     </section>
   );
 }
 
-function formatEventTime(value: string) {
+function formatEventTime(value: string, t: (key: any) => string) {
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "just now";
+    return t("activity.justNow");
   }
 
   return date.toLocaleTimeString("en-GB", {

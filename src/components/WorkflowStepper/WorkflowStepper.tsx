@@ -1,3 +1,7 @@
+import { Check } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
+import type { TranslationKey } from "@/i18n/translations";
+
 interface WorkflowStepperProps {
   selectionReady: boolean;
   documentsReady: boolean;
@@ -5,29 +9,11 @@ interface WorkflowStepperProps {
   onNavigate: (stepId: string) => void;
 }
 
-import { Check } from "lucide-react";
-
 const steps = [
-  {
-    id: "step-selection",
-    title: "Capture sample",
-    description: "Select sample rows from Excel",
-  },
-  {
-    id: "step-import",
-    title: "Import evidence",
-    description: "Load invoices and bank statements",
-  },
-  {
-    id: "step-config",
-    title: "Configure match",
-    description: "Map columns and set thresholds",
-  },
-  {
-    id: "step-review",
-    title: "Review output",
-    description: "Write results and inspect evidence",
-  },
+  { id: "step-selection" },
+  { id: "step-import" },
+  { id: "step-config" },
+  { id: "step-review" },
 ];
 
 export function WorkflowStepper({
@@ -36,30 +22,35 @@ export function WorkflowStepper({
   resultsReady,
   onNavigate,
 }: WorkflowStepperProps) {
+  const { t } = useI18n();
   const states = [selectionReady, documentsReady, documentsReady, resultsReady];
 
   return (
     <section className="dt-panel" aria-labelledby="workflow-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="dt-kicker">Workflow</p>
+          <p className="dt-kicker">{t("workflow.kicker")}</p>
           <h2 className="dt-section-title" id="workflow-title">
-            DataSnipper-style sidebar flow
+            {t("workflow.title")}
           </h2>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-            Progress overview only. Use the interactive controls above to run
-            each step.
+            {t("workflow.desc")}
           </p>
         </div>
-        <span className="dt-badge dt-badge-neutral">Phase 1 MVP</span>
+        <span className="dt-badge dt-badge-neutral">{t("workflow.badge")}</span>
       </div>
 
       <div className="mt-6 grid gap-3">
         {steps.map((step, index) => {
           const isComplete = states[index];
+          const stepTitle = t(
+            `workflow.step${index + 1}Title` as TranslationKey,
+          );
+          const stepDesc = t(`workflow.step${index + 1}Desc` as TranslationKey);
+
           return (
             <button
-              key={step.title}
+              key={step.id}
               onClick={() => onNavigate(step.id)}
               type="button"
               className={`group relative rounded-[2rem] border p-4 text-left transition-all hover:shadow-md ${
@@ -86,10 +77,10 @@ export function WorkflowStepper({
                   <h3
                     className={`text-sm leading-tight font-bold ${isComplete ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-white"}`}
                   >
-                    {step.title}
+                    {stepTitle}
                   </h3>
                   <p className="mt-0.5 truncate text-xs font-medium text-slate-500 dark:text-slate-400">
-                    {step.description}
+                    {stepDesc}
                   </p>
                 </div>
                 {isComplete && (

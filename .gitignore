@@ -24,3 +24,7 @@ manifest.local.xml
 .env
 .env.*
 !.env.example
+
+# Temporary development and build files
+scratch/
+lint_output.txt

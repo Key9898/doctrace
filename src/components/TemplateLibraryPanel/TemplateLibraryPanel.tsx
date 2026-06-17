@@ -12,6 +12,7 @@ import {
 
 import type { MatchTemplate } from "@/types/domain";
 import { formatDate } from "@/utils/formatters";
+import { useI18n } from "@/hooks/useI18n";
 
 interface TemplateLibraryPanelProps {
   templates: MatchTemplate[];
@@ -32,6 +33,7 @@ export function TemplateLibraryPanel({
   onExport,
   onImport,
 }: TemplateLibraryPanelProps) {
+  const { t } = useI18n();
   const [templateName, setTemplateName] = useState("");
   const busy = Boolean(busyMessage);
 
@@ -39,16 +41,16 @@ export function TemplateLibraryPanel({
     <section className="dt-panel" aria-labelledby="templates-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="dt-kicker">Templates</p>
+          <p className="dt-kicker">{t("templates.kicker")}</p>
           <h2 className="dt-section-title" id="templates-title">
-            Workbook and team-shared setups
+            {t("templates.title")}
           </h2>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-            Replicate matching logic across workbooks and team audit projects.
+            {t("templates.desc")}
           </p>
         </div>
         <span className="dt-badge dt-badge-neutral">
-          {templates.length} setups
+          {templates.length} {t("templates.setups")}
         </span>
       </div>
 
@@ -57,13 +59,13 @@ export function TemplateLibraryPanel({
           <label className="block space-y-2">
             <span className="flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-              Template Name
+              {t("templates.nameLabel")}
             </span>
             <input
               className="dt-input"
               disabled={busy}
               onChange={(event) => setTemplateName(event.target.value)}
-              placeholder="e.g. Expense testing baseline"
+              placeholder={t("templates.placeholder")}
               type="text"
               value={templateName}
             />
@@ -79,7 +81,7 @@ export function TemplateLibraryPanel({
               type="button"
             >
               <Save className="h-4 w-4" />
-              {busy ? "Saving..." : "Save Template"}
+              {busy ? t("templates.saving") : t("templates.save")}
             </button>
             <button
               className="dt-button-secondary flex-1 sm:flex-none"
@@ -88,7 +90,7 @@ export function TemplateLibraryPanel({
               type="button"
             >
               <Download className="h-4 w-4" />
-              Export JSON
+              {t("templates.export")}
             </button>
           </div>
         </div>
@@ -98,7 +100,7 @@ export function TemplateLibraryPanel({
         <label className="block space-y-2">
           <span className="flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
             <Upload className="h-3.5 w-3.5 text-sky-500" />
-            Import Configuration
+            {t("templates.importLabel")}
           </span>
           <div className="group relative">
             <input
@@ -125,7 +127,7 @@ export function TemplateLibraryPanel({
       <div className="mt-8 flex items-center gap-2 px-2">
         <History className="h-4 w-4 text-slate-400" />
         <p className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
-          Saved Library
+          {t("templates.savedLibrary")}
         </p>
       </div>
 
@@ -150,7 +152,7 @@ export function TemplateLibraryPanel({
                   className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-rose-50 text-rose-500 transition-colors hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-500/20"
                   disabled={busy}
                   onClick={() => void onDelete(template.id)}
-                  title="Delete template"
+                  title={t("templates.deleteTooltip")}
                   type="button"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -159,13 +161,16 @@ export function TemplateLibraryPanel({
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="dt-chip font-bold">
-                  Tol. ±{template.config?.amountTolerance ?? 0}
+                  {t("templates.tol")}
+                  {template.config?.amountTolerance ?? 0}
                 </span>
                 <span className="dt-chip font-bold">
-                  {template.config?.dateToleranceDays ?? 0}d Window
+                  {template.config?.dateToleranceDays ?? 0}
+                  {t("templates.window")}
                 </span>
                 <span className="dt-chip font-bold">
-                  {template.config?.outputFields?.length ?? 0} Fields
+                  {template.config?.outputFields?.length ?? 0}{" "}
+                  {t("templates.fields")}
                 </span>
               </div>
 
@@ -177,7 +182,7 @@ export function TemplateLibraryPanel({
                   type="button"
                 >
                   <ClipboardCheck className="h-4 w-4" />
-                  Apply Setup
+                  {t("templates.apply")}
                 </button>
               </div>
             </article>
@@ -190,11 +195,10 @@ export function TemplateLibraryPanel({
           </div>
           <div className="max-w-[280px] space-y-2">
             <p className="text-center text-lg font-bold text-slate-900 dark:text-white">
-              No templates yet
+              {t("templates.emptyTitle")}
             </p>
             <p className="text-center text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">
-              Save your current column mapping and thresholds to reuse them
-              across different workbooks.
+              {t("templates.emptyDesc")}
             </p>
           </div>
         </div>

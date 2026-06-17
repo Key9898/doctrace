@@ -174,12 +174,7 @@ export function AppShell({
           role="tablist"
           aria-label="Workspace Modules"
         >
-          {(
-            [
-              "engagements",
-              "matching",
-            ] as AppModule[]
-          ).map((mod) => (
+          {(["engagements", "matching"] as AppModule[]).map((mod) => (
             <button
               key={mod}
               role="tab"
