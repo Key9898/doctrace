@@ -203,6 +203,7 @@ export type TranslationKey =
   | "viewer.noPreview"
   | "viewer.emptyState"
   | "viewer.pdfFailed"
+  | "viewer.fileNotFound"
   | "viewer.extractedSnippet"
   | "viewer.manualSnip"
   | "snips.kicker"
@@ -506,6 +507,8 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "viewer.emptyState":
       "ကြည့်ရှုစနစ်ကို အသုံးပြုရန် သက်သေခံဖိုင်များ တင်သွင်းပါ သို့မဟုတ် ကိုက်ညီသော စာရင်းလိုင်းတစ်ခုကို ရွေးချယ်ပါ။",
     "viewer.pdfFailed": "PDF စမ်းသပ်ကြည့်ရှုမှု မအောင်မြင်ပါ။",
+    "viewer.fileNotFound":
+      "ဒေသတွင်းသိုလှောင်မှုတွင် ဖိုင်ကို ရှာမတွေ့ပါ။ ကျေးဇူးပြု၍ ဖိုင်ကို ပြန်လည်တင်ပေးပါ။",
     "viewer.extractedSnippet": "ထုတ်ယူထားသော အကျဉ်းချုပ်",
     "viewer.manualSnip": "ကိုယ်တိုင် ဖြတ်ညုံချက်",
     "snips.kicker": "အမြင်အာရုံ ဖြတ်ညှပ်စနစ် (Visual Snipping)",
@@ -808,6 +811,8 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "viewer.emptyState":
       "Import evidence files or select a matched row to unlock the task pane viewer.",
     "viewer.pdfFailed": "PDF preview failed.",
+    "viewer.fileNotFound":
+      "Document file not found in local storage. Please re-upload the document.",
     "viewer.extractedSnippet": "extracted-snippet",
     "viewer.manualSnip": "manual-snip",
     "snips.kicker": "Visual Snipping",

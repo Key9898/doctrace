@@ -75,11 +75,16 @@ export function ViewerPane({
   useEffect(() => {
     setRenderError(undefined);
 
-    if (
-      !activeDocument ||
-      activeDocument.sourceKind !== "pdf" ||
-      !canvasRef.current
-    ) {
+    if (!activeDocument) {
+      return;
+    }
+
+    if (activeDocument.sourceKind !== "json" && !activeDocument.objectUrl) {
+      setRenderError(t("viewer.fileNotFound"));
+      return;
+    }
+
+    if (activeDocument.sourceKind !== "pdf" || !canvasRef.current) {
       setCanvasSize({ width: 0, height: 0 });
       return;
     }
@@ -318,7 +323,17 @@ export function ViewerPane({
       </div>
 
       <div className="mt-4 overflow-hidden rounded-[2.5rem] border border-white/80 bg-slate-950/95 shadow-xl transition-all dark:border-white/5">
-        {activeDocument.sourceKind === "pdf" ? (
+        {renderError ? (
+          <div className="flex min-h-[300px] flex-col items-center justify-center bg-slate-900/50 p-8 text-center">
+            <AlertCircle className="mb-3 h-10 w-10 text-rose-500" />
+            <h4 className="text-sm font-bold text-slate-200">
+              {t("viewer.pdfFailed")}
+            </h4>
+            <p className="mt-2 max-w-xs text-xs text-slate-400">
+              {renderError}
+            </p>
+          </div>
+        ) : activeDocument.sourceKind === "pdf" ? (
           <div className="relative min-h-[300px] overflow-auto bg-slate-200/50 p-6">
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/40 backdrop-blur-md">
@@ -465,13 +480,6 @@ export function ViewerPane({
           </div>
         )}
       </div>
-
-      {renderError ? (
-        <div className="mt-4 flex items-center gap-2 rounded-2xl bg-rose-50 px-4 py-3 text-xs font-bold text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">
-          <AlertCircle className="h-4 w-4" />
-          {renderError}
-        </div>
-      ) : null}
 
       <div className="mt-6 grid gap-4">
         <div className="rounded-[2rem] border border-white/60 bg-white/40 p-5 dark:border-white/5 dark:bg-slate-900/40">
