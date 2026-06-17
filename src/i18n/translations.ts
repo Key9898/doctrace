@@ -127,13 +127,13 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "quick.loadInvoices": "Sample invoice JSON တင်ပါ",
     "quick.loadBank": "Sample bank JSON တင်ပါ",
     "quick.mapping": "Suggested mapping သုံးပါ",
-    "project.kicker": "Project အခြေအနေ",
-    "project.title": "ဒီ MVP က audit teams အတွက် ဘာကြောင့်အလုပ်ဖြစ်လဲ",
+    "project.kicker": "DOCTRACE အကြောင်း",
+    "project.title": "အလိုအလျောက် သက်သေခံစာရွက်စာတမ်း တိုက်ဆိုင်စစ်ဆေးရေးအင်ဂျင်",
     "project.description":
-      "Traceability မြင့်တဲ့ deterministic audit evidence matching workflow ဖြစ်ပါတယ်။",
+      "စာရင်းဇယားပါ အချက်အလက်များကို Invoice နှင့် Bank Statement သက်သေခံစာရွက်စာတမ်းများနှင့် တိကျသေချာစွာ တိုက်ဆိုင်စစ်ဆေးပေးသည်။",
     "project.invoiceTitle": "Invoice-side evidence",
     "project.invoiceBody":
-      "Digital PDF, scanned image/OCR, JSON evidence bundle တွေထဲက invoice number, date, amount, reviewer snippets တွေကို extract လုပ်နိုင်ပါတယ်။",
+      "Digital PDF များမှ text ကို တိုက်ရိုက်ဖတ်ခြင်း၊ Scanned image များကို OCR ဖြင့် ဖတ်ခြင်းနှင့် စနစ်တကျ ပြင်ဆင်ထားသော JSON ဖိုင်များမှ invoice နံပါတ်၊ ရက်စွဲ၊ ပမာဏနှင့် သက်သေခံချက်များကို အလိုအလျောက် ထုတ်ယူနိုင်ပါသည်။",
     "project.statementTitle": "Statement-side traceability",
     "project.statementBody":
       "Bank statement lines တွေကို date, amount, reference candidates အဖြစ် parse လုပ်ပြီး mapped worksheet columns နဲ့ workbook audit log ထဲကိုရေးပေးပါတယ်။",
@@ -238,13 +238,13 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "quick.loadInvoices": "Load sample invoices JSON",
     "quick.loadBank": "Load sample bank JSON",
     "quick.mapping": "Apply suggested mapping",
-    "project.kicker": "Project Status",
-    "project.title": "Why this MVP works for audit teams",
+    "project.kicker": "ABOUT DOCTRACE",
+    "project.title": "Automated Document Matching Engine",
     "project.description":
-      "DataSnipper-style document matching built for deterministic audit evidence.",
+      "Deterministic verification of ledger rows against supporting invoices and bank statements.",
     "project.invoiceTitle": "Invoice-side evidence",
     "project.invoiceBody":
-      "Digital PDFs are parsed directly, scanned evidence falls back to OCR, and JSON evidence bundles are supported for structured imports.",
+      "Digital PDFs are parsed directly, scanned evidence falls back to local OCR, and structured data imports are supported for automated verification.",
     "project.statementTitle": "Statement-side traceability",
     "project.statementBody":
       "Bank statement lines are parsed into date, amount, and reference candidates, then written into mapped worksheet columns with a workbook audit log.",
