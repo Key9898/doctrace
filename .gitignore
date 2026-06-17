@@ -25,6 +25,15 @@ manifest.local.xml
 .env.*
 !.env.example
 
-# Temporary development and build files
+# Temporary development, build, and workspace log files (Excluded from main)
 scratch/
+samples/
 lint_output.txt
+CHANGELOG.md
+.antigravity/sources/
+.antigravity/docs/last_session_summary.md
+.antigravity/docs/REQUIREMENTS_GAP_ANALYSIS.md
+.antigravity/docs/TESTING.md
+.antigravity/docs/JSON_EVIDENCE_SCHEMA.md
+scripts/generate-sample-ledgers.js
+scripts/generate-sample-pdfs.js
