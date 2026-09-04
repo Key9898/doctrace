@@ -6,12 +6,17 @@ import reactRefresh from "eslint-plugin-react-refresh";
 
 export default tseslint.config(
   {
-    ignores: ["dist/**", "node_modules/**", "scratch/**"],
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      "scratch/**",
+      "backend/node_modules/**",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["scripts/**/*.mjs"],
+    files: ["scripts/**/*.mjs", "backend/**/*.mjs"],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -41,6 +46,19 @@ export default tseslint.config(
           allowConstantExport: true,
         },
       ],
+    },
+  },
+  {
+    files: ["backend/**/*.ts"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      "react-hooks/rules-of-hooks": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "react-refresh/only-export-components": "off",
     },
   },
 );

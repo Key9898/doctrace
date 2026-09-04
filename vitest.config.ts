@@ -7,23 +7,23 @@ export default defineConfig({
   test: {
     environment: "happy-dom",
     globals: true,
-    setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    setupFiles: ["./frontend/src/test/setup.ts"],
+    include: ["frontend/src/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      include: ["src/**/*.{ts,tsx}"],
+      include: ["frontend/src/**/*.{ts,tsx}"],
       exclude: [
-        "src/**/*.d.ts",
-        "src/test/**/*",
-        "src/main.tsx",
-        "src/types/**/*",
+        "frontend/src/**/*.d.ts",
+        "frontend/src/test/**/*",
+        "frontend/src/main.tsx",
+        "frontend/src/types/**/*",
       ],
     },
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "./frontend/src"),
     },
   },
 });
