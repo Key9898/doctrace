@@ -26,6 +26,8 @@ export default defineConfig(async ({ command }) => {
   }
 
   return {
+    root: path.resolve(__dirname, "frontend"),
+    envDir: path.resolve(__dirname),
     plugins: [
       react(),
       tailwindcss(),
@@ -65,7 +67,7 @@ export default defineConfig(async ({ command }) => {
     ],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "src"),
+        "@": path.resolve(__dirname, "frontend/src"),
       },
     },
     server: {
@@ -88,7 +90,8 @@ export default defineConfig(async ({ command }) => {
       ...(httpsOptions ? { https: httpsOptions } : {}),
     },
     build: {
-      outDir: "dist",
+      outDir: path.resolve(__dirname, "dist"),
+      emptyOutDir: true,
       sourcemap: true,
       target: "es2022",
     },

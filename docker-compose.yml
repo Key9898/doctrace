@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: doctrace
+      POSTGRES_PASSWORD: doctrace
+      POSTGRES_DB: doctrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - doctrace_pg:/var/lib/postgresql/data
+
+volumes:
+  doctrace_pg:
