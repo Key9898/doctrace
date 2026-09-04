@@ -368,4 +368,9 @@ export interface Engagement {
   ocrLanguage?: "mya+eng" | "eng";
 }
 
-export type AppModule = "matching" | "engagements";
+export type AppModule =
+  | "matching"
+  | "engagements"
+  | "trial-balance"
+  | "workpapers"
+  | "client-portal";

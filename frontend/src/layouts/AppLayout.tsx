@@ -8,6 +8,9 @@ import { AppShell } from "@/features/shell/components/AppShell/AppShell";
 import { DiagnosticsPanel } from "@/features/shell/components/DiagnosticsPanel/DiagnosticsPanel";
 import { DocumentLibraryPanel } from "@/features/documents/components/DocumentLibraryPanel/DocumentLibraryPanel";
 import { EngagementManager } from "@/features/engagements/components/EngagementManager/EngagementManager";
+import { ClientPortal } from "@/features/pbc-portal/components/ClientPortal/ClientPortal";
+import { TrialBalance } from "@/features/trial-balance/components/TrialBalance/TrialBalance";
+import { Workpapers } from "@/features/workpapers/components/Workpapers/Workpapers";
 import { MatchConfigPanel } from "@/features/matching/components/MatchConfigPanel/MatchConfigPanel";
 import { ResultsPanel } from "@/features/matching/components/ResultsPanel/ResultsPanel";
 import { SelectionPanel } from "@/features/office/components/SelectionPanel/SelectionPanel";
@@ -19,6 +22,7 @@ import { FirstRunCue } from "@/features/shell/components/FirstRunCue/FirstRunCue
 import { WorkflowStepper } from "@/features/shell/components/WorkflowStepper/WorkflowStepper";
 import { queriesForMatch } from "@/features/snipping/services/field-highlight";
 import { probeCloudHealth } from "@/lib/cloud/cloud-health";
+import { isVisibleAppModule } from "@/lib/prep-modules";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/lib/i18n/locales";
 import { translate } from "@/lib/i18n/translations";
 
@@ -87,6 +91,12 @@ export function AppLayout() {
   }, []);
 
   useEffect(() => {
+    if (!isVisibleAppModule(activeModule)) {
+      setModule("engagements");
+    }
+  }, [activeModule, setModule]);
+
+  useEffect(() => {
     if (lastEpochRef.current === null) {
       lastEpochRef.current = inspectionEpoch;
       return;
@@ -150,6 +160,20 @@ export function AppLayout() {
         onToggleDevMode={toggleDevMode}
       >
         {activeModule === "engagements" && <EngagementManager />}
+
+        {activeModule === "trial-balance" &&
+        isVisibleAppModule("trial-balance") ? (
+          <TrialBalance />
+        ) : null}
+
+        {activeModule === "workpapers" && isVisibleAppModule("workpapers") ? (
+          <Workpapers />
+        ) : null}
+
+        {activeModule === "client-portal" &&
+        isVisibleAppModule("client-portal") ? (
+          <ClientPortal />
+        ) : null}
 
         {activeModule === "matching" && (
           <>

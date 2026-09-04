@@ -37,6 +37,7 @@ import type {
 import { EMPTY_AUDIT_IDENTITY } from "@/types/domain";
 import { createId } from "@/lib/id";
 import { toDocumentStub } from "@/lib/persistence/engagement-payload";
+import { isVisibleAppModule } from "@/lib/prep-modules";
 import {
   persistEngagementDocuments,
   removeEngagementDocuments,
@@ -363,7 +364,7 @@ function resolveInitialActiveModule(): AppModule {
     const module = window.localStorage.getItem(
       ACTIVE_MODULE_STORAGE_KEY,
     ) as AppModule | null;
-    if (module === "matching" || module === "engagements") {
+    if (module && isVisibleAppModule(module)) {
       return module;
     }
   } catch {
@@ -596,8 +597,11 @@ export const useDocTraceStore = create<AppState>((set) => ({
       },
     })),
   setModule: (activeModule) => {
-    saveActiveModuleToStorage(activeModule);
-    set({ activeModule });
+    const next = isVisibleAppModule(activeModule)
+      ? activeModule
+      : "engagements";
+    saveActiveModuleToStorage(next);
+    set({ activeModule: next });
   },
   toggleDevMode: () =>
     set((state) => {

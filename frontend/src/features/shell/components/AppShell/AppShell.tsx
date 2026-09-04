@@ -2,6 +2,7 @@ import type { AppLocale } from "@/lib/i18n/locales";
 import { translate } from "@/lib/i18n/translations";
 import { ThemeToggle } from "@/features/shell/components/ThemeToggle/ThemeToggle";
 
+import { navTranslationKey, visibleAppModules } from "@/lib/prep-modules";
 import type { AppModule } from "@/types/domain";
 
 interface AppShellProps {
@@ -28,6 +29,7 @@ export function AppShell({
   children,
 }: AppShellProps) {
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+  const modules = visibleAppModules();
 
   return (
     <div className="dt-shell min-h-0 min-w-0">
@@ -119,23 +121,25 @@ export function AppShell({
         </header>
 
         <nav
-          className="flex items-center gap-1 border-b border-slate-200 pb-2 dark:border-slate-800"
+          className="flex flex-wrap items-center gap-1 border-b border-slate-200 pb-2 dark:border-slate-800"
           role="tablist"
           aria-label="Workspace Modules"
         >
-          {(["engagements", "matching"] as AppModule[]).map((mod) => (
+          {modules.map((mod) => (
             <button
               key={mod}
               role="tab"
               aria-selected={activeModule === mod}
               onClick={() => onModuleChange(mod)}
-              className={`flex h-8 min-w-0 flex-1 items-center justify-center rounded-lg px-2 text-[0.7rem] font-bold ${
+              className={`flex h-8 min-w-0 items-center justify-center rounded-lg px-2 text-[0.7rem] font-bold ${
+                modules.length > 2 ? "shrink-0" : "flex-1"
+              } ${
                 activeModule === mod
                   ? "bg-sky-600 text-white shadow-sm"
                   : "border border-white/60 bg-white/45 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
               }`}
             >
-              {t(mod === "matching" ? "nav.matching" : "nav.engagements")}
+              {t(navTranslationKey(mod))}
             </button>
           ))}
         </nav>

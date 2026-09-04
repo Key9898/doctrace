@@ -2,7 +2,7 @@
 
 Living product thesis. Not an Impl log.
 
-- History: [implementation-phases.md](../architecture/implementation-phases.md) (through Impl 43)
+- History: [implementation-phases.md](../architecture/implementation-phases.md) (through Impl 44)
 - Optional local-cloud leftover after the client drop: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md)
 
 Original client files live in gitignored `docs/client-documents/`. They describe EZAI, a broader browser-based multi-tenant audit OS (BRD/PRD/SAD/vision), plus a strategy memo PDF that combined CaseWare, DataSnipper, dashboards, and AI. **This wiki wins where those files conflict:** Excel-native Test of Details, local-first Phase 1, no login wall, no DataSnipper-identical claim, no hosted API in the Phase 1 client drop.
@@ -23,7 +23,7 @@ Client docs also describe firm admin, partner, associate hierarchy, and a later 
 
 ## How to read phases
 
-- **Phase 0 and Phase 1** are shipped. Do not paste Impl 1-43 here.
+- **Phase 0 and Phase 1** are shipped. Do not paste Impl 1-44 here.
 - **Phase 1 client drop** is what the client can use without a hosted backend: Vercel or local task pane, empty `VITE_API_URL`, IndexedDB and workbook storage.
 - **After the drop (not a new product phase):** optional local key-swap A-D on the tracker.
 - **Phase 2** is team and cloud operating capability (public host, shared templates, firm auth, central evidence restore, admin, full i18n).
@@ -33,15 +33,15 @@ Client docs also describe firm admin, partner, associate hierarchy, and a later 
 
 EZAI phase names in BRD/vision are not DocTrace phase numbers.
 
-| Client docs (EZAI)                                                                              | DocTrace                                                                                                                                                            |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase 1 Audit Core: browser SaaS, multi-tenant, TB import, moderate AI assistant, client portal | Not adopted as Phase 1. DocTrace Phase 1 is the Excel ToD add-in. Engagements dashboard and local evidence exist; TB import, AI assistant, and a PBC portal do not. |
-| Phase 2 AI and evidence intelligence (OCR extraction, AI drafting)                              | Maps to DocTrace Phase 3. Phase 1 already has Tesseract OCR and deterministic matching; those are not LLM.                                                          |
-| Phase 3 AI review and analytics / reviewer support                                              | Maps to DocTrace milestone 3.4.                                                                                                                                     |
-| Phase 4 regional SaaS expansion (vision)                                                        | After a public host exists. Not started. Not Phase 1.                                                                                                               |
-| SAD: cloud-native SaaS, S3-style object storage, hybrid external AI                             | Optional `backend/` + R2 PUT scaffold only. Public host and GET-restore stay Phase 2. Not the Phase 1 client drop.                                                  |
-| Strategy PDF: Next.js/NestJS/Textract/FastAPI; CaseWare + DataSnipper combination               | Not adopted. Task pane is Vite/React; API is `backend/` `node:http`. No DataSnipper-identical claim.                                                                |
-| Singapore cloud, MFA, Super Admin, template marketplace                                         | Phase 2 or out unless re-scoped.                                                                                                                                    |
+| Client docs (EZAI)                                                                              | DocTrace                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 1 Audit Core: browser SaaS, multi-tenant, TB import, moderate AI assistant, client portal | Not adopted as Phase 1. DocTrace Phase 1 is the Excel ToD add-in. Engagements dashboard and local evidence exist. Mock TB / workpapers / PBC shells can appear on `development` only when `VITE_SHOW_PREP_MODULES` is set; they are not the client drop. |
+| Phase 2 AI and evidence intelligence (OCR extraction, AI drafting)                              | Maps to DocTrace Phase 3. Phase 1 already has Tesseract OCR and deterministic matching; those are not LLM.                                                                                                                                               |
+| Phase 3 AI review and analytics / reviewer support                                              | Maps to DocTrace milestone 3.4.                                                                                                                                                                                                                          |
+| Phase 4 regional SaaS expansion (vision)                                                        | After a public host exists. Not started. Not Phase 1.                                                                                                                                                                                                    |
+| SAD: cloud-native SaaS, S3-style object storage, hybrid external AI                             | Optional `backend/` + R2 PUT scaffold only. Public host and GET-restore stay Phase 2. Not the Phase 1 client drop.                                                                                                                                       |
+| Strategy PDF: Next.js/NestJS/Textract/FastAPI; CaseWare + DataSnipper combination               | Not adopted. Task pane is Vite/React; API is `backend/` `node:http`. No DataSnipper-identical claim.                                                                                                                                                     |
+| Singapore cloud, MFA, Super Admin, template marketplace                                         | Phase 2 or out unless re-scoped.                                                                                                                                                                                                                         |
 
 ## Phase 0 (shipped)
 
@@ -88,6 +88,7 @@ Exists in-repo. The pane does not use it unless `VITE_API_URL` is set.
 
 - Sideload `manifest.production.xml` (Vercel pane) or local `manifest.xml`
 - Empty `VITE_API_URL`: matching, OCR, and import stay local; health probe skips
+- Empty `VITE_SHOW_PREP_MODULES`: Trial Balance, Workpapers, and Client PBC Portal stay hidden (showcase default)
 - No hosted API (Railway or other). No login UI. No backup button. No mail button. No R2 GET-restore
 - Excel sideload smoke is user-owned
 - Optional local key-swap after the drop is not this drop: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md)
@@ -112,6 +113,10 @@ Dev-only local key-swap, in order. Do not set `VITE_API_URL` until A and B work.
 
 This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a public host stay Phase 2.
 
+### Prep modules (not the client drop)
+
+Mock Trial Balance, Audit Workpapers, and Client PBC Portal live on `development` behind `VITE_SHOW_PREP_MODULES` (Impl 44). Empty or whitespace keeps them hidden for showcase. A non-empty gitignored `.env` value plus a Vite restart shows them while preparing. Do not set this on Vercel. Do not gate on localhost or the DEV badge. These mocks are not wiki Phase 2 (host, templates, firm auth, GET-restore) and not a git `phase-2` branch.
+
 ## Phase 2 (team and cloud)
 
 Not in the Phase 1 client drop. Client EZAI docs call much of this cloud-native SaaS. DocTrace maps only outcomes that fit an Excel add-in plus an optional API.
@@ -130,13 +135,13 @@ Status: **scaffold** = code exists, not live for the drop. **open** = not built.
 
 From client docs and wiki out-of-scope notes:
 
-- EZAI client portal / PBC room
-- Trial-balance or ERP import as the core product
+- EZAI client portal / PBC room (mock shell may exist behind `VITE_SHOW_PREP_MODULES`; not the client drop and not Phase 2 cloud)
+- Trial-balance or ERP import as the core product (same: mock shell only, flag-gated)
 - Template marketplace storefront
 - DataSnipper-identical Professional pack, Find All Sums, version compare, comments/markup
 - SharePoint or OneDrive as required storage
 - Dedicated mobile apps
-- CaseWare-class workpaper OS (strategy PDF)
+- CaseWare-class workpaper OS (strategy PDF; mock workpapers shell is flag-gated on `development` only)
 
 ## Phase 3 (AI/ML; after Phase 2 foundations)
 
