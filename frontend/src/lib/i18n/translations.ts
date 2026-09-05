@@ -14,6 +14,31 @@ export type TranslationKey =
   | "app.none"
   | "app.ready"
   | "app.language"
+  | "cloud.session"
+  | "cloud.email"
+  | "cloud.password"
+  | "cloud.login"
+  | "cloud.register"
+  | "cloud.logout"
+  | "cloud.failed"
+  | "cloud.skipped"
+  | "cloud.invalid"
+  | "cloud.signedIn"
+  | "cloud.backup"
+  | "cloud.mail"
+  | "cloud.backupOk"
+  | "cloud.mailOk"
+  | "cloud.backupFailed"
+  | "cloud.mailFailed"
+  | "cloud.noEvidence"
+  | "cloud.restore"
+  | "cloud.restoreOk"
+  | "cloud.restoreFailed"
+  | "cloud.firmRole"
+  | "cloud.firmRoleLocal"
+  | "cloud.firmAccessNotLive"
+  | "cloud.mfa"
+  | "cloud.mfaNotLive"
   | "app.browserWarning"
   | "project.kicker"
   | "project.title"
@@ -92,6 +117,7 @@ export type TranslationKey =
   | "eng.wizard.next"
   | "eng.wizard.back"
   | "eng.wizard.finish"
+  | "eng.wizard.progress"
   | "eng.placeholder.clientExample"
   | "eng.placeholder.epName"
   | "eng.placeholder.emName"
@@ -412,6 +438,33 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.none": "မရွေးရသေးပါ",
     "app.ready": "အသင့်ဖြစ်ပါပြီ",
     "app.language": "ဘာသာစကား",
+    "cloud.session": "အကောင့်",
+    "cloud.email": "အီးမေးလ်",
+    "cloud.password": "စကားဝှက်",
+    "cloud.login": "ဝင်မည်",
+    "cloud.register": "အကောင့်ဖွင့်မည်",
+    "cloud.logout": "ထွက်မည်",
+    "cloud.failed": "ဆက်သွယ်၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.skipped": "API URL မရှိသေးပါ။",
+    "cloud.invalid": "အီးမေးလ်နှင့် စကားဝှက် (အနည်းဆုံး ၈ လုံး) ထည့်ပါ။",
+    "cloud.signedIn": "ဝင်ရောက်ထားသည်",
+    "cloud.backup": "အရန်သိမ်းမည်",
+    "cloud.mail": "အီးမေးလ်",
+    "cloud.backupOk": "အရန်သိမ်းပြီးပါပြီ။",
+    "cloud.mailOk": "အကြောင်းကြားစာ ပို့ပြီးပါပြီ။",
+    "cloud.backupFailed": "အရန်သိမ်း၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.mailFailed": "အီးမေးလ် ပို့၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.noEvidence": "သိမ်းရန် စာရွက်စာတမ်း မရှိသေးပါ။",
+    "cloud.restore": "ပြန်ယူမည်",
+    "cloud.restoreOk": "ပြန်ယူပြီးပါပြီ။",
+    "cloud.restoreFailed":
+      "Cloud မှ ပြန်ယူ၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.firmRole": "အခန်းကဏ္ဍ",
+    "cloud.firmRoleLocal": "စက်တွင်း လုပ်ကိုင်သူ",
+    "cloud.firmAccessNotLive":
+      "Firm roles မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.mfa": "MFA",
+    "cloud.mfaNotLive": "MFA မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
     "app.browserWarning":
       "စမ်းသပ်ပြသမှုစနစ် (Browser preview mode) ဖြစ်နေပါသည်။ စာရင်းဇယားရွေးချယ်ခြင်း၊ ရလဒ်များကို Excel ထဲသို့ ပြန်လည်ရေးသားခြင်းနှင့် Hidden audit log များ သိမ်းဆည်းရန်အတွက် Excel အတွင်း DocTrace ကို ဖွင့်လှစ်အသုံးပြုပေးပါ။",
     "project.kicker": "DOCTRACE အကြောင်း",
@@ -460,12 +513,12 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.partial": "တစ်စိတ်တစ်ပိုင်းကိုက်ညီ",
     "status.exception": "လွဲမှားမှုရှိသည်",
     "nav.matching": "🛠️ စာရင်းတိုက်ဆိုင်စစ်ဆေးရေး",
-    "nav.engagements": "📊 Engagement Dashboard",
-    "nav.trialBalance": "⚖️ Trial Balance",
-    "nav.workpapers": "📁 Audit Workpapers",
-    "nav.clientPortal": "🌐 Client PBC Portal",
+    "nav.engagements": "📊 စာရင်းစစ်လုပ်ငန်း Dashboard",
+    "nav.trialBalance": "⚖️ စမ်းသပ်လက်ကျန် (Trial Balance)",
+    "nav.workpapers": "📁 စာရင်းစစ်မှတ်တမ်းတွဲများ",
+    "nav.clientPortal": "🌐 ကလိုင်းယင့် PBC Portal",
     "eng.title": "စာရင်းစစ်လုပ်ငန်းများနှင့် Dashboard",
-    "eng.kicker": "DocTrace Modules",
+    "eng.kicker": "DocTrace မော်ဂျူးများ",
     "eng.new": "စာရင်းစစ်လုပ်ငန်း အသစ်ဖန်တီးရန်",
     "eng.clientName": "ကလိုင်းယင့်အမည်",
     "eng.financialYear": "ဘဏ္ဍာရေးနှစ် (FY)",
@@ -492,7 +545,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "eng.unlock": "စာရင်းစစ်ဆေးမှု လော့ခ်ပြန်ဖွင့်ရန် (Unlock)",
     "eng.locked": "လော့ခ်ချပြီး",
     "eng.unlocked": "လော့ခ်မချရသေး",
-    "eng.wizard.title": "Engagement Setup Wizard",
+    "eng.wizard.title": "စာရင်းစစ်လုပ်ငန်း စတင်သတ်မှတ်ရန်",
     "eng.wizard.step1": "လုပ်ငန်းအခြေခံအချက်အလက်များ",
     "eng.wizard.step2": "အရေးကြီးမှုအဆင့်သတ်မှတ်ချက် (Materiality)",
     "eng.wizard.step3": "စာရင်းစစ်အဖွဲ့ဝင်များသတ်မှတ်ခြင်း",
@@ -500,6 +553,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "eng.wizard.next": "ရှေ့သို့",
     "eng.wizard.back": "နောက်သို့",
     "eng.wizard.finish": "စတင်မည်",
+    "eng.wizard.progress": "အဆင့် {current} / {total}",
     "eng.placeholder.clientExample": "ဥပမာ - TZ Assurance Client A",
     "eng.placeholder.epName": "EP အမည်",
     "eng.placeholder.emName": "EM အမည်",
@@ -872,6 +926,31 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.none": "None",
     "app.ready": "Ready",
     "app.language": "Language",
+    "cloud.session": "Account",
+    "cloud.email": "Email",
+    "cloud.password": "Password",
+    "cloud.login": "Sign in",
+    "cloud.register": "Create account",
+    "cloud.logout": "Sign out",
+    "cloud.failed": "Cloud sign-in failed. Matching still works.",
+    "cloud.skipped": "API URL is not set.",
+    "cloud.invalid": "Enter an email and a password of at least 8 characters.",
+    "cloud.signedIn": "Signed in",
+    "cloud.backup": "Backup",
+    "cloud.mail": "Mail",
+    "cloud.backupOk": "Backup finished.",
+    "cloud.mailOk": "Notice sent.",
+    "cloud.backupFailed": "Cloud backup failed. Matching still works.",
+    "cloud.mailFailed": "Cloud mail failed. Matching still works.",
+    "cloud.noEvidence": "No document is available to back up.",
+    "cloud.restore": "Restore",
+    "cloud.restoreOk": "Restore finished.",
+    "cloud.restoreFailed": "Cloud restore failed. Matching still works.",
+    "cloud.firmRole": "Role",
+    "cloud.firmRoleLocal": "Local operator",
+    "cloud.firmAccessNotLive": "Firm roles are not live. Matching still works.",
+    "cloud.mfa": "MFA",
+    "cloud.mfaNotLive": "MFA is not live. Matching still works.",
     "app.browserWarning":
       "Browser preview mode is active. Open DocTrace inside Excel to capture worksheet selections, write mapped output columns, and update the hidden audit log.",
     "project.kicker": "ABOUT DOCTRACE",
@@ -956,6 +1035,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "eng.wizard.next": "Next",
     "eng.wizard.back": "Back",
     "eng.wizard.finish": "Finish",
+    "eng.wizard.progress": "Step {current} of {total}",
     "eng.placeholder.clientExample": "e.g. TZ Assurance Client A",
     "eng.placeholder.epName": "EP Name",
     "eng.placeholder.emName": "EM Name",

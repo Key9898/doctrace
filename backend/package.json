@@ -8,6 +8,7 @@
     "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
     "generate": "node generate-client.mjs",
+    "migrate:deploy": "node migrate-deploy.mjs",
     "postinstall": "node generate-client.mjs"
   },
   "dependencies": {

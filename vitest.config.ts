@@ -3,8 +3,14 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 
 export default defineConfig({
+  define: {
+    "import.meta.env.VITE_API_URL": JSON.stringify(""),
+  },
   plugins: [react()],
   test: {
+    env: {
+      VITE_API_URL: "",
+    },
     environment: "happy-dom",
     globals: true,
     setupFiles: ["./frontend/src/test/setup.ts"],

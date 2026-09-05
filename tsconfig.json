@@ -21,5 +21,10 @@
       "@/*": ["frontend/src/*"]
     }
   },
-  "include": ["frontend/src", "vite.config.ts", "vitest.config.ts"]
+  "include": [
+    "frontend/src",
+    "frontend/site",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
 }

@@ -323,9 +323,9 @@ export function EngagementManager() {
   };
 
   const getFrameworkLabel = (fw: AuditFramework) => {
-    if (fw === "IFRS_SMEs") return "IFRS for SMEs";
-    if (fw === "IAS_IFRS") return "IAS / IFRS";
-    return fw;
+    if (fw === "IFRS_SMEs") return t("eng.fw.ifrs_smes");
+    if (fw === "IAS_IFRS") return t("eng.fw.ias_ifrs");
+    return t("eng.fw.isa");
   };
 
   // Progress ring variables
@@ -365,7 +365,9 @@ export function EngagementManager() {
                   {t("eng.wizard.title")}
                 </h3>
                 <span className="text-[10px] font-bold text-sky-600 dark:text-sky-400">
-                  Step {wizardStep} of 4
+                  {t("eng.wizard.progress")
+                    .replace("{current}", String(wizardStep))
+                    .replace("{total}", "4")}
                 </span>
               </div>
 
@@ -420,9 +422,11 @@ export function EngagementManager() {
                         }
                         className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                       >
-                        <option value="ISA">ISA</option>
-                        <option value="IAS_IFRS">IAS / IFRS</option>
-                        <option value="IFRS_SMEs">IFRS for SMEs</option>
+                        <option value="ISA">{t("eng.fw.isa")}</option>
+                        <option value="IAS_IFRS">{t("eng.fw.ias_ifrs")}</option>
+                        <option value="IFRS_SMEs">
+                          {t("eng.fw.ifrs_smes")}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -603,7 +607,7 @@ export function EngagementManager() {
                     </span>
                     <span className="font-semibold">{t("eng.status")}:</span>
                     <span className="font-bold text-slate-900 dark:text-white">
-                      {status}
+                      {getStatusLabel(status)}
                     </span>
 
                     <span className="col-span-2 my-1 border-t border-slate-200 dark:border-slate-700"></span>
@@ -612,19 +616,19 @@ export function EngagementManager() {
                       {t("eng.overallMateriality")}:
                     </span>
                     <span className="font-bold text-slate-900 dark:text-white">
-                      {overallMateriality.toLocaleString()}
+                      {formatCurrency(overallMateriality)}
                     </span>
                     <span className="font-semibold">
                       {t("eng.performanceMateriality")}:
                     </span>
                     <span className="font-bold text-slate-900 dark:text-white">
-                      {performanceMateriality.toLocaleString()}
+                      {formatCurrency(performanceMateriality)}
                     </span>
                     <span className="font-semibold">
                       {t("eng.trivialThreshold")}:
                     </span>
                     <span className="font-bold text-slate-900 dark:text-white">
-                      {trivialThreshold.toLocaleString()}
+                      {formatCurrency(trivialThreshold)}
                     </span>
 
                     <span className="col-span-2 my-1 border-t border-slate-200 dark:border-slate-700"></span>

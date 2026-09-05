@@ -4,7 +4,15 @@ Current `frontend/src/` layout. Keep each component folder name (`ResultsPanel/R
 
 ```text
 frontend/
-  index.html
+  index.html            public landing (`/`)
+  taskpane.html         Excel add-in (`/taskpane.html`)
+  support.html
+  privacy.html
+  terms.html
+  site/                 public-site CSS/TS/copy only
+    site.css
+    site.ts
+    copy.ts
   public/assets/
   src/
     main.tsx
@@ -33,7 +41,9 @@ frontend/
       cloud/cloud-config.ts
       cloud/cloud-health.ts
       cloud/cloud-auth.ts
+      cloud/cloud-session.ts
       cloud/cloud-evidence.ts
+      cloud/cloud-backup-pick.ts
       cloud/cloud-mail.ts
       prep-modules.ts
     features/
@@ -84,6 +94,7 @@ frontend/
         services/viewer-zoom.ts
       shell/
         components/AppShell/
+        components/CloudSessionPanel/
         components/ToastViewport/
         components/ActivityPanel/
         components/WorkflowStepper/
@@ -108,7 +119,7 @@ backend/
   src/services/r2.ts
   src/services/brevo.ts
   prisma/schema.prisma
-  prisma/migrations/      init SQL only; not applied until later key-swap
+  prisma/migrations/      init SQL; applied on this machine (Impl 46 leftover A)
 .env.example
 docker-compose.yml      optional Postgres 16; not required for the add-in
 manifest.xml
@@ -134,5 +145,5 @@ AGENTS.md
 - Import files directly. No feature barrel `index.ts`.
 - `ResultsPanel` (matching) may import `VirtualList` from shell (shared chrome).
 - Tests live in `frontend/src/test/` and import via `@/`, not colocated relative paths.
-- Root Vite `root` is `frontend/`. Build `outDir` stays repo-root `dist/`. Manifests stay at repo root.
-- `backend/` is a separate Node package (port 3001). Local listen is HTTPS when office-addin-dev-certs exist, otherwise HTTP. Init SQL in `prisma/migrations/` is not applied in Phase 1. Phase 1 task pane stays local-first unless `VITE_API_URL` is set. When the URL is set, `AppLayout` probes `GET {url}/health` once and fail-closes (no toast, matching unchanged). Health does not use Prisma, R2, or Brevo. Optional auth lives in `lib/cloud/cloud-auth.ts` and `backend` `/auth/*`; it is not imported from `AppLayout` and is not a login wall. Optional R2 backup lives in `lib/cloud/cloud-evidence.ts` and `PUT /evidence/:contentSha256`; local IndexedDB and workbook bytes stay the source of truth. Unconfigured R2 fail-closes after auth. The evidence client is not imported from `AppLayout`. Optional Brevo mail lives in `lib/cloud/cloud-mail.ts` and `POST /mail/account-notice`; it is notification-only to the session user email, carries no evidence or report payload, fail-closes when keys are empty, and is not imported from `AppLayout`.
+- Root Vite `root` is `frontend/`. Build `outDir` stays repo-root `dist/`. Manifests stay at repo root. Public site HTML lives beside `taskpane.html`; Excel `SourceLocation` is `/taskpane.html`.
+- `backend/` is a separate Node package (port 3001). Local listen is HTTPS when office-addin-dev-certs exist, otherwise HTTP. Init SQL in `prisma/migrations/` was applied on this machine (Impl 46 leftover A). Phase 1 task pane stays local-first unless `VITE_API_URL` is set. When the URL is set, `AppLayout` probes `GET {url}/health` once and fail-closes (no toast, matching unchanged), and mounts `CloudSessionPanel` when `isCloudEnabled()`. Health does not use Prisma, R2, or Brevo. Optional auth lives in `lib/cloud/cloud-auth.ts` and `backend` `/auth/*`; it is not a login wall. Optional R2 backup lives in `lib/cloud/cloud-evidence.ts` and `PUT /evidence/:contentSha256`; local IndexedDB and workbook bytes stay the source of truth. Unconfigured R2 and leftover B live PutObject fail-close after auth. Optional GET restore (`GET /evidence/:contentSha256`) is fail-closed (`restore_not_live`); it does not call GetObject and does not write IndexedDB. Signed-in Account chrome shows read-only Local operator and MFA not-live copy (Impl 56). Optional Brevo mail lives in `lib/cloud/cloud-mail.ts` and `POST /mail/account-notice`; it is notification-only to the session user email, carries no evidence or report payload, and fail-closes until leftover B. `AppLayout` imports `CloudSessionPanel`, not the cloud client modules directly.

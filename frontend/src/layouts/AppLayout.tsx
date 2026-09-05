@@ -5,6 +5,7 @@ import { useDocTraceStore } from "@/stores/app-store";
 import { useDocTraceController } from "@/app/useDocTraceController";
 import { ActivityPanel } from "@/features/shell/components/ActivityPanel/ActivityPanel";
 import { AppShell } from "@/features/shell/components/AppShell/AppShell";
+import { CloudSessionPanel } from "@/features/shell/components/CloudSessionPanel/CloudSessionPanel";
 import { DiagnosticsPanel } from "@/features/shell/components/DiagnosticsPanel/DiagnosticsPanel";
 import { DocumentLibraryPanel } from "@/features/documents/components/DocumentLibraryPanel/DocumentLibraryPanel";
 import { EngagementManager } from "@/features/engagements/components/EngagementManager/EngagementManager";
@@ -21,6 +22,7 @@ import { ViewerPane } from "@/features/snipping/components/ViewerPane/ViewerPane
 import { FirstRunCue } from "@/features/shell/components/FirstRunCue/FirstRunCue";
 import { WorkflowStepper } from "@/features/shell/components/WorkflowStepper/WorkflowStepper";
 import { queriesForMatch } from "@/features/snipping/services/field-highlight";
+import { isCloudEnabled } from "@/lib/cloud/cloud-config";
 import { probeCloudHealth } from "@/lib/cloud/cloud-health";
 import { isVisibleAppModule } from "@/lib/prep-modules";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/lib/i18n/locales";
@@ -158,6 +160,11 @@ export function AppLayout() {
         onModuleChange={setModule}
         devMode={devMode}
         onToggleDevMode={toggleDevMode}
+        headerExtra={
+          isCloudEnabled() ? (
+            <CloudSessionPanel locale={controller.locale} />
+          ) : null
+        }
       >
         {activeModule === "engagements" && <EngagementManager />}
 

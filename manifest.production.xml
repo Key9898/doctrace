@@ -6,7 +6,7 @@
   xsi:type="TaskPaneApp"
 >
   <Id>0f58f263-ea08-440c-8ce1-2ae8b61e1dd0</Id>
-  <Version>1.0.0.4</Version>
+  <Version>1.0.0.5</Version>
   <ProviderName>DocTrace</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="DocTrace" />
@@ -17,7 +17,7 @@
   <HighResolutionIconUrl
     DefaultValue="https://doctrace-one.vercel.app/assets/icon-80.png"
   />
-  <SupportUrl DefaultValue="https://doctrace-one.vercel.app/" />
+  <SupportUrl DefaultValue="https://doctrace-one.vercel.app/support.html" />
   <AppDomains>
     <AppDomain>https://doctrace-one.vercel.app</AppDomain>
   </AppDomains>
@@ -33,7 +33,9 @@
     </Sets>
   </Requirements>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://doctrace-one.vercel.app/index.html" />
+    <SourceLocation
+      DefaultValue="https://doctrace-one.vercel.app/taskpane.html"
+    />
   </DefaultSettings>
   <Permissions>ReadWriteDocument</Permissions>
   <VersionOverrides
@@ -128,7 +130,7 @@
       <bt:Urls>
         <bt:Url
           id="Taskpane.Url"
-          DefaultValue="https://doctrace-one.vercel.app/index.html"
+          DefaultValue="https://doctrace-one.vercel.app/taskpane.html"
         />
       </bt:Urls>
       <bt:ShortStrings>

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { backupCloudEvidence } from "@/lib/cloud/cloud-evidence";
+import {
+  backupCloudEvidence,
+  restoreCloudEvidence,
+} from "@/lib/cloud/cloud-evidence";
 
 const sha256 = "a".repeat(64);
 const bytes = new Uint8Array([1, 2, 3]);
@@ -161,5 +164,60 @@ describe("cloud-evidence", () => {
         timeoutMs: 20,
       }),
     ).resolves.toEqual({ status: "failed" });
+  });
+});
+
+describe("restoreCloudEvidence", () => {
+  it("does not fetch when the URL, token, or hash is empty", async () => {
+    const fetchImpl = vi.fn();
+
+    await expect(
+      restoreCloudEvidence({
+        contentSha256: sha256,
+        token: "sess_1",
+        url: "",
+        fetchImpl,
+      }),
+    ).resolves.toEqual({ status: "skipped" });
+    await expect(
+      restoreCloudEvidence({
+        contentSha256: sha256,
+        token: "",
+        url: "http://127.0.0.1:3001",
+        fetchImpl,
+      }),
+    ).resolves.toEqual({ status: "skipped" });
+    await expect(
+      restoreCloudEvidence({
+        contentSha256: "   ",
+        token: "sess_1",
+        url: "http://127.0.0.1:3001",
+        fetchImpl,
+      }),
+    ).resolves.toEqual({ status: "skipped" });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("GETs /evidence/{sha} and returns failed on 503", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValue(
+        jsonResponse(503, { ok: false, error: "restore_not_live" }),
+      );
+
+    await expect(
+      restoreCloudEvidence({
+        contentSha256: sha256,
+        token: "sess_1",
+        url: "  http://127.0.0.1:3001  ",
+        fetchImpl,
+      }),
+    ).resolves.toEqual({ status: "failed" });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    const [requestUrl, init] = fetchImpl.mock.calls[0];
+    expect(requestUrl).toBe(`http://127.0.0.1:3001/evidence/${sha256}`);
+    expect(init?.method).toBe("GET");
+    expect(init?.headers?.Authorization).toBe("Bearer sess_1");
+    expect(init?.body).toBeUndefined();
   });
 });
