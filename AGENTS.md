@@ -23,6 +23,19 @@
 8. Do not add feature barrel `index.ts` files. Import files directly.
 9. Keep demo/mock data in `frontend/src/demo/mocks/`.
 
+## Git branches
+
+Keep both long-lived branches. Solo: merge only when asked. Do not open a GitHub pull request. Ignore the Compare & pull request banner (`development` can stay ahead of `main`).
+
+1. Daily work is `development`. After any `main` edit, check out `development` again.
+2. Client drop path is `main` plus a version tag at drop time. Do not tag until a client drop is requested. `v0.1.0` is not tagged yet.
+3. Never name a git branch `phase-N`. Wiki phases are not git branches. Do not recreate `phase-2` or `legacy-saas-mocks`.
+4. Do not merge `development` into `main` while prep-module commit `d7f47c6` (or later prep-module work) is on `development`. That merge would put Trial Balance, Workpapers, and Client PBC files on `main`.
+5. `main` has the local-first add-in from `33b4cab` (merge `cac3878`). It must not contain `d7f47c6`. `AppModule` on `main` is matching and engagements only.
+6. To update `main` without prep-module files, copy or cherry-pick commits that do not introduce those features. Do not merge the `development` tip.
+7. Prep-module mocks live on `development` only, behind empty-by-default `VITE_SHOW_PREP_MODULES`. Do not set that variable on Vercel. Empty `VITE_API_URL` keeps the task pane local-first.
+8. Vercel production must deploy `main`. Do not point production at `development`.
+
 ## Quality gates
 
 1. After each meaningful change batch, do all four: an Impl row in `wiki/architecture/implementation-phases.md`, a note in `wiki/notes/`, a gitignored session summary in `docs/sessions/`, and a Lark Task in the chat reply (see Handoff output below). Skip none of these.

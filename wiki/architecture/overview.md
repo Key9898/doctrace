@@ -17,6 +17,9 @@ DocTrace
 |       |   |-- documents
 |       |   |-- office
 |       |   |-- engagements
+|       |   |-- trial-balance
+|       |   |-- workpapers
+|       |   |-- pbc-portal
 |       |   |-- snipping
 |       |   `-- shell
 |       |-- lib
@@ -47,6 +50,7 @@ DocTrace
 main.tsx -> App.tsx -> AppLayout
 AppLayout -> useDocTraceController
 AppLayout -> features/shell, matching, documents, office, engagements, snipping
+AppLayout -> trial-balance, workpapers, pbc-portal when VITE_SHOW_PREP_MODULES is set (development only)
 useDocTraceController -> stores/app-store + feature services
 workers/matching.worker -> features/matching/services/matching.service
 ```
@@ -59,6 +63,7 @@ workers/matching.worker -> features/matching/services/matching.service
 - `stores/`: Zustand app state (`useDocTraceStore`).
 - `app/`: composition root (`useDocTraceController`). Not split further.
 - `layouts/`: `AppLayout` holds the former App body (controller hook, locale effect, engagements vs matching).
+- On `development` only, `features/trial-balance`, `workpapers`, and `pbc-portal` are mock prep modules (Impl 44). They stay hidden unless `VITE_SHOW_PREP_MODULES` is non-empty. They are not on `main` and are not wiki Phase 2. Do not copy this tree onto `main` as if those folders exist there.
 - `frontend/src/App.tsx`: thin wrapper that only renders `AppLayout`.
 - `wiki/`: committed Impl history and architecture.
 - `docs/sessions/`: gitignored local session drafts.

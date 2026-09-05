@@ -50,5 +50,6 @@ Dual-track: each Impl has a committed wiki note, a gitignored session file, and 
 | 42   | 2026-09-04 | Prisma migrate files and backend HTTPS                        | this batch                                    | [note](../notes/2026-09-04-migrate-https.md)           | `docs/sessions/2026-09-04-session-summary-impl-42.md` |
 | 43   | 2026-09-05 | EngagementManager placeholder i18n                            | this batch                                    | [note](../notes/2026-09-05-engagement-i18n.md)         | `docs/sessions/2026-09-05-session-summary.md`         |
 | 44   | 2026-09-05 | Prep-module TB/workpapers/PBC behind env flag                 | this batch                                    | [note](../notes/2026-09-05-prep-modules.md)            | `docs/sessions/2026-09-05-session-summary-impl-44.md` |
+| 45   | 2026-09-05 | Git branch rules in AGENTS.md                                 | this batch                                    | [note](../notes/2026-09-05-git-flow.md)                | `docs/sessions/2026-09-05-session-summary-impl-45.md` |
 
 Do not re-list `useEffectEvent` → `useCallback` under Impl 15. That change belongs to Impl 13.

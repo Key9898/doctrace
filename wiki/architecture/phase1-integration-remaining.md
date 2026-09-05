@@ -1,6 +1,6 @@
 # Phase 1 integration remaining
 
-Living list for optional local-cloud key-swap after the Phase 1 client drop. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 44).
+Living list for optional local-cloud key-swap after the Phase 1 client drop. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 45).
 
 Phase 1 client drop is the Excel-native local-first add-in (Vercel task pane, empty `VITE_API_URL`). It does not include a hosted API.
 
