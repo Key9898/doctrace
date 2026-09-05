@@ -1,19 +1,198 @@
 <!doctype html>
-<html lang="en">
+<html lang="my">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DocTrace</title>
+    <meta
+      name="description"
+      content="DocTrace Excel add-in for audit Test of Details. Local-first matching in the task pane."
+    />
+    <title>DocTrace — Excel ထဲက Test of Details</title>
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <link rel="stylesheet" href="/site/site.css" />
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body data-page="landing" class="bg-paper text-ink antialiased">
+    <a
+      class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
+      href="#content"
+      data-i18n="skipToContent"
+    >
+      Skip to content
+    </a>
+    <p
+      class="border-rule bg-wash border-b px-4 py-2 text-center font-mono text-xs tracking-wide"
+      data-i18n="placeholderBanner"
+    ></p>
+    <div class="lg:grid lg:grid-cols-[3rem_minmax(0,1fr)]">
+      <aside
+        class="border-rule text-tick hidden items-center justify-center border-r font-mono text-[0.7rem] tracking-[0.35em] lg:flex"
+        aria-hidden="true"
+      >
+        <span class="site-rail">TRACE · MATCH · SNIP</span>
+      </aside>
+      <div>
+        <header
+          class="border-rule flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4 sm:px-10"
+        >
+          <a class="text-lg font-semibold tracking-tight" href="/">DocTrace</a>
+          <nav
+            class="flex flex-wrap items-center gap-5 text-sm"
+            aria-label="Site"
+          >
+            <a href="/support.html" data-i18n="navSupport">Support</a>
+            <a href="/privacy.html" data-i18n="navPrivacy">Privacy</a>
+            <a href="/terms.html" data-i18n="navTerms">Terms</a>
+            <div class="border-rule flex overflow-hidden border">
+              <button
+                type="button"
+                class="site-lang px-2 py-1 font-mono text-xs"
+                data-locale-set="my"
+                data-i18n="langMy"
+              >
+                မြန်မာ
+              </button>
+              <button
+                type="button"
+                class="site-lang border-rule border-l px-2 py-1 font-mono text-xs"
+                data-locale-set="en"
+                data-i18n="langEn"
+              >
+                EN
+              </button>
+            </div>
+          </nav>
+        </header>
+        <main id="content">
+          <section
+            class="border-rule grid gap-10 border-b px-6 py-16 sm:px-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(12rem,0.6fr)] lg:py-24"
+          >
+            <div>
+              <p
+                class="text-tick mb-4 font-mono text-xs tracking-[0.28em] uppercase"
+                data-i18n="kicker"
+              ></p>
+              <h1
+                class="max-w-xl text-4xl leading-[1.15] font-semibold tracking-tight sm:text-5xl"
+                data-i18n="heroLead"
+              ></h1>
+              <p
+                class="mt-6 max-w-prose text-lg leading-relaxed"
+                data-i18n="heroBody"
+              ></p>
+              <div class="mt-10 flex flex-wrap gap-3">
+                <a
+                  class="bg-ink text-wash px-5 py-3 text-sm"
+                  href="/support.html"
+                  data-i18n="ctaSupport"
+                ></a>
+                <a
+                  class="border-ink border px-5 py-3 text-sm"
+                  href="/taskpane.html"
+                  data-i18n="ctaPane"
+                ></a>
+              </div>
+            </div>
+            <div
+              class="border-rule bg-wash self-end border p-5 font-mono text-sm"
+              aria-hidden="true"
+            >
+              <div
+                class="text-tick grid grid-cols-3 gap-2 border-b border-dashed pb-3 text-xs tracking-widest"
+              >
+                <span data-i18n="colA"></span>
+                <span data-i18n="colB"></span>
+                <span data-i18n="colC"></span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 pt-3">
+                <span data-i18n="colSample"></span>
+                <span data-i18n="colEvidence"></span>
+                <span data-i18n="colTrace"></span>
+              </div>
+            </div>
+          </section>
+          <section class="border-rule border-b px-6 py-16 sm:px-10">
+            <h2
+              class="font-mono text-xs tracking-[0.28em] uppercase"
+              data-i18n="doesTitle"
+            ></h2>
+            <ol class="divide-rule mt-8 divide-y">
+              <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                <span class="text-tick font-mono text-sm">01</span>
+                <div>
+                  <h3 class="text-xl font-semibold" data-i18n="does1Title"></h3>
+                  <p
+                    class="mt-2 max-w-prose leading-relaxed"
+                    data-i18n="does1Body"
+                  ></p>
+                </div>
+              </li>
+              <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                <span class="text-tick font-mono text-sm">02</span>
+                <div>
+                  <h3 class="text-xl font-semibold" data-i18n="does2Title"></h3>
+                  <p
+                    class="mt-2 max-w-prose leading-relaxed"
+                    data-i18n="does2Body"
+                  ></p>
+                </div>
+              </li>
+              <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                <span class="text-tick font-mono text-sm">03</span>
+                <div>
+                  <h3 class="text-xl font-semibold" data-i18n="does3Title"></h3>
+                  <p
+                    class="mt-2 max-w-prose leading-relaxed"
+                    data-i18n="does3Body"
+                  ></p>
+                </div>
+              </li>
+            </ol>
+          </section>
+          <section
+            class="border-rule grid gap-8 border-b px-6 py-16 sm:px-10 lg:grid-cols-2"
+          >
+            <div>
+              <h2
+                class="font-mono text-xs tracking-[0.28em] uppercase"
+                data-i18n="notTitle"
+              ></h2>
+              <ul class="mt-6 max-w-prose space-y-3 leading-relaxed">
+                <li data-i18n="not1"></li>
+                <li data-i18n="not2"></li>
+                <li data-i18n="not3"></li>
+                <li data-i18n="not4"></li>
+              </ul>
+            </div>
+            <div class="lg:border-rule lg:border-l lg:pl-10">
+              <h2
+                class="font-mono text-xs tracking-[0.28em] uppercase"
+                data-i18n="dataTitle"
+              ></h2>
+              <p
+                class="mt-6 max-w-prose leading-relaxed"
+                data-i18n="dataBody"
+              ></p>
+              <h2
+                class="mt-10 font-mono text-xs tracking-[0.28em] uppercase"
+                data-i18n="platformsTitle"
+              ></h2>
+              <p
+                class="mt-6 max-w-prose leading-relaxed"
+                data-i18n="platformsBody"
+              ></p>
+            </div>
+          </section>
+        </main>
+        <footer class="px-6 py-10 sm:px-10">
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+        </footer>
+      </div>
+    </div>
+    <script type="module" src="/site/site.ts"></script>
   </body>
 </html>

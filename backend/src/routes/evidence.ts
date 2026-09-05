@@ -26,7 +26,7 @@ export async function handleEvidence(
   response: ServerResponse,
   pathname: string,
 ): Promise<void> {
-  if (request.method !== "PUT") {
+  if (request.method !== "PUT" && request.method !== "GET") {
     sendJson(response, 404, { ok: false, error: "not_found" });
     return;
   }
@@ -52,6 +52,11 @@ export async function handleEvidence(
     }
   } catch {
     sendJson(response, 500, { ok: false, error: "internal" });
+    return;
+  }
+
+  if (request.method === "GET") {
+    sendJson(response, 503, { ok: false, error: "restore_not_live" });
     return;
   }
 

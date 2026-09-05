@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="my">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DocTrace privacy policy for the Excel add-in and public pages."
+    />
+    <title>ကိုယ်ရေးမူဝါဒ</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/favicon-32.png"
+    />
+    <link rel="stylesheet" href="/site/site.css" />
+  </head>
+  <body data-page="privacy" class="bg-paper text-ink antialiased">
+    <a
+      class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
+      href="#content"
+      data-i18n="skipToContent"
+    ></a>
+    <p
+      class="border-rule bg-wash border-b px-4 py-2 text-center font-mono text-xs tracking-wide"
+      data-i18n="placeholderBanner"
+    ></p>
+    <header
+      class="border-rule flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4 sm:px-10"
+    >
+      <a class="text-lg font-semibold tracking-tight" href="/">DocTrace</a>
+      <nav class="flex flex-wrap items-center gap-5 text-sm" aria-label="Site">
+        <a href="/support.html" data-i18n="navSupport">Support</a>
+        <a href="/privacy.html" data-i18n="navPrivacy">Privacy</a>
+        <a href="/terms.html" data-i18n="navTerms">Terms</a>
+        <div class="border-rule flex overflow-hidden border">
+          <button
+            type="button"
+            class="site-lang px-2 py-1 font-mono text-xs"
+            data-locale-set="my"
+            data-i18n="langMy"
+          ></button>
+          <button
+            type="button"
+            class="site-lang border-rule border-l px-2 py-1 font-mono text-xs"
+            data-locale-set="en"
+            data-i18n="langEn"
+          ></button>
+        </div>
+      </nav>
+    </header>
+    <main id="content" class="mx-auto max-w-3xl px-6 py-16 sm:px-10">
+      <p
+        class="text-tick mb-4 font-mono text-xs tracking-[0.28em] uppercase"
+        data-i18n="privacyKicker"
+      ></p>
+      <h1
+        class="text-4xl font-semibold tracking-tight"
+        data-i18n="privacyTitle"
+      ></h1>
+      <p class="mt-6 text-lg leading-relaxed" data-i18n="privacyLead"></p>
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold" data-i18n="privacyCollectTitle"></h2>
+        <p class="mt-3 leading-relaxed" data-i18n="privacyCollectBody"></p>
+      </section>
+      <section class="mt-10">
+        <h2 class="text-xl font-semibold" data-i18n="privacyUseTitle"></h2>
+        <p class="mt-3 leading-relaxed" data-i18n="privacyUseBody"></p>
+      </section>
+      <section class="border-rule mt-10 border-t pt-10">
+        <h2 class="text-xl font-semibold" data-i18n="privacyContactTitle"></h2>
+        <p class="mt-3 leading-relaxed" data-i18n="privacyContactBody"></p>
+        <p class="mt-4 font-mono text-sm">
+          <a class="text-tick underline" href="mailto:privacy@example.com"
+            >privacy@example.com</a
+          >
+        </p>
+      </section>
+    </main>
+    <footer class="px-6 py-10 sm:px-10">
+      <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+    </footer>
+    <script type="module" src="/site/site.ts"></script>
+  </body>
+</html>

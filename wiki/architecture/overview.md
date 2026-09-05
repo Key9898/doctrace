@@ -6,6 +6,11 @@
 DocTrace
 |-- frontend
 |   |-- index.html
+|   |-- taskpane.html
+|   |-- support.html
+|   |-- privacy.html
+|   |-- terms.html
+|   |-- site
 |   |-- public
 |   `-- src
 |       |-- App.tsx
@@ -62,7 +67,7 @@ workers/matching.worker -> features/matching/services/matching.service
 - `frontend/src/App.tsx`: thin wrapper that only renders `AppLayout`.
 - `wiki/`: committed Impl history and architecture.
 - `docs/sessions/`: gitignored local session drafts.
-- `backend/`: optional Node API (port 3001). Local listen is HTTPS when `{homedir}/.office-addin-dev-certs/localhost.crt` and `localhost.key` exist (same files Vite uses); otherwise HTTP with a `certs:install` warning. Init SQL lives in `prisma/migrations/` and is not applied until a later key-swap. The Excel task pane stays local-first when `VITE_API_URL` is empty. When the URL is set, a silent `GET /health` probe fail-closes on error. Health does not use Prisma, R2, or Brevo. Optional Bearer auth (`/auth/*`, `lib/cloud/cloud-auth.ts`) is not a login wall and is not wired from `AppLayout`. Optional R2 evidence backup (`PUT /evidence/:contentSha256`, `lib/cloud/cloud-evidence.ts`) is fail-closed when the URL, Bearer token, or R2 keys are missing; IndexedDB and workbook bytes stay local. Optional Brevo mail (`POST /mail/account-notice`, `lib/cloud/cloud-mail.ts`) is a session-user notification only, carries no evidence or report payload, and is not wired from `AppLayout`. Secrets stay in backend env, never on `VITE_` names.
+- `backend/`: optional Node API (port 3001). Local listen is HTTPS when `{homedir}/.office-addin-dev-certs/localhost.crt` and `localhost.key` exist (same files Vite uses); otherwise HTTP with a `certs:install` warning. Init SQL lives in `prisma/migrations/` and was applied on this machine (Impl 46 leftover A). The Excel task pane stays local-first when `VITE_API_URL` is empty. When the URL is set, a silent `GET /health` probe fail-closes on error. Health does not use Prisma, R2, or Brevo. `AppLayout` mounts `CloudSessionPanel` only when `isCloudEnabled()`. Optional Bearer auth (`/auth/*`, `lib/cloud/cloud-auth.ts`) is not a login wall. Optional R2 evidence backup (`PUT /evidence/:contentSha256`, `lib/cloud/cloud-evidence.ts`) is fail-closed when the URL, Bearer token, or R2 keys are missing; live PutObject still waits on leftover B. Optional GET restore (`GET /evidence/:contentSha256`) is fail-closed (`restore_not_live`); it does not call GetObject and does not write IndexedDB. IndexedDB and workbook bytes stay local. Signed-in Account chrome shows read-only Local operator and MFA not-live copy (Impl 56). Optional Brevo mail (`POST /mail/account-notice`, `lib/cloud/cloud-mail.ts`) is a session-user notification only, carries no evidence or report payload, and is fail-closed until leftover B. Secrets stay in backend env, never on `VITE_` names.
 
 ## Data flow
 

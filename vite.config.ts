@@ -94,6 +94,15 @@ export default defineConfig(async ({ command }) => {
       emptyOutDir: true,
       sourcemap: true,
       target: "es2022",
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, "frontend/index.html"),
+          taskpane: path.resolve(__dirname, "frontend/taskpane.html"),
+          support: path.resolve(__dirname, "frontend/support.html"),
+          privacy: path.resolve(__dirname, "frontend/privacy.html"),
+          terms: path.resolve(__dirname, "frontend/terms.html"),
+        },
+      },
     },
   };
 });

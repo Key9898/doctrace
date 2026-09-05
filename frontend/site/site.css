@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+@source not "../src";
+@source "../index.html";
+@source "../support.html";
+@source "../privacy.html";
+@source "../terms.html";
+@source "./**/*.ts";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-paper: #efe6d2;
+  --color-ink: #1c1712;
+  --color-tick: #b54718;
+  --color-rule: #cbbfa6;
+  --color-wash: #f7f1e4;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    font-family: var(--font-sans);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  button,
+  a,
+  [tabindex]:not([tabindex="-1"]) {
+    @apply focus-visible:ring-tick focus-visible:ring-offset-paper focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+  }
+}
+
+@layer components {
+  .site-rail {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .site-lang[aria-pressed="true"] {
+    background-color: var(--color-ink);
+    color: var(--color-wash);
+  }
+}

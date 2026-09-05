@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { AppLocale } from "@/lib/i18n/locales";
 import { translate } from "@/lib/i18n/translations";
 import { ThemeToggle } from "@/features/shell/components/ThemeToggle/ThemeToggle";
@@ -13,7 +15,8 @@ interface AppShellProps {
   onModuleChange: (module: AppModule) => void;
   devMode: boolean;
   onToggleDevMode: () => void;
-  children: React.ReactNode;
+  headerExtra?: ReactNode;
+  children: ReactNode;
 }
 
 export function AppShell({
@@ -25,6 +28,7 @@ export function AppShell({
   onModuleChange,
   devMode,
   onToggleDevMode,
+  headerExtra,
   children,
 }: AppShellProps) {
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
@@ -79,6 +83,7 @@ export function AppShell({
               )}
             </div>
             <div className="flex shrink-0 items-center gap-1">
+              {headerExtra ?? null}
               <div
                 className="inline-flex h-8 items-center gap-0.5 rounded-lg border border-white/60 bg-slate-100/80 p-0.5 dark:border-white/5 dark:bg-white/5"
                 role="group"

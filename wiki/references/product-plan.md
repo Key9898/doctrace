@@ -2,7 +2,7 @@
 
 Living product thesis. Not an Impl log.
 
-- History: [implementation-phases.md](../architecture/implementation-phases.md) (through Impl 43)
+- History: [implementation-phases.md](../architecture/implementation-phases.md) (through Impl 56)
 - Optional local-cloud leftover after the client drop: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md)
 
 Original client files live in gitignored `docs/client-documents/`. They describe EZAI, a broader browser-based multi-tenant audit OS (BRD/PRD/SAD/vision), plus a strategy memo PDF that combined CaseWare, DataSnipper, dashboards, and AI. **This wiki wins where those files conflict:** Excel-native Test of Details, local-first Phase 1, no login wall, no DataSnipper-identical claim, no hosted API in the Phase 1 client drop.
@@ -39,7 +39,7 @@ EZAI phase names in BRD/vision are not DocTrace phase numbers.
 | Phase 2 AI and evidence intelligence (OCR extraction, AI drafting)                              | Maps to DocTrace Phase 3. Phase 1 already has Tesseract OCR and deterministic matching; those are not LLM.                                                          |
 | Phase 3 AI review and analytics / reviewer support                                              | Maps to DocTrace milestone 3.4.                                                                                                                                     |
 | Phase 4 regional SaaS expansion (vision)                                                        | After a public host exists. Not started. Not Phase 1.                                                                                                               |
-| SAD: cloud-native SaaS, S3-style object storage, hybrid external AI                             | Optional `backend/` + R2 PUT scaffold only. Public host and GET-restore stay Phase 2. Not the Phase 1 client drop.                                                  |
+| SAD: cloud-native SaaS, S3-style object storage, hybrid external AI                             | Optional `backend/` + R2 PUT scaffold and fail-closed GET (`restore_not_live`). Public host and live GET-restore stay Phase 2. Not the Phase 1 client drop.         |
 | Strategy PDF: Next.js/NestJS/Textract/FastAPI; CaseWare + DataSnipper combination               | Not adopted. Task pane is Vite/React; API is `backend/` `node:http`. No DataSnipper-identical claim.                                                                |
 | Singapore cloud, MFA, Super Admin, template marketplace                                         | Phase 2 or out unless re-scoped.                                                                                                                                    |
 
@@ -79,16 +79,16 @@ Exists in-repo. The pane does not use it unless `VITE_API_URL` is set.
 
 - `backend/` on `127.0.0.1:3001` (HTTPS when office-addin-dev-certs exist)
 - `GET /health` returns `{ ok: true }` without Postgres, R2, or Brevo
-- Fail-closed `/auth/*`, `PUT /evidence/:contentSha256`, `POST /mail/account-notice`
-- Frontend clients exist (`cloud-auth`, `cloud-evidence`, `cloud-mail`). `AppLayout` only calls `probeCloudHealth` (skips fetch when the URL is empty)
-- Init SQL exists under `backend/prisma/migrations/` and is not applied
+- Fail-closed `/auth/*`, `PUT /evidence/:contentSha256`, `GET /evidence/:contentSha256` (`restore_not_live`), `POST /mail/account-notice`
+- Frontend clients exist (`cloud-auth`, `cloud-evidence`, `cloud-mail`). `AppLayout` calls `probeCloudHealth` (skips fetch when the URL is empty) and mounts `CloudSessionPanel` only when `isCloudEnabled()`
+- Init SQL exists under `backend/prisma/migrations/` and was applied on this machine (Impl 46 leftover A)
 - Default CORS origin is `https://127.0.0.1:3000`
 
 ### Phase 1 client drop
 
 - Sideload `manifest.production.xml` (Vercel pane) or local `manifest.xml`
 - Empty `VITE_API_URL`: matching, OCR, and import stay local; health probe skips
-- No hosted API (Railway or other). No login UI. No backup button. No mail button. No R2 GET-restore
+- No hosted API (Railway or other). Optional local login, backup, mail, and restore UI exist when `VITE_API_URL` is set (fail-closed until leftover B is green). Restore GET is scaffold-only (`restore_not_live`); no live R2 GetObject.
 - Excel sideload smoke is user-owned
 - Optional local key-swap after the drop is not this drop: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md)
 
@@ -103,28 +103,35 @@ Already true in the current add-in. Do not regress.
 
 ## After the client drop (not a new product phase)
 
-Dev-only local key-swap, in order. Do not set `VITE_API_URL` until A and B work. Full list: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md).
+Dev-only local key-swap. Finish blank/fail-closed work first; ask the team leader only for credentials that must actually work. Full list: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md).
 
-- A. Postgres up, real `DATABASE_URL`, `prisma migrate deploy`
-- B. Real R2 and Brevo values in `backend/.env`
-- C. Root `VITE_API_URL=https://127.0.0.1:3001`
-- D. Optional login/signup UI against that local API: no login wall, matching stays usable, persist the session token (`cloud-auth` does not persist yet)
+**Done without team-leader live keys**
 
-This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a public host stay Phase 2.
+- A. **Done (this machine):** Postgres up, `DATABASE_URL`, `backend` `npm run migrate:deploy` applied `20260904184706_init`. Docker Desktop engine must be running to use the DB.
+- C. **Done (this machine, Impl 48):** Root gitignored `VITE_API_URL=https://127.0.0.1:3001`. Committed `.env.example` stays empty. Not Vercel.
+- D. **Done (code, Impl 47):** Optional login/signup UI and session persist (`doctrace.cloud.session`). No login wall. Visible on this machine after leftover C.
+- Backup, Mail, and Restore buttons (Impl 50 / 54). Backup/Mail stay fail-closed until leftover B is green. Restore stays fail-closed (`restore_not_live`) and does not write IndexedDB.
+- Signed-in read-only Role (Local operator) and MFA not-live chrome (Impl 56). No role picker. No MFA enroll. Matching stays unblocked.
+
+**Waiting on team leader**
+
+- B. **Attempted (Impl 49, retried Impl 51):** R2 env non-empty; live PUT still 502 `r2_failed`. Brevo env empty; POST still 503 `brevo_unconfigured`. Need working R2 PutObject (200) and working Brevo (200). Not `VITE_` names. Backup/mail UI is already wired (Impl 50). Restore UI is already wired fail-closed (Impl 54).
+
+This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a public host stay Phase 2. Leftover B live PutObject/Brevo is not green yet (Impl 51 retry).
 
 ## Phase 2 (team and cloud)
 
-Not in the Phase 1 client drop. Client EZAI docs call much of this cloud-native SaaS. DocTrace maps only outcomes that fit an Excel add-in plus an optional API.
+Not in the Phase 1 client drop. Client EZAI docs call much of this cloud-native SaaS. DocTrace maps only outcomes that fit an Excel add-in plus an optional API. Phase 2 is **not done**. Local leftover A-D is not Phase 2.
 
-Status: **scaffold** = code exists, not live for the drop. **open** = not built.
+Status: **scaffold** = code exists, fail-closed without live keys. **open** = not built. Live PUT/mail 200 waits on team-leader R2 and Brevo.
 
 - **Public API host (open):** Railway or equivalent; bind/CORS/`VITE_API_URL` for the Vercel pane, Excel on the web, and other PCs. Local `:3001` is not a public host. Not Phase 1.
 - **Organization templates (open):** team-wide cloud sync. Phase 1 keeps workbook-embedded templates and JSON export/import.
-- **Identity and firm access (open UI, scaffold routes):** firm-level roles once a host exists. Client docs add MFA, Super Admin, Firm Admin, associate restrictions, export authority. Optional local login UI is tracker D, not this bullet. No login wall on matching. Scaffold: `/auth/*` and `cloud-auth.ts` only.
-- **Central evidence (open restore, scaffold PUT):** GET-restore, retention, firm storage. Phase 1 source of truth stays IndexedDB and the workbook. Scaffold: R2 PUT only; no backup button.
-- **Notifications (scaffold):** mail button after real Brevo. Scaffold: `POST /mail/account-notice` (session email only; no evidence payload). Not wired from `AppLayout`.
+- **Identity and firm access (open live firm auth, scaffold chrome + local login):** real firm-level roles and MFA once a host exists. Client docs add Super Admin, Firm Admin, associate restrictions, export authority. Signed-in Account panel shows read-only Local operator + MFA not-live chrome (Impl 56). Optional local login UI is leftover D (Impl 47). No login wall on matching. Scaffold: `/auth/*` and `cloud-auth.ts`.
+- **Central evidence (open live restore, scaffold GET/PUT):** live GetObject, retention, firm storage. Phase 1 source of truth stays IndexedDB and the workbook. Scaffold: R2 PUT, fail-closed GET (`restore_not_live`), Backup + Restore buttons. Restore does not write IndexedDB. No live GET-restore.
+- **Notifications (scaffold):** signed-in Mail button wired (Impl 50, fail-closed until Brevo). Scaffold: `POST /mail/account-notice` (session email only; no evidence payload).
 - **Admin and deploy tooling (open)**
-- **Full enterprise i18n (open):** EngagementManager placeholders are done (Impl 43). Remaining firm-terminology i18n is still open. Locale, date, number, currency, and OCR language stay centralized in `frontend/src/lib/i18n/`.
+- **Full enterprise i18n:** EngagementManager placeholders (Impl 43) and remaining firm-terminology display (Impl 55) are done. Prep-module component copy stays later. Locale, date, number, currency, and OCR language stay centralized in `frontend/src/lib/i18n/`.
 
 ### Explicitly not DocTrace Phase 2 unless re-scoped
 
