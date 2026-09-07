@@ -10,13 +10,13 @@ export async function handleMail(
   pathname: string,
 ): Promise<void> {
   if (request.method !== "POST" || pathname !== ACCOUNT_NOTICE_PATH) {
-    sendJson(response, 404, { ok: false, error: "not_found" });
+    sendJson(request, response, 404, { ok: false, error: "not_found" });
     return;
   }
 
   const token = readBearerToken(request);
   if (!token) {
-    sendJson(response, 401, { ok: false, error: "unauthorized" });
+    sendJson(request, response, 401, { ok: false, error: "unauthorized" });
     return;
   }
 
@@ -25,26 +25,29 @@ export async function handleMail(
     const { findValidSession } = await import("../services/session.js");
     const session = await findValidSession(token);
     if (!session) {
-      sendJson(response, 401, { ok: false, error: "unauthorized" });
+      sendJson(request, response, 401, { ok: false, error: "unauthorized" });
       return;
     }
     toEmail = session.user.email;
   } catch {
-    sendJson(response, 500, { ok: false, error: "internal" });
+    sendJson(request, response, 500, { ok: false, error: "internal" });
     return;
   }
 
   const { isBrevoConfigured, sendAccountNotice } =
     await import("../services/brevo.js");
   if (!isBrevoConfigured()) {
-    sendJson(response, 503, { ok: false, error: "brevo_unconfigured" });
+    sendJson(request, response, 503, {
+      ok: false,
+      error: "brevo_unconfigured",
+    });
     return;
   }
 
   try {
     await sendAccountNotice(toEmail);
-    sendJson(response, 200, { ok: true });
+    sendJson(request, response, 200, { ok: true });
   } catch {
-    sendJson(response, 502, { ok: false, error: "brevo_failed" });
+    sendJson(request, response, 502, { ok: false, error: "brevo_failed" });
   }
 }

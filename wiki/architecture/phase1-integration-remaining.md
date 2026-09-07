@@ -1,6 +1,6 @@
 # Phase 1 integration remaining
 
-Living list for optional local-cloud key-swap after the Phase 1 client drop. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 56).
+Living list for optional local-cloud key-swap after the Phase 1 client drop. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 95).
 
 Phase 1 client drop is the Excel-native local-first add-in (Vercel task pane, empty `VITE_API_URL`). It does not include a hosted API.
 
@@ -34,9 +34,15 @@ Working credentials only. Do not invent. Do not overwrite `backend/.env` with gu
 
 ## Not this client drop (Phase 2 still open)
 
-- Railway or any public API host.
-- Live R2 GET-restore (GetObject + write into IndexedDB). Scaffold GET + Restore button shipped (Impl 54) and stay fail-closed (`restore_not_live`). IndexedDB and the workbook stay the source of truth.
-- Phase 2: team template cloud, live firm-level auth, MFA enroll, admin tooling. Signed-in Role/MFA chrome is scaffold only (Impl 56). Local leftover A-D is not that work.
+Team and cloud remaining work lives in [phase2-remaining.md](phase2-remaining.md). Local leftover A-D is not that list. Leftover B stays on this file.
+
+## Not this client drop (Phase 3)
+
+LLM/ML remaining work lives in [phase3-remaining.md](phase3-remaining.md). Not leftover A–D. Do not start live assist from this file.
+
+## Not this client drop (prep modules)
+
+Trial Balance, Workpapers, and Client PBC remaining work lives in [prep-modules-remaining.md](prep-modules-remaining.md). That list is not leftover A–D and not Phase 2 cloud. Do not add TB/PBC under leftover A–D. Leftover B stays on this file.
 
 ## User-owned
 

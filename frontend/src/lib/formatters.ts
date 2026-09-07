@@ -13,6 +13,7 @@ export function formatNumber(value?: number | null) {
   const { numberLocale } = getActiveLocaleConfig();
 
   return new Intl.NumberFormat(numberLocale, {
+    numberingSystem: "latn",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
@@ -31,6 +32,7 @@ export function formatCurrency(
 
   try {
     return new Intl.NumberFormat(numberLocale, {
+      numberingSystem: "latn",
       style: "currency",
       currency,
       minimumFractionDigits: 2,
@@ -55,6 +57,7 @@ export function formatDate(value?: string | null) {
   const { dateLocale } = getActiveLocaleConfig();
 
   return new Intl.DateTimeFormat(dateLocale, {
+    numberingSystem: "latn",
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -130,6 +133,11 @@ function mapExplanationSuffix(suffix: string): string {
   return suffix
     .split(", ")
     .map((bit) => {
+      const amountOr = /^amount ±(.+) or (.+)$/.exec(bit);
+      if (amountOr) {
+        return `ပမာဏ ±${amountOr[1]} သို့မဟုတ် ${amountOr[2]}`;
+      }
+
       const amount = /^amount ±(.+)$/.exec(bit);
       if (amount) {
         return `ပမာဏ ±${amount[1]}`;

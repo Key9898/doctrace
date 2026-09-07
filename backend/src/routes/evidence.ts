@@ -27,19 +27,19 @@ export async function handleEvidence(
   pathname: string,
 ): Promise<void> {
   if (request.method !== "PUT" && request.method !== "GET") {
-    sendJson(response, 404, { ok: false, error: "not_found" });
+    sendJson(request, response, 404, { ok: false, error: "not_found" });
     return;
   }
 
   const contentSha256 = parseEvidencePath(pathname);
   if (!contentSha256) {
-    sendJson(response, 400, { ok: false, error: "invalid_hash" });
+    sendJson(request, response, 400, { ok: false, error: "invalid_hash" });
     return;
   }
 
   const token = readBearerToken(request);
   if (!token) {
-    sendJson(response, 401, { ok: false, error: "unauthorized" });
+    sendJson(request, response, 401, { ok: false, error: "unauthorized" });
     return;
   }
 
@@ -47,35 +47,35 @@ export async function handleEvidence(
     const { findValidSession } = await import("../services/session.js");
     const session = await findValidSession(token);
     if (!session) {
-      sendJson(response, 401, { ok: false, error: "unauthorized" });
+      sendJson(request, response, 401, { ok: false, error: "unauthorized" });
       return;
     }
   } catch {
-    sendJson(response, 500, { ok: false, error: "internal" });
+    sendJson(request, response, 500, { ok: false, error: "internal" });
     return;
   }
 
   if (request.method === "GET") {
-    sendJson(response, 503, { ok: false, error: "restore_not_live" });
+    sendJson(request, response, 503, { ok: false, error: "restore_not_live" });
     return;
   }
 
   const { isR2Configured, putEvidenceObject } =
     await import("../services/r2.js");
   if (!isR2Configured()) {
-    sendJson(response, 503, { ok: false, error: "r2_unconfigured" });
+    sendJson(request, response, 503, { ok: false, error: "r2_unconfigured" });
     return;
   }
 
   const body = await readRawBody(request);
   if (!body.ok) {
-    sendJson(response, 400, { ok: false, error: "invalid_body" });
+    sendJson(request, response, 400, { ok: false, error: "invalid_body" });
     return;
   }
 
   const digest = createHash("sha256").update(body.bytes).digest("hex");
   if (digest !== contentSha256) {
-    sendJson(response, 400, { ok: false, error: "hash_mismatch" });
+    sendJson(request, response, 400, { ok: false, error: "hash_mismatch" });
     return;
   }
 
@@ -88,8 +88,8 @@ export async function handleEvidence(
 
   try {
     await putEvidenceObject(key, body.bytes, mimeType);
-    sendJson(response, 200, { ok: true, key });
+    sendJson(request, response, 200, { ok: true, key });
   } catch {
-    sendJson(response, 502, { ok: false, error: "r2_failed" });
+    sendJson(request, response, 502, { ok: false, error: "r2_failed" });
   }
 }

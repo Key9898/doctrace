@@ -5,6 +5,7 @@ import { useDocTraceStore } from "@/stores/app-store";
 import { useDocTraceController } from "@/app/useDocTraceController";
 import { ActivityPanel } from "@/features/shell/components/ActivityPanel/ActivityPanel";
 import { AppShell } from "@/features/shell/components/AppShell/AppShell";
+import { AdminConsolePanel } from "@/features/shell/components/AdminConsolePanel/AdminConsolePanel";
 import { CloudSessionPanel } from "@/features/shell/components/CloudSessionPanel/CloudSessionPanel";
 import { DiagnosticsPanel } from "@/features/shell/components/DiagnosticsPanel/DiagnosticsPanel";
 import { DocumentLibraryPanel } from "@/features/documents/components/DocumentLibraryPanel/DocumentLibraryPanel";
@@ -156,6 +157,13 @@ export function AppLayout() {
           ) : null
         }
       >
+        {isCloudEnabled() ? (
+          <AdminConsolePanel
+            hidden={inspectionFocused && activeModule === "matching"}
+            locale={controller.locale}
+          />
+        ) : null}
+
         {activeModule === "engagements" && <EngagementManager />}
 
         {activeModule === "matching" && (

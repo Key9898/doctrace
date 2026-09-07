@@ -16,7 +16,7 @@ const STEP_KEYS: TranslationKey[] = [
 ];
 
 export function FirstRunCue() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [visible, setVisible] = useState(() => !isFirstRunDismissed());
 
   if (!visible) {
@@ -46,7 +46,11 @@ export function FirstRunCue() {
         {STEP_KEYS.map((key, index) => (
           <li
             key={key}
-            className="truncate text-center text-[0.58rem] font-bold tracking-wide text-slate-500 dark:text-slate-400"
+            className={
+              locale === "my-MM"
+                ? "text-center text-[0.58rem] font-bold text-slate-500 dark:text-slate-400"
+                : "truncate text-center text-[0.58rem] font-bold tracking-wide text-slate-500 dark:text-slate-400"
+            }
           >
             {index + 1}. {t(key)}
           </li>

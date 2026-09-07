@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   fetchCloudMe,
-  loginCloudUser,
   logoutCloudUser,
-  registerCloudUser,
+  requestCloudOtp,
+  verifyCloudOtp,
 } from "@/lib/cloud/cloud-auth";
 
 function jsonResponse(status: number, body: unknown): Response {
@@ -14,18 +14,26 @@ function jsonResponse(status: number, body: unknown): Response {
   } as Response;
 }
 
-const credentials = { email: "auditor@example.com", password: "password1" };
 const user = { id: "user_1", email: "auditor@example.com" };
+const loginRequest = { email: "auditor@example.com", intent: "login" as const };
+const signupRequest = {
+  email: "auditor@example.com",
+  intent: "signup" as const,
+};
+const verifyPayload = { email: "auditor@example.com", code: "123456" };
 
 describe("cloud-auth", () => {
   it("does not fetch when the URL is empty, whitespace, or undefined", async () => {
     const fetchImpl = vi.fn();
 
     await expect(
-      loginCloudUser(credentials, { url: "", fetchImpl }),
+      requestCloudOtp(loginRequest, { url: "", fetchImpl }),
     ).resolves.toEqual({ status: "skipped" });
     await expect(
-      registerCloudUser(credentials, { url: "   ", fetchImpl }),
+      requestCloudOtp(signupRequest, { url: "   ", fetchImpl }),
+    ).resolves.toEqual({ status: "skipped" });
+    await expect(
+      verifyCloudOtp(verifyPayload, { url: "", fetchImpl }),
     ).resolves.toEqual({ status: "skipped" });
     await expect(
       fetchCloudMe("token", { url: undefined, fetchImpl }),
@@ -36,50 +44,64 @@ describe("cloud-auth", () => {
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it("POSTs /auth/login on a trimmed API URL and returns ok", async () => {
+  it("POSTs /auth/otp/request on a trimmed API URL and returns ok", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValue(jsonResponse(200, { ok: true, debugCode: "123456" }));
+
+    await expect(
+      requestCloudOtp(loginRequest, {
+        url: "  http://127.0.0.1:3001  ",
+        fetchImpl,
+      }),
+    ).resolves.toEqual({ status: "ok" });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    const [requestUrl, init] = fetchImpl.mock.calls[0];
+    expect(requestUrl).toBe("http://127.0.0.1:3001/auth/otp/request");
+    expect(init?.method).toBe("POST");
+    expect(init?.body).toBe(JSON.stringify(loginRequest));
+  });
+
+  it("POSTs /auth/otp/verify and returns ok on 200", async () => {
     const fetchImpl = vi
       .fn()
       .mockResolvedValue(jsonResponse(200, { token: "sess_1", user }));
 
     await expect(
-      loginCloudUser(credentials, {
-        url: "  http://127.0.0.1:3001  ",
-        fetchImpl,
-      }),
-    ).resolves.toEqual({ status: "ok", token: "sess_1", user });
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-    const [requestUrl, init] = fetchImpl.mock.calls[0];
-    expect(requestUrl).toBe("http://127.0.0.1:3001/auth/login");
-    expect(init?.method).toBe("POST");
-    expect(init?.body).toBe(JSON.stringify(credentials));
-  });
-
-  it("POSTs /auth/register and returns ok on 201", async () => {
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValue(jsonResponse(201, { token: "sess_1", user }));
-
-    await expect(
-      registerCloudUser(credentials, {
+      verifyCloudOtp(verifyPayload, {
         url: "http://127.0.0.1:3001/",
         fetchImpl,
       }),
     ).resolves.toEqual({ status: "ok", token: "sess_1", user });
     expect(fetchImpl.mock.calls[0][0]).toBe(
-      "http://127.0.0.1:3001/auth/register",
+      "http://127.0.0.1:3001/auth/otp/verify",
+    );
+    expect(fetchImpl.mock.calls[0][1]?.body).toBe(
+      JSON.stringify(verifyPayload),
     );
   });
 
-  it("returns failed when fetch throws, times out, or is unauthorized", async () => {
+  it("returns failed with the API error when request is rejected", async () => {
     await expect(
-      loginCloudUser(credentials, {
+      requestCloudOtp(loginRequest, {
         url: "http://127.0.0.1:3001",
         fetchImpl: vi.fn().mockRejectedValue(new Error("network")),
       }),
     ).resolves.toEqual({ status: "failed" });
 
     await expect(
-      loginCloudUser(credentials, {
+      requestCloudOtp(loginRequest, {
+        url: "http://127.0.0.1:3001",
+        fetchImpl: vi
+          .fn()
+          .mockResolvedValue(
+            jsonResponse(404, { ok: false, error: "user_not_found" }),
+          ),
+      }),
+    ).resolves.toEqual({ status: "failed", error: "user_not_found" });
+
+    await expect(
+      verifyCloudOtp(verifyPayload, {
         url: "http://127.0.0.1:3001",
         fetchImpl: vi
           .fn()
@@ -87,7 +109,7 @@ describe("cloud-auth", () => {
             jsonResponse(401, { ok: false, error: "unauthorized" }),
           ),
       }),
-    ).resolves.toEqual({ status: "failed" });
+    ).resolves.toEqual({ status: "failed", error: "unauthorized" });
 
     const hangingFetch = vi.fn(
       (_input: string, init?: { signal?: AbortSignal }) =>
@@ -98,7 +120,7 @@ describe("cloud-auth", () => {
         }),
     );
     await expect(
-      loginCloudUser(credentials, {
+      requestCloudOtp(loginRequest, {
         url: "http://127.0.0.1:3001",
         fetchImpl: hangingFetch,
         timeoutMs: 20,

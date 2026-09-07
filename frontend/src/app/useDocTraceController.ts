@@ -120,7 +120,7 @@ import type {
 } from "@/types/domain";
 import { createId } from "@/lib/id";
 import { UNSUPPORTED_FILE_TYPE } from "@/lib/files/evidence-file";
-import { translate } from "@/lib/i18n/translations";
+import { translate, type TranslationKey } from "@/lib/i18n/translations";
 import {
   resolveCurrency,
   resolveOcrLanguage,
@@ -183,6 +183,10 @@ function resolveErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+function toastT(key: TranslationKey) {
+  return translate(useDocTraceStore.getState().locale, key);
+}
+
 let workbookIdbCacheWarned = false;
 
 function notifyWorkbookIdbCacheMiss() {
@@ -192,9 +196,8 @@ function notifyWorkbookIdbCacheMiss() {
   workbookIdbCacheWarned = true;
   useDocTraceStore.getState().pushToast({
     tone: "info",
-    title: "Session cache failed",
-    description:
-      "The file is in this workbook. IndexedDB could not cache it for this session.",
+    title: toastT("persist.sessionCacheFailedTitle"),
+    description: toastT("persist.sessionCacheFailedDesc"),
   });
 }
 
@@ -555,8 +558,8 @@ async function focusSnipAnchorFromWorkbook(bindingId: string) {
   if (!document) {
     useDocTraceStore.getState().pushToast({
       tone: "error",
-      title: "Evidence could not be opened",
-      description: "The linked file is not in this workbook.",
+      title: toastT("persist.evidenceOpenFailedTitle"),
+      description: toastT("persist.evidenceOpenFailedDesc"),
     });
     return;
   }
@@ -693,14 +696,13 @@ export function useDocTraceController() {
         idbCacheWarned.current = true;
         stateRef.current.pushToast({
           tone: "info",
-          title: "Session cache failed",
-          description:
-            "The file is in this workbook. IndexedDB could not cache it for this session.",
+          title: toastT("persist.sessionCacheFailedTitle"),
+          description: toastT("persist.sessionCacheFailedDesc"),
         });
         recordActivity(
           "info",
-          "Session cache failed",
-          "Workbook embed succeeded; IndexedDB cache failed.",
+          toastT("persist.sessionCacheFailedTitle"),
+          toastT("activity.sessionCacheFailedDesc"),
         );
         return;
       }
@@ -708,14 +710,13 @@ export function useDocTraceController() {
       if (workbook === false && !idbOk) {
         stateRef.current.pushToast({
           tone: "error",
-          title: "Evidence was not stored",
-          description:
-            "The file could not be saved to the workbook or the session cache.",
+          title: toastT("persist.evidenceNotStoredTitle"),
+          description: toastT("persist.evidenceNotStoredWorkbookDesc"),
         });
         recordActivity(
           "error",
-          "Evidence was not stored",
-          "Workbook embed and IndexedDB both failed.",
+          toastT("persist.evidenceNotStoredTitle"),
+          toastT("activity.evidenceNotStoredBothDesc"),
         );
         return;
       }
@@ -723,13 +724,13 @@ export function useDocTraceController() {
       if (workbook === false && idbOk) {
         stateRef.current.pushToast({
           tone: "error",
-          title: "Workbook embed failed",
-          description: "Evidence was kept in IndexedDB for this session.",
+          title: toastT("persist.workbookEmbedFailedTitle"),
+          description: toastT("persist.workbookEmbedFailedDesc"),
         });
         recordActivity(
           "error",
-          "Workbook embed failed",
-          "Evidence was kept in IndexedDB for this session.",
+          toastT("persist.workbookEmbedFailedTitle"),
+          toastT("persist.workbookEmbedFailedDesc"),
         );
         return;
       }
@@ -737,14 +738,13 @@ export function useDocTraceController() {
       if (!idbOk) {
         stateRef.current.pushToast({
           tone: "error",
-          title: "Evidence was not stored",
-          description:
-            "IndexedDB could not save this file. It remains available in this session only.",
+          title: toastT("persist.evidenceNotStoredTitle"),
+          description: toastT("persist.evidenceNotStoredIdbDesc"),
         });
         recordActivity(
           "error",
-          "Evidence was not stored",
-          "IndexedDB blob persist failed.",
+          toastT("persist.evidenceNotStoredTitle"),
+          toastT("activity.evidenceNotStoredIdbDesc"),
         );
       }
     },
@@ -764,23 +764,29 @@ export function useDocTraceController() {
         useDocTraceStore.getState().setTemplates(validTemplates);
         recordActivity(
           "info",
-          "Workbook templates loaded",
-          `${validTemplates.length} template(s) available in this workbook.`,
+          toastT("activity.templatesLoadedTitle"),
+          toastT("activity.templatesLoadedDesc").replace(
+            "{count}",
+            String(validTemplates.length),
+          ),
         );
       })
       .catch((error) => {
         useDocTraceStore.getState().pushToast({
           tone: "error",
-          title: "Templates could not be loaded",
+          title: toastT("persist.templatesLoadFailedTitle"),
           description:
             error instanceof Error
               ? error.message
-              : "Workbook templates are unavailable.",
+              : toastT("persist.templatesLoadFailedFallback"),
         });
         recordActivity(
           "error",
-          "Workbook templates failed",
-          resolveErrorMessage(error, "Workbook templates are unavailable."),
+          toastT("activity.templatesFailedTitle"),
+          resolveErrorMessage(
+            error,
+            toastT("persist.templatesLoadFailedFallback"),
+          ),
         );
       });
   }, [recordActivity, state.officeAvailable, state.officeReady]);
@@ -808,7 +814,7 @@ export function useDocTraceController() {
           title: translate(stateRef.current.locale, "identity.saveFailed"),
           description: resolveErrorMessage(
             error,
-            "Workbook initials could not be read.",
+            toastT("identity.readFailedFallback"),
           ),
         });
       }
@@ -830,7 +836,7 @@ export function useDocTraceController() {
           title: translate(stateRef.current.locale, "eng.reportingSaveFailed"),
           description: resolveErrorMessage(
             error,
-            "Workbook reporting could not be read.",
+            toastT("eng.reportingReadFailedFallback"),
           ),
         });
       } finally {
@@ -846,10 +852,10 @@ export function useDocTraceController() {
       } catch (error) {
         useDocTraceStore.getState().pushToast({
           tone: "error",
-          title: "Audit log could not be loaded",
+          title: toastT("persist.auditLogLoadFailedTitle"),
           description: resolveErrorMessage(
             error,
-            "The hidden ISA log sheet could not be read.",
+            toastT("persist.auditLogLoadFailedFallback"),
           ),
         });
       }
@@ -883,7 +889,7 @@ export function useDocTraceController() {
         title: translate(stateRef.current.locale, "eng.reportingSaveFailed"),
         description: resolveErrorMessage(
           error,
-          "Workbook reporting could not be saved.",
+          toastT("eng.reportingSaveFailedFallback"),
         ),
       });
     });
@@ -912,7 +918,7 @@ export function useDocTraceController() {
         title: translate(stateRef.current.locale, "identity.saveFailed"),
         description: resolveErrorMessage(
           error,
-          "Workbook initials could not be saved.",
+          toastT("identity.saveFailedFallback"),
         ),
       });
     }
@@ -955,7 +961,7 @@ export function useDocTraceController() {
           title: translate(locale, "identity.saveFailed"),
           description: resolveErrorMessage(
             error,
-            "Workbook initials could not be saved.",
+            toastT("identity.saveFailedFallback"),
           ),
         });
       }
@@ -968,14 +974,13 @@ export function useDocTraceController() {
     if (!state.selection) {
       state.pushToast({
         tone: "error",
-        title: "Sample selection required",
-        description:
-          "Capture an Excel range first so DocTrace can suggest the input columns.",
+        title: toastT("match.sampleRequiredTitle"),
+        description: toastT("match.sampleRequiredMappingDesc"),
       });
       recordActivity(
         "error",
-        "Suggested mapping blocked",
-        "No Excel sample is active yet.",
+        toastT("activity.mappingBlockedTitle"),
+        toastT("activity.mappingBlockedDesc"),
       );
       return;
     }
@@ -987,14 +992,16 @@ export function useDocTraceController() {
     state.setConfig(nextConfig);
     state.pushToast({
       tone: "success",
-      title: "Suggested mapping applied",
-      description:
-        "Input roles and output columns were refreshed from the captured sample.",
+      title: toastT("match.mappingAppliedTitle"),
+      description: toastT("match.mappingAppliedDesc"),
     });
     recordActivity(
       "success",
-      "Suggested mapping applied",
-      `Mapped ${state.selection.columns.length} captured column(s).`,
+      toastT("match.mappingAppliedTitle"),
+      toastT("activity.mappingAppliedDesc").replace(
+        "{count}",
+        String(state.selection.columns.length),
+      ),
     );
   };
 
@@ -1002,20 +1009,19 @@ export function useDocTraceController() {
     if (!state.officeAvailable) {
       state.pushToast({
         tone: "error",
-        title: "Excel context required",
-        description:
-          "Open DocTrace inside Excel to capture a workbook selection.",
+        title: toastT("match.excelContextTitle"),
+        description: toastT("match.excelContextCaptureDesc"),
       });
       recordActivity(
         "error",
-        "Selection capture blocked",
-        "The add-in is not connected to an Excel host.",
+        toastT("activity.selectionBlockedTitle"),
+        toastT("activity.selectionBlockedDesc"),
       );
       return;
     }
 
     state.setBusyMessage("Reading the selected sample from Excel");
-    recordActivity("info", "Capturing Excel selection");
+    recordActivity("info", toastT("activity.capturingSelectionTitle"));
 
     try {
       const nextSelection = await captureSelection(state.hasHeaders);
@@ -1032,40 +1038,51 @@ export function useDocTraceController() {
 
       state.pushToast({
         tone: "success",
-        title: "Selection captured",
-        description: `${nextSelection.rowCount} sample rows are ready for matching.`,
+        title: toastT("match.selectionCapturedTitle"),
+        description: toastT("match.selectionCapturedDesc").replace(
+          "{count}",
+          String(nextSelection.rowCount),
+        ),
       });
       recordActivity(
         nextSelection.rowCount > 0 ? "success" : "error",
         nextSelection.rowCount > 0
-          ? "Selection captured"
-          : "Selection captured without sample rows",
+          ? toastT("match.selectionCapturedTitle")
+          : toastT("activity.selectionCapturedEmptyTitle"),
         nextSelection.rowCount > 0
-          ? `${nextSelection.address} is ready for mapping.`
-          : "Select at least one data row below the header row and capture again.",
+          ? toastT("activity.selectionCapturedDesc").replace(
+              "{address}",
+              nextSelection.address,
+            )
+          : toastT("activity.selectionCapturedEmptyDesc"),
       );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Selection capture failed",
+        title: toastT("match.selectionFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "Excel selection could not be read.",
+          toastT("match.selectionFailedFallback"),
         ),
       });
       recordActivity(
         "error",
-        "Selection capture failed",
-        resolveErrorMessage(error, "Excel selection could not be read."),
+        toastT("match.selectionFailedTitle"),
+        resolveErrorMessage(error, toastT("match.selectionFailedFallback")),
       );
     } finally {
       state.setBusyMessage(undefined);
     }
   };
 
-  const importDocumentFiles = async (kind: DocumentKind, files: File[]) => {
+  const importDocumentFiles = async (
+    kind: DocumentKind,
+    files: File[],
+  ): Promise<string[]> => {
+    const importedIds: string[] = [];
+
     if (!files.length) {
-      return;
+      return importedIds;
     }
 
     const locale = stateRef.current.locale;
@@ -1116,14 +1133,19 @@ export function useDocTraceController() {
               revokeParsedObjectUrls(parsedDocuments);
               stateRef.current.pushToast({
                 tone: "error",
-                title: `${file.name} was not stored`,
-                description:
-                  "The file is over 20 MB after processing and exceeds the workbook safety limit.",
+                title: toastT("persist.fileTooLargeTitle").replace(
+                  "{name}",
+                  file.name,
+                ),
+                description: toastT("persist.fileTooLargeDesc"),
               });
               recordActivity(
                 "error",
-                `${file.name} was not stored`,
-                "Evidence exceeded the 20 MB workbook safety limit.",
+                toastT("persist.fileTooLargeTitle").replace(
+                  "{name}",
+                  file.name,
+                ),
+                toastT("activity.fileTooLargeDesc"),
               );
               continue;
             }
@@ -1148,9 +1170,8 @@ export function useDocTraceController() {
                 workbookEmbedWarned.current = true;
                 stateRef.current.pushToast({
                   tone: "info",
-                  title: "Workbook embed unavailable",
-                  description:
-                    "This Excel host does not support Custom XML parts. Evidence stays in this session via IndexedDB.",
+                  title: toastT("persist.workbookEmbedUnavailableTitle"),
+                  description: toastT("persist.workbookEmbedUnavailableDesc"),
                 });
               }
             } else {
@@ -1178,6 +1199,7 @@ export function useDocTraceController() {
           if (parsed.status === "error") {
             failedCount += 1;
             state.upsertDocument(parsed);
+            importedIds.push(parsed.id);
             const parseDescription =
               parsed.error === UNSUPPORTED_FILE_TYPE
                 ? translate(locale, "import.unsupportedType")
@@ -1206,6 +1228,7 @@ export function useDocTraceController() {
             : parsed;
 
           state.upsertDocument(document);
+          importedIds.push(document.id);
           importedCount += 1;
         }
       }
@@ -1264,6 +1287,8 @@ export function useDocTraceController() {
     } finally {
       state.setBusyMessage(undefined);
     }
+
+    return importedIds;
   };
 
   const importDocuments = async (
@@ -1277,18 +1302,23 @@ export function useDocTraceController() {
     await importDocumentFiles(kind, Array.from(files));
   };
 
-  const importPickedDocuments = async (kind: DocumentKind, files: File[]) => {
+  const importPickedDocuments = async (
+    kind: DocumentKind,
+    files: File[],
+  ): Promise<string[]> => {
     if (!files.length) {
       recordActivity(
         "info",
-        kind === "invoice"
-          ? "Invoice picker dismissed"
-          : "Bank picker dismissed",
+        toastT(
+          kind === "invoice"
+            ? "activity.invoicePickerDismissed"
+            : "activity.bankPickerDismissed",
+        ),
       );
-      return;
+      return [];
     }
 
-    await importDocumentFiles(kind, files);
+    return importDocumentFiles(kind, files);
   };
 
   const removeDocument = (documentId: string) => {
@@ -1316,16 +1346,20 @@ export function useDocTraceController() {
       void removeEvidence(sharedHash).catch((error) => {
         stateRef.current.pushToast({
           tone: "error",
-          title: "Workbook evidence could not be removed",
+          title: toastT("persist.workbookEvidenceRemoveFailedTitle"),
           description: resolveErrorMessage(
             error,
-            "The document was removed from this session.",
+            toastT("persist.workbookEvidenceRemoveFailedFallback"),
           ),
         });
       });
     }
 
-    recordActivity("success", "Evidence removed", target?.fileName);
+    recordActivity(
+      "success",
+      toastT("activity.evidenceRemovedTitle"),
+      target?.fileName,
+    );
 
     if (state.viewer.documentId === documentId) {
       const fallback = state.documents.find(
@@ -1512,14 +1546,13 @@ export function useDocTraceController() {
     if (!state.selection) {
       state.pushToast({
         tone: "error",
-        title: "No sample selected",
-        description:
-          "Capture the Excel sample range before matching documents.",
+        title: toastT("match.noSampleTitle"),
+        description: toastT("match.noSampleDocsDesc"),
       });
       recordActivity(
         "error",
-        "Matching blocked",
-        "No Excel sample has been captured yet.",
+        toastT("activity.matchBlockedTitle"),
+        toastT("activity.matchBlockedNoSampleDesc"),
       );
       return;
     }
@@ -1527,14 +1560,13 @@ export function useDocTraceController() {
     if (!state.documents.length) {
       state.pushToast({
         tone: "error",
-        title: "No evidence imported",
-        description:
-          "Import invoices and bank statements before running a match.",
+        title: toastT("match.noEvidenceTitle"),
+        description: toastT("match.noEvidenceRunDesc"),
       });
       recordActivity(
         "error",
-        "Matching blocked",
-        "No evidence documents are loaded yet.",
+        toastT("activity.matchBlockedTitle"),
+        toastT("activity.matchBlockedNoEvidenceDesc"),
       );
       return;
     }
@@ -1542,13 +1574,13 @@ export function useDocTraceController() {
     if (!state.config.outputFields.length) {
       state.pushToast({
         tone: "error",
-        title: "No output fields selected",
-        description: "Choose at least one output field before matching.",
+        title: toastT("match.noOutputTitle"),
+        description: toastT("match.noOutputDesc"),
       });
       recordActivity(
         "error",
-        "Matching blocked",
-        "No output fields are enabled.",
+        toastT("activity.matchBlockedTitle"),
+        toastT("activity.matchBlockedNoOutputDesc"),
       );
       return;
     }
@@ -1561,14 +1593,13 @@ export function useDocTraceController() {
     if (outputMappingCheck.missingFields.length) {
       state.pushToast({
         tone: "error",
-        title: "Output mapping incomplete",
-        description:
-          "Every enabled output field needs a target Excel column before matching.",
+        title: toastT("match.outputIncompleteTitle"),
+        description: toastT("match.outputIncompleteBeforeDesc"),
       });
       recordActivity(
         "error",
-        "Matching blocked",
-        "Some enabled output fields do not have target Excel columns yet.",
+        toastT("activity.matchBlockedTitle"),
+        toastT("activity.matchBlockedIncompleteDesc"),
       );
       return;
     }
@@ -1576,14 +1607,13 @@ export function useDocTraceController() {
     if (outputMappingCheck.duplicateColumns.length) {
       state.pushToast({
         tone: "error",
-        title: "Output columns are duplicated",
-        description:
-          "Each enabled output field must write to a different Excel column.",
+        title: toastT("match.outputDuplicateTitle"),
+        description: toastT("match.outputDuplicateDesc"),
       });
       recordActivity(
         "error",
-        "Matching blocked",
-        "Duplicate Excel output columns were detected.",
+        toastT("activity.matchBlockedTitle"),
+        toastT("activity.matchBlockedDuplicateDesc"),
       );
       return;
     }
@@ -1591,8 +1621,10 @@ export function useDocTraceController() {
     state.setBusyMessage("Running deterministic document matching");
     recordActivity(
       "info",
-      "Running deterministic matching",
-      `${state.selection.rowCount} sample row(s) and ${state.documents.length} document(s).`,
+      toastT("activity.matchingRunningTitle"),
+      toastT("activity.matchingRunningDesc")
+        .replace("{rows}", String(state.selection.rowCount))
+        .replace("{docs}", String(state.documents.length)),
     );
 
     try {
@@ -1610,7 +1642,11 @@ export function useDocTraceController() {
           );
 
           if (detail) {
-            recordActivity("info", "Matching worker fallback", detail);
+            recordActivity(
+              "info",
+              toastT("activity.workerFallbackTitle"),
+              detail,
+            );
           }
         },
       );
@@ -1677,27 +1713,32 @@ export function useDocTraceController() {
 
       state.pushToast({
         tone: "success",
-        title: "Matching completed",
-        description: `${ran.length} sample row(s) were processed and written back to Excel.`,
+        title: toastT("match.completedTitle"),
+        description: toastT("match.completedDesc").replace(
+          "{count}",
+          String(ran.length),
+        ),
       });
       recordActivity(
         "success",
-        "Matching completed",
-        `${ran.length} row(s) processed with ${ran.filter((result) => result.status === "matched").length} full match(es).`,
+        toastT("match.completedTitle"),
+        toastT("activity.matchingCompletedDesc")
+          .replace("{count}", String(ran.length))
+          .replace(
+            "{matched}",
+            String(ran.filter((result) => result.status === "matched").length),
+          ),
       );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Matching failed",
-        description: resolveErrorMessage(
-          error,
-          "The matching run did not complete.",
-        ),
+        title: toastT("match.failedTitle"),
+        description: resolveErrorMessage(error, toastT("match.failedFallback")),
       });
       recordActivity(
         "error",
-        "Matching failed",
-        resolveErrorMessage(error, "The matching run did not complete."),
+        toastT("match.failedTitle"),
+        resolveErrorMessage(error, toastT("match.failedFallback")),
       );
     } finally {
       state.setBusyMessage(undefined);
@@ -1725,8 +1766,8 @@ export function useDocTraceController() {
     if (!state.selection) {
       state.pushToast({
         tone: "error",
-        title: "No sample selected",
-        description: "Capture the Excel sample range before matching.",
+        title: toastT("match.noSampleTitle"),
+        description: toastT("match.noSampleDesc"),
       });
       return;
     }
@@ -1734,8 +1775,8 @@ export function useDocTraceController() {
     if (!state.documents.length) {
       state.pushToast({
         tone: "error",
-        title: "No evidence imported",
-        description: "Import invoices and bank statements before matching.",
+        title: toastT("match.noEvidenceTitle"),
+        description: toastT("match.noEvidenceDesc"),
       });
       return;
     }
@@ -1743,8 +1784,8 @@ export function useDocTraceController() {
     if (!state.config.outputFields.length) {
       state.pushToast({
         tone: "error",
-        title: "No output fields selected",
-        description: "Choose at least one output field before matching.",
+        title: toastT("match.noOutputTitle"),
+        description: toastT("match.noOutputDesc"),
       });
       return;
     }
@@ -1757,8 +1798,8 @@ export function useDocTraceController() {
     if (outputMappingCheck.missingFields.length) {
       state.pushToast({
         tone: "error",
-        title: "Output mapping incomplete",
-        description: "Every enabled output field needs a target Excel column.",
+        title: toastT("match.outputIncompleteTitle"),
+        description: toastT("match.outputIncompleteDesc"),
       });
       return;
     }
@@ -1766,9 +1807,8 @@ export function useDocTraceController() {
     if (outputMappingCheck.duplicateColumns.length) {
       state.pushToast({
         tone: "error",
-        title: "Output columns are duplicated",
-        description:
-          "Each enabled output field must write to a different Excel column.",
+        title: toastT("match.outputDuplicateTitle"),
+        description: toastT("match.outputDuplicateDesc"),
       });
       return;
     }
@@ -1779,8 +1819,11 @@ export function useDocTraceController() {
     if (!targetRow) {
       state.pushToast({
         tone: "error",
-        title: "Row not found",
-        description: `Row ${rowNumber} is outside the captured selection range.`,
+        title: toastT("match.rowNotFoundTitle"),
+        description: toastT("match.rowNotFoundDesc").replace(
+          "{row}",
+          String(rowNumber),
+        ),
       });
       return;
     }
@@ -1788,8 +1831,10 @@ export function useDocTraceController() {
     state.setBusyMessage(`Matching Row ${rowNumber}`);
     recordActivity(
       "info",
-      "Running single-row match",
-      `Row ${rowNumber} from ${state.selection.sheetName}.`,
+      toastT("activity.singleRowRunningTitle"),
+      toastT("activity.singleRowRunningDesc")
+        .replace("{row}", String(rowNumber))
+        .replace("{sheet}", state.selection.sheetName),
     );
 
     try {
@@ -1828,27 +1873,34 @@ export function useDocTraceController() {
 
       state.pushToast({
         tone: "success",
-        title: `Row ${rowNumber} matched`,
-        description: `Row ${rowNumber} matched successfully (${result.confidence}% confidence).`,
+        title: toastT("match.rowMatchedTitle").replace(
+          "{row}",
+          String(rowNumber),
+        ),
+        description: toastT("match.rowMatchedDesc")
+          .replace("{row}", String(rowNumber))
+          .replace("{confidence}", String(result.confidence)),
       });
       recordActivity(
         "success",
-        `Row ${rowNumber} matched`,
-        `Status: ${result.status}, Confidence: ${result.confidence}%.`,
+        toastT("match.rowMatchedTitle").replace("{row}", String(rowNumber)),
+        toastT("activity.rowMatchedDesc")
+          .replace("{status}", result.status)
+          .replace("{confidence}", String(result.confidence)),
       );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: `Row ${rowNumber} match failed`,
-        description: resolveErrorMessage(
-          error,
-          "The matching run did not complete.",
+        title: toastT("match.rowFailedTitle").replace(
+          "{row}",
+          String(rowNumber),
         ),
+        description: resolveErrorMessage(error, toastT("match.failedFallback")),
       });
       recordActivity(
         "error",
-        `Row ${rowNumber} match failed`,
-        resolveErrorMessage(error, "The matching run did not complete."),
+        toastT("match.rowFailedTitle").replace("{row}", String(rowNumber)),
+        resolveErrorMessage(error, toastT("match.failedFallback")),
       );
     } finally {
       state.setBusyMessage(undefined);
@@ -1859,8 +1911,8 @@ export function useDocTraceController() {
     if (!state.officeAvailable) {
       state.pushToast({
         tone: "error",
-        title: "Excel connection required",
-        description: "Active row matching is only available inside Excel.",
+        title: toastT("match.excelConnectionTitle"),
+        description: toastT("match.excelConnectionDesc"),
       });
       return;
     }
@@ -1868,8 +1920,8 @@ export function useDocTraceController() {
     if (!state.selection) {
       state.pushToast({
         tone: "error",
-        title: "No sample selected",
-        description: "Capture the Excel sample range before matching.",
+        title: toastT("match.noSampleTitle"),
+        description: toastT("match.noSampleDesc"),
       });
       return;
     }
@@ -1886,8 +1938,10 @@ export function useDocTraceController() {
       if (activeRowNumber < minRow || activeRowNumber > maxRow) {
         state.pushToast({
           tone: "error",
-          title: "Selection out of bounds",
-          description: `Place your Excel cursor inside the captured range (Rows ${minRow} - ${maxRow}).`,
+          title: toastT("match.outOfBoundsTitle"),
+          description: toastT("match.outOfBoundsDesc")
+            .replace("{min}", String(minRow))
+            .replace("{max}", String(maxRow)),
         });
         return;
       }
@@ -1896,10 +1950,10 @@ export function useDocTraceController() {
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Could not match active row",
+        title: toastT("match.activeRowFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "Failed to resolve Excel cursor row.",
+          toastT("match.activeRowFailedFallback"),
         ),
       });
     }
@@ -1918,21 +1972,21 @@ export function useDocTraceController() {
         });
         state.pushToast({
           tone: "success",
-          title: "Match cleared",
-          description: "Match results were cleared from Excel and UI.",
+          title: toastT("match.clearedTitle"),
+          description: toastT("match.clearedExcelDesc"),
         });
         recordActivity(
           "info",
-          "Match cleared",
-          "Match results cleared from Excel and UI.",
+          toastT("match.clearedTitle"),
+          toastT("activity.matchClearedDesc"),
         );
       } catch (error) {
         state.pushToast({
           tone: "error",
-          title: "Clear failed",
+          title: toastT("match.clearFailedTitle"),
           description: resolveErrorMessage(
             error,
-            "Unable to clear Excel range.",
+            toastT("match.clearFailedFallback"),
           ),
         });
       } finally {
@@ -1941,8 +1995,8 @@ export function useDocTraceController() {
     } else {
       state.pushToast({
         tone: "success",
-        title: "Match cleared",
-        description: "Match results were cleared from UI.",
+        title: toastT("match.clearedTitle"),
+        description: toastT("match.clearedUiDesc"),
       });
     }
   };
@@ -1974,7 +2028,7 @@ export function useDocTraceController() {
       state.pushToast({
         tone: "error",
         title: translate(state.locale, "results.signOff"),
-        description: "Only unmatched exception rows can be signed off.",
+        description: toastT("results.signOffExceptionOnly"),
       });
       return;
     }
@@ -2034,10 +2088,10 @@ export function useDocTraceController() {
       } catch (error) {
         state.pushToast({
           tone: "error",
-          title: "Sign-off could not be logged",
+          title: toastT("results.signOffLogFailedTitle"),
           description: resolveErrorMessage(
             error,
-            "The hidden ISA log sheet could not be updated.",
+            toastT("results.signOffLogFailedFallback"),
           ),
         });
         return;
@@ -2053,7 +2107,9 @@ export function useDocTraceController() {
     recordActivity(
       "success",
       translate(state.locale, "results.signOffSuccessTitle"),
-      `Row ${rowNumber}: ${action}`,
+      toastT("activity.signOffRowDesc")
+        .replace("{row}", String(rowNumber))
+        .replace("{action}", action),
     );
   };
 
@@ -2074,10 +2130,13 @@ export function useDocTraceController() {
 
     state.pushToast({
       tone: "success",
-      title: "Template saved",
-      description: `${template.name} is available for this workbook.`,
+      title: toastT("template.savedTitle"),
+      description: toastT("template.savedDesc").replace(
+        "{name}",
+        template.name,
+      ),
     });
-    recordActivity("success", "Template saved", template.name);
+    recordActivity("success", toastT("template.savedTitle"), template.name);
   };
 
   const loadTemplate = (templateId: string) => {
@@ -2093,10 +2152,13 @@ export function useDocTraceController() {
     });
     state.pushToast({
       tone: "success",
-      title: "Template applied",
-      description: `${template.name} is now active.`,
+      title: toastT("template.appliedTitle"),
+      description: toastT("template.appliedDesc").replace(
+        "{name}",
+        template.name,
+      ),
     });
-    recordActivity("success", "Template applied", template.name);
+    recordActivity("success", toastT("template.appliedTitle"), template.name);
   };
 
   const deleteTemplate = async (templateId: string) => {
@@ -2114,10 +2176,14 @@ export function useDocTraceController() {
 
     state.pushToast({
       tone: "success",
-      title: "Template deleted",
-      description: deletedTemplate?.name ?? "The template was removed.",
+      title: toastT("template.deletedTitle"),
+      description: deletedTemplate?.name ?? toastT("template.deletedFallback"),
     });
-    recordActivity("success", "Template deleted", deletedTemplate?.name);
+    recordActivity(
+      "success",
+      toastT("template.deletedTitle"),
+      deletedTemplate?.name,
+    );
   };
 
   const exportTemplates = () => {
@@ -2135,10 +2201,10 @@ export function useDocTraceController() {
     URL.revokeObjectURL(url);
     state.pushToast({
       tone: "success",
-      title: "Templates exported",
-      description: "The workbook template bundle was downloaded as JSON.",
+      title: toastT("template.exportedTitle"),
+      description: toastT("template.exportedDesc"),
     });
-    recordActivity("success", "Templates exported");
+    recordActivity("success", toastT("template.exportedTitle"));
   };
 
   const importTemplates = async (file: File | null) => {
@@ -2180,30 +2246,32 @@ export function useDocTraceController() {
 
       state.pushToast({
         tone: "success",
-        title: "Templates imported",
-        description: `${nextTemplates.length} template(s) are now available.`,
+        title: toastT("template.importedTitle"),
+        description: toastT("template.importedDesc").replace(
+          "{count}",
+          String(nextTemplates.length),
+        ),
       });
       recordActivity(
         "success",
-        "Templates imported",
-        `${nextTemplates.length} template(s) loaded from ${file.name}.`,
+        toastT("template.importedTitle"),
+        toastT("activity.templatesImportedDesc")
+          .replace("{count}", String(nextTemplates.length))
+          .replace("{name}", file.name),
       );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Template import failed",
+        title: toastT("template.importFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "The selected template file could not be read.",
+          toastT("template.importFailedFallback"),
         ),
       });
       recordActivity(
         "error",
-        "Template import failed",
-        resolveErrorMessage(
-          error,
-          "The selected template file could not be read.",
-        ),
+        toastT("template.importFailedTitle"),
+        resolveErrorMessage(error, toastT("template.importFailedFallback")),
       );
     }
   };
@@ -2223,8 +2291,8 @@ export function useDocTraceController() {
     });
     recordActivity(
       "info",
-      "Viewer focused",
-      document?.fileName ?? "Evidence preview updated.",
+      toastT("activity.viewerFocusedTitle"),
+      document?.fileName ?? toastT("activity.viewerFocusedFallback"),
     );
   };
 
@@ -2235,8 +2303,8 @@ export function useDocTraceController() {
       if (!normalizedText) {
         state.pushToast({
           tone: "error",
-          title: "Empty snip ignored",
-          description: "Choose a text value or evidence region with content.",
+          title: toastT("snip.emptyIgnoredTitle"),
+          description: toastT("snip.emptyIgnoredDesc"),
         });
         return;
       }
@@ -2261,13 +2329,19 @@ export function useDocTraceController() {
         });
         currentStore.pushToast({
           tone: "info",
-          title: "Snip already captured",
-          description: `"${duplicate.text}" is already in the snip list.`,
+          title: toastT("snip.alreadyCapturedTitle"),
+          description: toastT("snip.alreadyCapturedDesc").replace(
+            "{text}",
+            duplicate.text,
+          ),
         });
         currentStore.pushActivity({
           tone: "info",
-          title: "Duplicate snip focused",
-          description: `"${duplicate.text}" was already captured.`,
+          title: toastT("activity.duplicateSnipTitle"),
+          description: toastT("activity.duplicateSnipDesc").replace(
+            "{text}",
+            duplicate.text,
+          ),
         });
         return;
       }
@@ -2283,8 +2357,10 @@ export function useDocTraceController() {
 
       currentStore.pushActivity({
         tone: "success",
-        title: "Text snipped",
-        description: `"${candidate.text}" from ${candidate.fileName}`,
+        title: toastT("activity.textSnippedTitle"),
+        description: toastT("activity.textSnippedDesc")
+          .replace("{text}", candidate.text)
+          .replace("{name}", candidate.fileName),
       });
 
       // If it's a manual region from an image, run OCR asynchronously to extract the actual text!
@@ -2295,8 +2371,8 @@ export function useDocTraceController() {
         if (doc && doc.sourceKind === "image") {
           currentStore.pushActivity({
             tone: "info",
-            title: "Text extraction active",
-            description: "Running OCR on image region...",
+            title: toastT("activity.ocrActiveTitle"),
+            description: toastT("activity.ocrActiveDesc"),
           });
           void extractTextFromImageRegion(doc.objectUrl, candidate.boundingBox)
             .then((extractedText) => {
@@ -2316,8 +2392,11 @@ export function useDocTraceController() {
 
                 latestStore.pushActivity({
                   tone: "success",
-                  title: "Text extracted from region",
-                  description: `"${extractedText}" replaced coordinate placeholder.`,
+                  title: toastT("activity.ocrExtractedTitle"),
+                  description: toastT("activity.ocrExtractedDesc").replace(
+                    "{text}",
+                    extractedText,
+                  ),
                 });
               }
             })
@@ -2326,8 +2405,8 @@ export function useDocTraceController() {
               const latestStore = useDocTraceStore.getState();
               latestStore.pushActivity({
                 tone: "error",
-                title: "Text extraction failed",
-                description: "Could not extract text from the selected region.",
+                title: toastT("activity.ocrFailedTitle"),
+                description: toastT("activity.ocrFailedDesc"),
               });
             });
         }
@@ -2337,7 +2416,7 @@ export function useDocTraceController() {
       const currentStore = useDocTraceStore.getState();
       currentStore.pushToast({
         tone: "error",
-        title: "Add snip failed",
+        title: toastT("snip.addFailedTitle"),
         description: error instanceof Error ? error.message : String(error),
       });
     }
@@ -2454,7 +2533,7 @@ export function useDocTraceController() {
         });
         recordActivity(
           "success",
-          "Snip undone",
+          toastT("activity.snipUndoneTitle"),
           `${stash.sheetName}!${stash.grid.rangeAddress}`,
         );
         return;
@@ -2544,7 +2623,7 @@ export function useDocTraceController() {
       });
       recordActivity(
         "success",
-        "Snip undone",
+        toastT("activity.snipUndoneTitle"),
         `${stash.sheetName}!${stash.cellAddress}`,
       );
     } catch (error) {
@@ -2557,10 +2636,10 @@ export function useDocTraceController() {
       }
       stateRef.current.pushToast({
         tone: "error",
-        title: "Snip undo failed",
+        title: toastT("snip.undoFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "The previous snip could not be restored.",
+          toastT("snip.undoFailedFallback"),
         ),
       });
     } finally {
@@ -2662,11 +2741,9 @@ export function useDocTraceController() {
     }
 
     if (!isSnipAnchorSupported()) {
-      saveError =
-        "This Excel host cannot store snip bindings. The cells were filled for this session only.";
+      saveError = toastT("snip.hostNoBindingsCells");
     } else if (!contentSha256) {
-      saveError =
-        "The evidence file hash is missing, so a reopen-safe anchor was not stored.";
+      saveError = toastT("snip.hashMissingAnchor");
     } else {
       bindingId = createSnipBindingId();
       markSnipUndoSelectGuard();
@@ -2677,8 +2754,7 @@ export function useDocTraceController() {
         } catch {
           await selectSheetRange(written.sheetName, written.originAddress);
           await createSnipBinding(bindingId, "text");
-          saveError =
-            "This Excel host bound only the top-left cell. Other table cells may not reopen the PDF.";
+          saveError = toastT("snip.hostTopLeftOnly");
         }
         await saveSnipAnchor({
           bindingId,
@@ -2716,7 +2792,7 @@ export function useDocTraceController() {
         bindingId = undefined;
         saveError = resolveErrorMessage(
           error,
-          "The cells were filled for this session. The workbook did not keep the snip location.",
+          toastT("snip.sessionKeepCellsFallback"),
         );
       } finally {
         clearSnipUndoSelectGuard();
@@ -2754,7 +2830,11 @@ export function useDocTraceController() {
         void undoSnipReplace(undoToken);
       },
     });
-    recordActivity("success", "Table snip linked to cells", rangeLabel);
+    recordActivity(
+      "success",
+      toastT("activity.tableSnipLinkedTitle"),
+      rangeLabel,
+    );
   };
 
   const linkFormFields = async () => {
@@ -2762,8 +2842,8 @@ export function useDocTraceController() {
     if (!state.officeAvailable) {
       state.pushToast({
         tone: "error",
-        title: "Excel context required",
-        description: "Open DocTrace inside Excel to link snips to cells.",
+        title: toastT("match.excelContextTitle"),
+        description: toastT("snip.excelContextLinkDesc"),
       });
       return;
     }
@@ -2791,8 +2871,8 @@ export function useDocTraceController() {
     if (!sourceDocument) {
       state.pushToast({
         tone: "error",
-        title: "Snip link failed",
-        description: "The source document is no longer in this session.",
+        title: toastT("snip.linkFailedTitle"),
+        description: toastT("snip.linkFailedNoDocument"),
       });
       return;
     }
@@ -2890,11 +2970,9 @@ export function useDocTraceController() {
       markSnipUndoSelectGuard(FORM_BIND_GUARD_MS);
       try {
         if (!anchorsSupported) {
-          saveError =
-            "This Excel host cannot store snip bindings. The cells were filled for this session only.";
+          saveError = toastT("snip.hostNoBindingsCells");
         } else if (!contentSha256) {
-          saveError =
-            "The evidence file hash is missing, so a reopen-safe anchor was not stored.";
+          saveError = toastT("snip.hashMissingAnchor");
         } else {
           for (let row = 0; row < formSnips.length; row += 1) {
             const snip = formSnips[row];
@@ -2939,7 +3017,7 @@ export function useDocTraceController() {
               bindFailed = true;
               saveError = resolveErrorMessage(
                 error,
-                "The cells were filled for this session. The workbook did not keep the snip location.",
+                toastT("snip.sessionKeepCellsFallback"),
               );
             }
 
@@ -3012,14 +3090,18 @@ export function useDocTraceController() {
           void undoSnipReplace(undoToken);
         },
       });
-      recordActivity("success", "Form fields written to cells", rangeLabel);
+      recordActivity(
+        "success",
+        toastT("activity.formFieldsWrittenTitle"),
+        rangeLabel,
+      );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Form write failed",
+        title: toastT("snip.formWriteFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "The tagged fields could not be written to Excel.",
+          toastT("snip.formWriteFailedFallback"),
         ),
       });
     }
@@ -3029,8 +3111,8 @@ export function useDocTraceController() {
     if (!state.officeAvailable) {
       state.pushToast({
         tone: "error",
-        title: "Excel context required",
-        description: "Open DocTrace inside Excel to link snips to cells.",
+        title: toastT("match.excelContextTitle"),
+        description: toastT("snip.excelContextLinkDesc"),
       });
       return;
     }
@@ -3042,8 +3124,8 @@ export function useDocTraceController() {
     if (!sourceDocument) {
       state.pushToast({
         tone: "error",
-        title: "Snip link failed",
-        description: "The source document is no longer in this session.",
+        title: toastT("snip.linkFailedTitle"),
+        description: toastT("snip.linkFailedNoDocument"),
       });
       return;
     }
@@ -3113,8 +3195,7 @@ export function useDocTraceController() {
       }
 
       if (!isSnipAnchorSupported()) {
-        saveError =
-          "This Excel host cannot store snip bindings. The cell was filled for this session only.";
+        saveError = toastT("snip.hostNoBindingsCell");
         if (staleLinks.length > 0) {
           storeBefore.setSnipLinks(
             storeBefore.snipLinks.filter(
@@ -3123,8 +3204,7 @@ export function useDocTraceController() {
           );
         }
       } else if (!contentSha256) {
-        saveError =
-          "The evidence file hash is missing, so a reopen-safe anchor was not stored.";
+        saveError = toastT("snip.hashMissingAnchor");
         if (staleLinks.length > 0) {
           storeBefore.setSnipLinks(
             storeBefore.snipLinks.filter(
@@ -3174,7 +3254,7 @@ export function useDocTraceController() {
           bindingId = undefined;
           saveError = resolveErrorMessage(
             error,
-            "The cell was filled for this session. The workbook did not keep the snip location.",
+            toastT("snip.sessionKeepCellFallback"),
           );
         }
       }
@@ -3196,18 +3276,25 @@ export function useDocTraceController() {
         activeSnipId: hasRealSnipGeometry(snip) ? snip.id : undefined,
         linkedRowId: undefined,
       });
+      const cellLabel = `${sheetName}!${cellAddress}`;
       state.pushToast({
         tone: replaced ? "info" : bindingId ? "success" : "info",
-        title: replaced
-          ? "Snip replaced on cell"
-          : bindingId
-            ? "Snip linked"
-            : "Snip linked in this session",
+        title: toastT(
+          replaced
+            ? "snip.replacedTitle"
+            : bindingId
+              ? "snip.linkedTitle"
+              : "snip.linkedSessionTitle",
+        ),
         description: saveError
-          ? `${sheetName}!${cellAddress}. ${saveError}`
+          ? `${cellLabel}. ${saveError}`
           : replaced
-            ? `"${snip.text}" replaced the previous snip on ${sheetName}!${cellAddress}.`
-            : `"${snip.text}" -> ${sheetName}!${cellAddress}`,
+            ? toastT("snip.replacedDesc")
+                .replace("{text}", snip.text)
+                .replace("{cell}", cellLabel)
+            : toastT("snip.linkedDesc")
+                .replace("{text}", snip.text)
+                .replace("{cell}", cellLabel),
         durationMs: replaced ? SNIP_UNDO_TTL_MS : undefined,
         actionLabel: replaced ? translate(locale, "snip.undo") : undefined,
         onAction: replaced
@@ -3218,16 +3305,20 @@ export function useDocTraceController() {
       });
       recordActivity(
         "success",
-        replaced ? "Snip replaced on cell" : "Snip linked to cell",
+        toastT(
+          replaced
+            ? "activity.snipReplacedTitle"
+            : "activity.snipLinkedToCellTitle",
+        ),
         `${sheetName}!${cellAddress}`,
       );
     } catch (error) {
       state.pushToast({
         tone: "error",
-        title: "Snip link failed",
+        title: toastT("snip.linkFailedTitle"),
         description: resolveErrorMessage(
           error,
-          "Could not write to the selected cell.",
+          toastT("snip.linkFailedFallback"),
         ),
       });
     }
@@ -3238,10 +3329,12 @@ export function useDocTraceController() {
     state.setSnippingEnabled(nextEnabled);
     recordActivity(
       "info",
-      nextEnabled ? "Snip mode enabled" : "Snip mode disabled",
-      nextEnabled
-        ? "Click PDF text, image regions, or viewer snippets to capture evidence."
-        : "Captured snips remain available in the snip review panel.",
+      toastT(
+        nextEnabled ? "activity.snipModeOnTitle" : "activity.snipModeOffTitle",
+      ),
+      toastT(
+        nextEnabled ? "activity.snipModeOnDesc" : "activity.snipModeOffDesc",
+      ),
     );
   };
 
@@ -3255,8 +3348,10 @@ export function useDocTraceController() {
     });
     recordActivity(
       "info",
-      "Snip focused",
-      `${snip.fileName} page ${snip.pageNumber}`,
+      toastT("activity.snipFocusedTitle"),
+      toastT("activity.snipFocusedDesc")
+        .replace("{name}", snip.fileName)
+        .replace("{page}", String(snip.pageNumber)),
     );
 
     // Scroll the Viewer Pane into view so the user doesn't have to scroll up manually
@@ -3293,7 +3388,7 @@ export function useDocTraceController() {
       });
     }
 
-    recordActivity("success", "Snip removed");
+    recordActivity("success", toastT("activity.snipRemovedTitle"));
   };
 
   const removeSnipLink = (linkId: string) => {
@@ -3310,7 +3405,7 @@ export function useDocTraceController() {
     }
 
     state.removeSnipLink(linkId);
-    recordActivity("success", "Snip link removed");
+    recordActivity("success", toastT("activity.snipLinkRemovedTitle"));
   };
 
   // Session hydrate: wait for Office settle, then one pipeline (never slim before IDB copy).
@@ -3384,9 +3479,8 @@ export function useDocTraceController() {
                   browserBlobMissWarned.current = true;
                   stateRef.current.pushToast({
                     tone: "error",
-                    title: "Evidence file is missing",
-                    description:
-                      "Parse text was restored but the PDF or image bytes are not in IndexedDB.",
+                    title: toastT("persist.evidenceFileMissingTitle"),
+                    description: toastT("persist.evidenceFileMissingDesc"),
                   });
                 }
 
@@ -3427,8 +3521,8 @@ export function useDocTraceController() {
           }
           recordActivity(
             "info",
-            "Session restored",
-            "Previous browser session data was loaded from IndexedDB.",
+            toastT("activity.sessionRestoredTitle"),
+            toastT("activity.sessionRestoredDesc"),
           );
         }
       }
@@ -3482,9 +3576,8 @@ export function useDocTraceController() {
         parseCacheMissWarned.current = true;
         stateRef.current.pushToast({
           tone: "error",
-          title: "Parse cache missing",
-          description:
-            "Document files may still preview. Matching text was not in IndexedDB and was not re-run.",
+          title: toastT("persist.parseCacheMissingTitle"),
+          description: toastT("persist.parseCacheMissingDesc"),
         });
       }
 
@@ -3612,10 +3705,10 @@ export function useDocTraceController() {
             if (active) {
               stateRef.current.pushToast({
                 tone: "error",
-                title: "Workbook evidence could not be read",
+                title: toastT("persist.workbookEvidenceReadFailedTitle"),
                 description: resolveErrorMessage(
                   error,
-                  "Falling back to IndexedDB for this session.",
+                  toastT("persist.workbookEvidenceReadFailedFallback"),
                 ),
               });
             }
@@ -3731,10 +3824,10 @@ export function useDocTraceController() {
             if (active) {
               stateRef.current.pushToast({
                 tone: "error",
-                title: "Workbook embed failed",
+                title: toastT("persist.workbookEmbedFailedTitle"),
                 description: resolveErrorMessage(
                   error,
-                  "Evidence was kept in IndexedDB for this session.",
+                  toastT("persist.workbookEmbedFailedDesc"),
                 ),
               });
             }
@@ -3830,10 +3923,10 @@ export function useDocTraceController() {
         if (!cancelled) {
           stateRef.current.pushToast({
             tone: "error",
-            title: "Snip anchors could not be restored",
+            title: toastT("persist.snipAnchorsRestoreFailedTitle"),
             description: resolveErrorMessage(
               error,
-              "Linked cells in this workbook could not be read.",
+              toastT("persist.snipAnchorsRestoreFailedFallback"),
             ),
           });
         }

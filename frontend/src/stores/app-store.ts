@@ -36,6 +36,7 @@ import type {
 } from "@/types/domain";
 import { EMPTY_AUDIT_IDENTITY } from "@/types/domain";
 import { createId } from "@/lib/id";
+import { translate } from "@/lib/i18n/translations";
 import { toDocumentStub } from "@/lib/persistence/engagement-payload";
 import {
   persistEngagementDocuments,
@@ -309,9 +310,14 @@ function persistActiveEngagementPayload(
       engagementPayloadWarned = true;
       useDocTraceStore.getState().pushToast({
         tone: "error",
-        title: "Evidence cache could not be saved",
-        description:
-          "Parse text could not be stored in IndexedDB. This session still has the documents.",
+        title: translate(
+          useDocTraceStore.getState().locale,
+          "persist.evidenceCacheSaveFailedTitle",
+        ),
+        description: translate(
+          useDocTraceStore.getState().locale,
+          "persist.evidenceCacheSaveFailedDesc",
+        ),
       });
     });
   });
@@ -334,9 +340,14 @@ function saveEngagementsToStorage(engagements: Engagement[]) {
       engagementQuotaWarned = true;
       scheduleStoreToast({
         tone: "error",
-        title: "Engagement save failed",
-        description:
-          "Browser storage is full or blocked. Evidence bytes stay in IndexedDB when they were saved.",
+        title: translate(
+          useDocTraceStore.getState().locale,
+          "persist.engagementSaveFailedTitle",
+        ),
+        description: translate(
+          useDocTraceStore.getState().locale,
+          "persist.engagementSaveFailedDesc",
+        ),
       });
     }
   }

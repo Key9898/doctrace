@@ -1,7 +1,10 @@
-import type { ServerResponse } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 
 import { sendJson } from "../http.js";
 
-export function sendHealth(response: ServerResponse): void {
-  sendJson(response, 200, { ok: true });
+export function sendHealth(
+  request: IncomingMessage,
+  response: ServerResponse,
+): void {
+  sendJson(request, response, 200, { ok: true });
 }

@@ -728,7 +728,7 @@ function ImageSnipLayer({
   activeSnips,
   onSnip,
 }: ImageSnipLayerProps) {
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const [drawingStart, setDrawingStart] = useState<{
     x: number;
     y: number;
@@ -797,10 +797,7 @@ function ImageSnipLayer({
       documentId,
       fileName,
       pageNumber,
-      text:
-        locale === "my-MM"
-          ? `ပုံရိပ်အပိုင်းအခြား - စာမျက်နှာ ${pageNumber}`
-          : `Image region - page ${pageNumber}`,
+      text: t("viewer.imageRegion").replace("{page}", String(pageNumber)),
       boundingBox,
       createdAt: new Date().toISOString(),
       sourceType: "manual-region",
@@ -851,11 +848,7 @@ function ImageSnipLayer({
           x="0"
           y="0"
         >
-          <title>
-            {locale === "my-MM"
-              ? "ပုံရိပ်အကွက်အသစ်ဆွဲရန် ဖိဆွဲပါ သို့မဟုတ် သတ်မှတ်ပြီးသားအကွက်သုံးရန် ကလစ်နှိပ်ပါ"
-              : "Drag to draw a custom image region, or click to use default box"}
-          </title>
+          <title>{t("viewer.imageRegionHint")}</title>
         </rect>
       ) : null}
 

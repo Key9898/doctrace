@@ -5,7 +5,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Outfit", "Myanmar Text", "Myanmar MN", "Noto Sans Myanmar", ui-sans-serif,
+    system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -67,7 +69,9 @@
 
   body {
     margin: 0;
-    font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+    font-family:
+      "Outfit", "Myanmar Text", "Myanmar MN", "Noto Sans Myanmar",
+      ui-sans-serif, system-ui, sans-serif;
     @apply bg-slate-50 text-slate-900 antialiased;
   }
 
@@ -384,4 +388,44 @@
   to {
     width: 0%;
   }
+}
+
+html[lang="my-MM"] .dt-kicker,
+html[lang="my-MM"] .dt-badge,
+html[lang="my-MM"] .dt-field,
+html[lang="my-MM"] .dt-stat-label {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+html[lang="my-MM"] .dt-section-title,
+html[lang="my-MM"] .dt-chip {
+  letter-spacing: normal;
+}
+
+html[lang="my-MM"] .uppercase {
+  text-transform: none;
+}
+
+html[lang="my-MM"] .tracking-tight,
+html[lang="my-MM"] .tracking-wide,
+html[lang="my-MM"] .tracking-wider,
+html[lang="my-MM"] .tracking-widest,
+html[lang="my-MM"] [class*="tracking-["] {
+  letter-spacing: normal;
+}
+
+html[lang="my-MM"] .leading-tight {
+  line-height: 1.5;
+}
+
+html[lang="my-MM"] .dt-badge,
+html[lang="my-MM"] .dt-chip {
+  overflow: visible;
+  line-height: 1.5;
+}
+
+html[lang="my-MM"] [class*="text-[9px]"] {
+  line-height: 1.5;
+  overflow: visible;
 }

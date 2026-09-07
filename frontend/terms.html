@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="my">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +7,7 @@
       name="description"
       content="DocTrace terms of use for the Excel add-in and public pages."
     />
-    <title>အသုံးပြုမှု စည်းကမ်း</title>
+    <title>Terms of use</title>
     <link
       rel="icon"
       type="image/png"
@@ -16,61 +16,224 @@
     />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
-  <body data-page="terms" class="bg-paper text-ink antialiased">
+  <body
+    data-page="terms"
+    class="bg-paper text-ink flex min-h-svh flex-col antialiased"
+  >
     <a
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
     ></a>
-    <p
-      class="border-rule bg-wash border-b px-4 py-2 text-center font-mono text-xs tracking-wide"
-      data-i18n="placeholderBanner"
-    ></p>
+    <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
-      class="border-rule flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4 sm:px-10"
+      class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
     >
-      <a class="text-lg font-semibold tracking-tight" href="/">DocTrace</a>
-      <nav class="flex flex-wrap items-center gap-5 text-sm" aria-label="Site">
+      <a
+        class="flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
+        href="/"
+      >
+        <img
+          alt=""
+          class="h-8 w-8"
+          height="32"
+          src="/assets/logo-mark.svg"
+          width="32"
+        />
+        <span class="hidden sm:inline">DocTrace</span>
+      </a>
+      <nav data-nav-stuck aria-label="Site">
+        <a href="/guide.html" data-i18n="navGuide">Guide</a>
         <a href="/support.html" data-i18n="navSupport">Support</a>
-        <a href="/privacy.html" data-i18n="navPrivacy">Privacy</a>
-        <a href="/terms.html" data-i18n="navTerms">Terms</a>
-        <div class="border-rule flex overflow-hidden border">
-          <button
-            type="button"
-            class="site-lang px-2 py-1 font-mono text-xs"
-            data-locale-set="my"
-            data-i18n="langMy"
-          ></button>
-          <button
-            type="button"
-            class="site-lang border-rule border-l px-2 py-1 font-mono text-xs"
-            data-locale-set="en"
-            data-i18n="langEn"
-          ></button>
-        </div>
+        <a href="/contact.html" data-i18n="navContact">Get in touch</a>
       </nav>
+      <div
+        class="flex min-w-0 items-center justify-end gap-3 text-sm md:gap-5"
+        data-header-utils
+      >
+        <a class="md:hidden" href="/support.html" data-i18n="navSupport"
+          >Support</a
+        >
+        <div class="relative md:hidden" data-more>
+          <button
+            type="button"
+            class="inline-flex items-center"
+            data-more-toggle
+            aria-expanded="false"
+            aria-haspopup="menu"
+            aria-controls="site-more-menu"
+          >
+            <svg
+              aria-hidden="true"
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span class="sr-only" data-i18n="navMenu">Menu</span>
+          </button>
+          <div
+            class="border-rule bg-wash absolute top-full right-0 z-20 mt-1 hidden min-w-44 border py-1"
+            data-more-menu
+            id="site-more-menu"
+            role="menu"
+          >
+            <a
+              class="hover:bg-paper block px-3 py-2"
+              data-i18n="navGuide"
+              href="/guide.html"
+              role="menuitem"
+              >Guide</a
+            >
+            <a
+              class="hover:bg-paper block px-3 py-2"
+              data-i18n="navContact"
+              href="/contact.html"
+              role="menuitem"
+              >Get in touch</a
+            >
+            <a
+              class="hover:bg-paper block px-3 py-2"
+              data-i18n="navFaq"
+              href="/faq.html"
+              role="menuitem"
+              >FAQ</a
+            >
+            <a
+              class="hover:bg-paper block px-3 py-2"
+              data-i18n="navPrivacy"
+              href="/privacy.html"
+              role="menuitem"
+              >Privacy Policy</a
+            >
+            <a
+              class="hover:bg-paper block px-3 py-2"
+              data-i18n="navTerms"
+              href="/terms.html"
+              role="menuitem"
+              >Terms of use</a
+            >
+          </div>
+        </div>
+        <nav data-nav-rest aria-label="Site">
+          <a href="/guide.html" data-i18n="navGuide">Guide</a>
+          <a href="/support.html" data-i18n="navSupport">Support</a>
+          <a href="/contact.html" data-i18n="navContact">Get in touch</a>
+        </nav>
+        <button
+          type="button"
+          class="border-rule border px-2 py-1 font-mono text-xs"
+          data-locale-toggle
+        >
+          <span data-i18n="langSwitch" lang="my">မြန်မာ</span>
+        </button>
+        <div class="relative" data-profile>
+          <button
+            type="button"
+            class="inline-flex items-center gap-2"
+            data-profile-toggle
+            aria-expanded="false"
+            aria-haspopup="menu"
+            aria-controls="site-profile-menu"
+          >
+            <svg
+              aria-hidden="true"
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="10" r="3" />
+              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+            </svg>
+            <span class="hidden sm:inline" data-i18n="navProfile">Profile</span>
+          </button>
+          <div
+            class="border-rule bg-wash absolute top-full right-0 z-20 mt-1 hidden min-w-44 border py-1"
+            data-profile-menu
+            id="site-profile-menu"
+            role="menu"
+          >
+            <div data-profile-guest>
+              <a
+                class="hover:bg-paper block px-3 py-2"
+                data-i18n="navSignIn"
+                href="/sign-in.html"
+                role="menuitem"
+                >Sign in</a
+              >
+              <a
+                class="hover:bg-paper block px-3 py-2"
+                data-i18n="navSignUp"
+                href="/sign-up.html"
+                role="menuitem"
+                >Sign up</a
+              >
+            </div>
+            <div class="hidden" data-profile-session>
+              <p class="truncate px-3 py-2 text-xs" data-profile-email></p>
+              <button
+                class="hover:bg-paper block w-full px-3 py-2 text-left"
+                data-i18n="navSignOut"
+                data-profile-signout
+                role="menuitem"
+                type="button"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
-    <main id="content" class="mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p
-        class="text-tick mb-4 font-mono text-xs tracking-[0.28em] uppercase"
-        data-i18n="termsKicker"
-      ></p>
-      <h1
-        class="text-4xl font-semibold tracking-tight"
-        data-i18n="termsTitle"
-      ></h1>
-      <p class="mt-6 text-lg leading-relaxed" data-i18n="termsLead"></p>
-      <section class="mt-12">
-        <h2 class="text-xl font-semibold" data-i18n="terms1Title"></h2>
-        <p class="mt-3 leading-relaxed" data-i18n="terms1Body"></p>
+    <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
+      <p class="site-kicker" data-i18n="termsKicker"></p>
+      <h1 class="site-title" data-i18n="termsTitle"></h1>
+      <p class="site-lead" data-i18n="termsLead"></p>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="terms1Title"></h2>
+        <p class="site-prose" data-i18n="terms1Body"></p>
       </section>
-      <section class="mt-10">
-        <h2 class="text-xl font-semibold" data-i18n="terms2Title"></h2>
-        <p class="mt-3 leading-relaxed" data-i18n="terms2Body"></p>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsLicenseTitle"></h2>
+        <p class="site-prose" data-i18n="termsLicenseBody"></p>
       </section>
-      <section class="border-rule mt-10 border-t pt-10">
-        <h2 class="text-xl font-semibold" data-i18n="terms3Title"></h2>
-        <p class="mt-3 leading-relaxed" data-i18n="terms3Body"></p>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="terms2Title"></h2>
+        <p class="site-prose" data-i18n="terms2Body"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsUseTitle"></h2>
+        <p class="site-prose" data-i18n="termsUseBody"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsWarrantyTitle"></h2>
+        <p class="site-prose" data-i18n="termsWarrantyBody"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsLiabilityTitle"></h2>
+        <p class="site-prose" data-i18n="termsLiabilityBody"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsPublisherTitle"></h2>
+        <p class="site-prose" data-i18n="termsPublisherBody"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="termsChangesTitle"></h2>
+        <p class="site-prose" data-i18n="termsChangesBody"></p>
+      </section>
+      <section class="site-section">
+        <h2 class="site-section-title" data-i18n="terms3Title"></h2>
+        <p class="site-prose" data-i18n="terms3Body"></p>
         <p class="mt-4 font-mono text-sm">
           <a class="text-tick underline" href="mailto:support@example.com"
             >support@example.com</a
@@ -78,9 +241,33 @@
         </p>
       </section>
     </main>
-    <footer class="px-6 py-10 sm:px-10">
-      <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+    <footer
+      class="border-rule mt-auto flex flex-col gap-3 border-t px-6 py-3 sm:px-10"
+    >
+      <div
+        class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+      >
+        <div class="text-center sm:text-left">
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide">
+            &copy; <span data-footer-year></span>
+            <span data-i18n="footerPowered"
+              >Powered By Studio Next Steps. All rights reserved.</span
+            >
+          </p>
+        </div>
+        <nav
+          class="flex flex-wrap justify-center gap-4 text-sm sm:justify-end"
+          aria-label="Legal"
+        >
+          <a href="/faq.html" data-i18n="navFaq">FAQ</a>
+          <a href="/privacy.html" data-i18n="navPrivacy">Privacy Policy</a>
+          <a href="/terms.html" data-i18n="navTerms">Terms of use</a>
+        </nav>
+      </div>
     </footer>
+    <div id="site-dock-root"></div>
     <script type="module" src="/site/site.ts"></script>
+    <script type="module" src="/site/dock.ts"></script>
   </body>
 </html>

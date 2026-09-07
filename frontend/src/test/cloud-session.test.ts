@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  CLOUD_SESSION_EVENT,
   CLOUD_SESSION_STORAGE_KEY,
   clearCloudSession,
   readCloudSession,
@@ -41,6 +42,7 @@ describe("cloud-session localStorage helper", () => {
     expect(readCloudSession()).toBeNull();
     expect(window.localStorage.getItem(CLOUD_SESSION_STORAGE_KEY)).toBeNull();
 
+    const spy = vi.spyOn(window, "dispatchEvent");
     vi.stubGlobal("localStorage", {
       getItem: () => {
         throw new Error("blocked");
@@ -56,5 +58,19 @@ describe("cloud-session localStorage helper", () => {
     expect(readCloudSession()).toBeNull();
     expect(writeCloudSession(session)).toBe(false);
     expect(clearCloudSession()).toBe(false);
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it("dispatches a session event after successful write and clear", () => {
+    const spy = vi.spyOn(window, "dispatchEvent");
+    expect(writeCloudSession(session)).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((spy.mock.calls[0][0] as Event).type).toBe(CLOUD_SESSION_EVENT);
+    spy.mockClear();
+    expect(clearCloudSession()).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((spy.mock.calls[0][0] as Event).type).toBe(CLOUD_SESSION_EVENT);
+    spy.mockRestore();
   });
 });

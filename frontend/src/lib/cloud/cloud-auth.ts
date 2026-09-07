@@ -114,27 +114,43 @@ async function requestJson(
   }
 }
 
+export type CloudOtpIntent = "login" | "signup";
+
+export type CloudOtpRequestResult = CloudAuthResult & {
+  error?: string;
+};
+
 function skipped(): CloudAuthResult {
   return { status: "skipped" };
 }
 
-function failed(): CloudAuthResult {
-  return { status: "failed" };
+function failed(error?: string): CloudOtpRequestResult {
+  return error ? { status: "failed", error } : { status: "failed" };
+}
+
+function readError(body: unknown): string | undefined {
+  if (typeof body !== "object" || body === null) {
+    return undefined;
+  }
+  if (!("error" in body) || typeof body.error !== "string") {
+    return undefined;
+  }
+  return body.error;
 }
 
 function tokenUserResult(
   expectedStatus: number,
   payload: { status: number; body: unknown } | { failed: true },
-): CloudAuthResult {
+): CloudOtpRequestResult {
   if ("failed" in payload) {
     return failed();
   }
   if (payload.status !== expectedStatus || typeof payload.body !== "object") {
-    return failed();
+    return failed(readError(payload.body));
   }
   const body = payload.body;
   if (body === null || !("token" in body) || !("user" in body)) {
-    return failed();
+    return failed(readError(body));
   }
   if (typeof body.token !== "string" || !isUser(body.user)) {
     return failed();
@@ -142,34 +158,40 @@ function tokenUserResult(
   return { status: "ok", token: body.token, user: body.user };
 }
 
-export async function registerCloudUser(
-  credentials: { email: string; password: string },
+export async function requestCloudOtp(
+  payload: { email: string; intent: CloudOtpIntent },
   options?: CloudAuthOptions,
-): Promise<CloudAuthResult> {
+): Promise<CloudOtpRequestResult> {
   if (!resolveBaseUrl(options?.url)) {
     return skipped();
   }
-  const payload = await requestJson(
-    "/auth/register",
-    { method: "POST", body: credentials },
+  const response = await requestJson(
+    "/auth/otp/request",
+    { method: "POST", body: payload },
     options,
   );
-  return tokenUserResult(201, payload);
+  if ("failed" in response) {
+    return failed();
+  }
+  if (response.status === 200) {
+    return { status: "ok" };
+  }
+  return failed(readError(response.body));
 }
 
-export async function loginCloudUser(
-  credentials: { email: string; password: string },
+export async function verifyCloudOtp(
+  payload: { email: string; code: string },
   options?: CloudAuthOptions,
-): Promise<CloudAuthResult> {
+): Promise<CloudOtpRequestResult> {
   if (!resolveBaseUrl(options?.url)) {
     return skipped();
   }
-  const payload = await requestJson(
-    "/auth/login",
-    { method: "POST", body: credentials },
+  const response = await requestJson(
+    "/auth/otp/verify",
+    { method: "POST", body: payload },
     options,
   );
-  return tokenUserResult(200, payload);
+  return tokenUserResult(200, response);
 }
 
 export async function fetchCloudMe(

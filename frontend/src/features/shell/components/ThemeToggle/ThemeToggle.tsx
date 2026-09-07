@@ -6,6 +6,7 @@ import {
   getSystemTheme,
   setStoredTheme,
   applyTheme,
+  syncThemeAfterOfficeReady,
   type Theme,
 } from "@/lib/theme";
 
@@ -15,9 +16,20 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    const stored = getStoredTheme();
-    setTheme(stored);
-    applyTheme(stored);
+    const sync = () => {
+      const stored = getStoredTheme();
+      setTheme(stored);
+      applyTheme(stored);
+    };
+    sync();
+    const office = window.Office;
+    if (typeof office?.onReady !== "function") {
+      return;
+    }
+    office.onReady((info) => {
+      syncThemeAfterOfficeReady(info);
+      sync();
+    });
   }, []);
 
   useEffect(() => {

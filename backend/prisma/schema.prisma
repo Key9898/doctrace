@@ -10,7 +10,7 @@ datasource db {
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
-  passwordHash String
+  passwordHash String?
   createdAt    DateTime  @default(now())
   sessions     Session[]
 }
@@ -20,6 +20,16 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model OtpChallenge {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  intent    String
+  codeHash  String
+  attempts  Int      @default(0)
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
