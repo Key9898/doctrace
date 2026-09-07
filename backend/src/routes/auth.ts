@@ -5,10 +5,15 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../db.js";
 import { readBearerToken, readJsonBody, sendJson } from "../http.js";
 import {
-  hashPassword,
-  MIN_PASSWORD_LENGTH,
-  verifyPassword,
-} from "../services/password.js";
+  createOtpChallenge,
+  hashesMatch,
+  OTP_MAX_ATTEMPTS,
+  parseEmail,
+  parseIntent,
+  parseOtpCode,
+  resolveOtpCode,
+} from "../services/otp.js";
+import { hashToken } from "../services/session.js";
 import {
   createSession,
   deleteSession,
@@ -19,53 +24,133 @@ function publicUser(user: { id: string; email: string }) {
   return { id: user.id, email: user.email };
 }
 
-function readEmailPassword(value: unknown): {
-  email: string;
-  password: string;
-} | null {
-  if (typeof value !== "object" || value === null) {
-    return null;
-  }
-  const emailRaw = "email" in value ? value.email : undefined;
-  const passwordRaw = "password" in value ? value.password : undefined;
-  if (typeof emailRaw !== "string" || typeof passwordRaw !== "string") {
-    return null;
-  }
-  const email = emailRaw.trim().toLowerCase();
-  const password = passwordRaw;
-  if (!email.includes("@") || !email.includes(".")) {
-    return null;
-  }
-  if (password.length < MIN_PASSWORD_LENGTH) {
-    return null;
-  }
-  return { email, password };
-}
-
-async function handleRegister(
+async function handleOtpRequest(
   request: IncomingMessage,
   response: ServerResponse,
 ): Promise<void> {
   const body = await readJsonBody(request);
-  if (!body.ok) {
-    sendJson(response, 400, { ok: false, error: "invalid_json" });
+  if (!body.ok || typeof body.value !== "object" || body.value === null) {
+    sendJson(request, response, 400, { ok: false, error: "invalid_json" });
     return;
   }
-  const credentials = readEmailPassword(body.value);
-  if (!credentials) {
-    sendJson(response, 400, { ok: false, error: "invalid_fields" });
+
+  const email = parseEmail(
+    "email" in body.value ? body.value.email : undefined,
+  );
+  const intent = parseIntent(
+    "intent" in body.value ? body.value.intent : undefined,
+  );
+  if (!email || !intent) {
+    sendJson(request, response, 400, { ok: false, error: "invalid_fields" });
     return;
   }
 
   try {
-    const user = await prisma.user.create({
-      data: {
-        email: credentials.email,
-        passwordHash: await hashPassword(credentials.password),
-      },
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (intent === "login" && !existingUser) {
+      sendJson(request, response, 404, { ok: false, error: "user_not_found" });
+      return;
+    }
+    if (intent === "signup" && existingUser) {
+      sendJson(request, response, 409, { ok: false, error: "email_taken" });
+      return;
+    }
+
+    const resolved = resolveOtpCode();
+    if (!resolved.ok) {
+      sendJson(request, response, 503, { ok: false, error: resolved.error });
+      return;
+    }
+
+    const created = await createOtpChallenge(email, intent, resolved.code);
+    if (!created.ok) {
+      sendJson(request, response, 429, { ok: false, error: created.error });
+      return;
+    }
+
+    sendJson(request, response, 200, {
+      ok: true,
+      expiresAt: created.expiresAt.toISOString(),
+      debugCode: resolved.debugCode,
     });
+  } catch {
+    sendJson(request, response, 500, { ok: false, error: "internal" });
+  }
+}
+
+async function handleOtpVerify(
+  request: IncomingMessage,
+  response: ServerResponse,
+): Promise<void> {
+  const body = await readJsonBody(request);
+  if (!body.ok || typeof body.value !== "object" || body.value === null) {
+    sendJson(request, response, 400, { ok: false, error: "invalid_json" });
+    return;
+  }
+
+  const email = parseEmail(
+    "email" in body.value ? body.value.email : undefined,
+  );
+  const code = parseOtpCode("code" in body.value ? body.value.code : undefined);
+  if (!email || !code) {
+    sendJson(request, response, 400, { ok: false, error: "invalid_fields" });
+    return;
+  }
+
+  try {
+    const challenge = await prisma.otpChallenge.findUnique({
+      where: { email },
+    });
+    if (!challenge) {
+      sendJson(request, response, 401, { ok: false, error: "unauthorized" });
+      return;
+    }
+    if (challenge.expiresAt.getTime() <= Date.now()) {
+      await prisma.otpChallenge.delete({ where: { email } });
+      sendJson(request, response, 401, { ok: false, error: "otp_expired" });
+      return;
+    }
+    if (challenge.attempts >= OTP_MAX_ATTEMPTS) {
+      await prisma.otpChallenge.delete({ where: { email } });
+      sendJson(request, response, 429, { ok: false, error: "otp_locked" });
+      return;
+    }
+
+    const matches = hashesMatch(challenge.codeHash, hashToken(code));
+    if (!matches) {
+      const nextAttempts = challenge.attempts + 1;
+      if (nextAttempts >= OTP_MAX_ATTEMPTS) {
+        await prisma.otpChallenge.delete({ where: { email } });
+        sendJson(request, response, 429, { ok: false, error: "otp_locked" });
+        return;
+      }
+      await prisma.otpChallenge.update({
+        where: { email },
+        data: { attempts: nextAttempts },
+      });
+      sendJson(request, response, 401, { ok: false, error: "unauthorized" });
+      return;
+    }
+
+    let user = await prisma.user.findUnique({ where: { email } });
+    if (challenge.intent === "signup") {
+      if (user) {
+        await prisma.otpChallenge.delete({ where: { email } });
+        sendJson(request, response, 409, { ok: false, error: "email_taken" });
+        return;
+      }
+      user = await prisma.user.create({
+        data: { email },
+      });
+    } else if (!user) {
+      await prisma.otpChallenge.delete({ where: { email } });
+      sendJson(request, response, 404, { ok: false, error: "user_not_found" });
+      return;
+    }
+
+    await prisma.otpChallenge.delete({ where: { email } });
     const token = await createSession(user.id);
-    sendJson(response, 201, {
+    sendJson(request, response, 200, {
       token,
       user: publicUser(user),
     });
@@ -74,51 +159,10 @@ async function handleRegister(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      sendJson(response, 409, { ok: false, error: "email_taken" });
+      sendJson(request, response, 409, { ok: false, error: "email_taken" });
       return;
     }
-    sendJson(response, 500, { ok: false, error: "internal" });
-  }
-}
-
-async function handleLogin(
-  request: IncomingMessage,
-  response: ServerResponse,
-): Promise<void> {
-  const body = await readJsonBody(request);
-  if (!body.ok) {
-    sendJson(response, 400, { ok: false, error: "invalid_json" });
-    return;
-  }
-  const credentials = readEmailPassword(body.value);
-  if (!credentials) {
-    sendJson(response, 400, { ok: false, error: "invalid_fields" });
-    return;
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email: credentials.email },
-    });
-    if (!user) {
-      sendJson(response, 401, { ok: false, error: "unauthorized" });
-      return;
-    }
-    const matches = await verifyPassword(
-      credentials.password,
-      user.passwordHash,
-    );
-    if (!matches) {
-      sendJson(response, 401, { ok: false, error: "unauthorized" });
-      return;
-    }
-    const token = await createSession(user.id);
-    sendJson(response, 200, {
-      token,
-      user: publicUser(user),
-    });
-  } catch {
-    sendJson(response, 500, { ok: false, error: "internal" });
+    sendJson(request, response, 500, { ok: false, error: "internal" });
   }
 }
 
@@ -128,19 +172,19 @@ async function handleMe(
 ): Promise<void> {
   const token = readBearerToken(request);
   if (!token) {
-    sendJson(response, 401, { ok: false, error: "unauthorized" });
+    sendJson(request, response, 401, { ok: false, error: "unauthorized" });
     return;
   }
 
   try {
     const session = await findValidSession(token);
     if (!session) {
-      sendJson(response, 401, { ok: false, error: "unauthorized" });
+      sendJson(request, response, 401, { ok: false, error: "unauthorized" });
       return;
     }
-    sendJson(response, 200, { user: publicUser(session.user) });
+    sendJson(request, response, 200, { user: publicUser(session.user) });
   } catch {
-    sendJson(response, 500, { ok: false, error: "internal" });
+    sendJson(request, response, 500, { ok: false, error: "internal" });
   }
 }
 
@@ -150,16 +194,26 @@ async function handleLogout(
 ): Promise<void> {
   const token = readBearerToken(request);
   if (!token) {
-    sendJson(response, 401, { ok: false, error: "unauthorized" });
+    sendJson(request, response, 401, { ok: false, error: "unauthorized" });
     return;
   }
 
   try {
     await deleteSession(token);
-    sendJson(response, 200, { ok: true });
+    sendJson(request, response, 200, { ok: true });
   } catch {
-    sendJson(response, 500, { ok: false, error: "internal" });
+    sendJson(request, response, 500, { ok: false, error: "internal" });
   }
+}
+
+function handleRetiredPasswordAuth(
+  request: IncomingMessage,
+  response: ServerResponse,
+): void {
+  sendJson(request, response, 410, {
+    ok: false,
+    error: "password_auth_retired",
+  });
 }
 
 export async function handleAuth(
@@ -167,12 +221,20 @@ export async function handleAuth(
   response: ServerResponse,
   pathname: string,
 ): Promise<void> {
+  if (request.method === "POST" && pathname === "/auth/otp/request") {
+    await handleOtpRequest(request, response);
+    return;
+  }
+  if (request.method === "POST" && pathname === "/auth/otp/verify") {
+    await handleOtpVerify(request, response);
+    return;
+  }
   if (request.method === "POST" && pathname === "/auth/register") {
-    await handleRegister(request, response);
+    handleRetiredPasswordAuth(request, response);
     return;
   }
   if (request.method === "POST" && pathname === "/auth/login") {
-    await handleLogin(request, response);
+    handleRetiredPasswordAuth(request, response);
     return;
   }
   if (request.method === "GET" && pathname === "/auth/me") {
@@ -184,5 +246,5 @@ export async function handleAuth(
     return;
   }
 
-  sendJson(response, 404, { ok: false, error: "not_found" });
+  sendJson(request, response, 404, { ok: false, error: "not_found" });
 }

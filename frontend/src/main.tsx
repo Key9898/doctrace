@@ -2,7 +2,8 @@ import { createRoot } from "react-dom/client";
 
 import { App } from "@/App";
 import { useDocTraceStore } from "@/stores/app-store";
-import { initializeTheme } from "@/lib/theme";
+import { initializeTheme, syncThemeAfterOfficeReady } from "@/lib/theme";
+import { translate } from "@/lib/i18n/translations";
 
 import "./styles.css";
 
@@ -40,31 +41,34 @@ installNativeClickBridge();
 root.render(<App />);
 
 if (typeof window.Office !== "undefined") {
-  window.Office.onReady(() => {
+  window.Office.onReady((info) => {
+    syncThemeAfterOfficeReady(info);
     void bootstrapApplication().catch((error: unknown) => {
+      const locale = useDocTraceStore.getState().locale;
       const description =
         error instanceof Error
           ? error.message
-          : "Office readiness detection failed.";
+          : translate(locale, "app.officeReadyFailedFallback");
       applyExcelHostClass();
       useDocTraceStore.getState().setOfficeState(true, hasOfficeContext());
       useDocTraceStore.getState().pushActivity({
         tone: "error",
-        title: "Office bootstrap fallback",
+        title: translate(locale, "app.officeBootstrapFallback"),
         description,
       });
     });
   });
 } else {
   void bootstrapApplication().catch((error: unknown) => {
+    const locale = useDocTraceStore.getState().locale;
     const description =
       error instanceof Error
         ? error.message
-        : "Office readiness detection failed.";
+        : translate(locale, "app.officeReadyFailedFallback");
     useDocTraceStore.getState().setOfficeState(true, hasOfficeContext());
     useDocTraceStore.getState().pushActivity({
       tone: "error",
-      title: "Office bootstrap fallback",
+      title: translate(locale, "app.officeBootstrapFallback"),
       description,
     });
   });
@@ -391,12 +395,12 @@ function registerRuntimeDiagnostics() {
 
     useDocTraceStore.getState().pushActivity({
       tone: "error",
-      title: "Runtime error",
+      title: translate(useDocTraceStore.getState().locale, "app.runtimeError"),
       description: msg,
     });
     useDocTraceStore.getState().pushToast({
       tone: "error",
-      title: "Runtime error",
+      title: translate(useDocTraceStore.getState().locale, "app.runtimeError"),
       description: msg,
     });
   });
@@ -414,12 +418,18 @@ function registerRuntimeDiagnostics() {
 
     useDocTraceStore.getState().pushActivity({
       tone: "error",
-      title: "Unhandled promise rejection",
+      title: translate(
+        useDocTraceStore.getState().locale,
+        "app.unhandledRejection",
+      ),
       description: msg,
     });
     useDocTraceStore.getState().pushToast({
       tone: "error",
-      title: "Unhandled promise rejection",
+      title: translate(
+        useDocTraceStore.getState().locale,
+        "app.unhandledRejection",
+      ),
       description: msg,
     });
   });

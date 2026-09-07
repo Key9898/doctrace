@@ -1,6 +1,11 @@
 import type { CloudAuthUser } from "@/lib/cloud/cloud-auth";
 
 export const CLOUD_SESSION_STORAGE_KEY = "doctrace.cloud.session";
+export const CLOUD_SESSION_EVENT = "doctrace-cloud-session";
+
+function notifyCloudSessionChange(): void {
+  window.dispatchEvent(new Event(CLOUD_SESSION_EVENT));
+}
 
 export type CloudSession = {
   token: string;
@@ -59,6 +64,7 @@ export function writeCloudSession(session: CloudSession): boolean {
       CLOUD_SESSION_STORAGE_KEY,
       JSON.stringify({ token: session.token, user: session.user }),
     );
+    notifyCloudSessionChange();
     return true;
   } catch {
     return false;
@@ -68,6 +74,7 @@ export function writeCloudSession(session: CloudSession): boolean {
 export function clearCloudSession(): boolean {
   try {
     window.localStorage.removeItem(CLOUD_SESSION_STORAGE_KEY);
+    notifyCloudSessionChange();
     return true;
   } catch {
     return false;

@@ -153,11 +153,9 @@ export function SnipPanel({
                     <button
                       className="mt-2 block w-full text-left text-sm leading-5 font-semibold text-slate-900 transition-colors hover:text-sky-600 dark:text-white dark:hover:text-sky-400"
                       onClick={() => onFocusSnip(snip)}
-                      title={
-                        locale === "my-MM"
-                          ? `${snip.fileName} ၏ စာမျက်နှာ ${snip.pageNumber} သို့ သွားရန်`
-                          : `Go to page ${snip.pageNumber} of ${snip.fileName}`
-                      }
+                      title={t("snips.goToPage")
+                        .replace("{page}", String(snip.pageNumber))
+                        .replace("{fileName}", snip.fileName)}
                       type="button"
                     >
                       &ldquo;{snip.text}&rdquo;

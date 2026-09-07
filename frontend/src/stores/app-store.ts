@@ -33,9 +33,12 @@ import type {
   EngagementStatus,
   EngagementTeam,
   AppModule,
+  TodWorkpaperPack,
+  PbcMinutesLink,
 } from "@/types/domain";
 import { EMPTY_AUDIT_IDENTITY } from "@/types/domain";
 import { createId } from "@/lib/id";
+import { translate } from "@/lib/i18n/translations";
 import { toDocumentStub } from "@/lib/persistence/engagement-payload";
 import { isVisibleAppModule } from "@/lib/prep-modules";
 import {
@@ -64,6 +67,8 @@ interface AppState {
   snippingEnabled: boolean;
   identity: AuditIdentity;
   rowSignOffs: Record<number, RowSignOff>;
+  todWorkpaperPack?: TodWorkpaperPack;
+  pbcMinutesLinks?: PbcMinutesLink[];
   engagements: Engagement[];
   activeEngagementId: string | null;
   activeModule: AppModule;
@@ -97,6 +102,8 @@ interface AppState {
   patchIdentity: (patch: Partial<AuditIdentity>) => void;
   setRowSignOffs: (rowSignOffs: Record<number, RowSignOff>) => void;
   upsertRowSignOff: (signOff: RowSignOff) => void;
+  setTodWorkpaperPack: (pack?: TodWorkpaperPack) => void;
+  setPbcMinutesLinks: (links: PbcMinutesLink[]) => void;
   setModule: (module: AppModule) => void;
   toggleDevMode: () => void;
   createEngagement: (
@@ -310,9 +317,14 @@ function persistActiveEngagementPayload(
       engagementPayloadWarned = true;
       useDocTraceStore.getState().pushToast({
         tone: "error",
-        title: "Evidence cache could not be saved",
-        description:
-          "Parse text could not be stored in IndexedDB. This session still has the documents.",
+        title: translate(
+          useDocTraceStore.getState().locale,
+          "persist.evidenceCacheSaveFailedTitle",
+        ),
+        description: translate(
+          useDocTraceStore.getState().locale,
+          "persist.evidenceCacheSaveFailedDesc",
+        ),
       });
     });
   });
@@ -335,9 +347,14 @@ function saveEngagementsToStorage(engagements: Engagement[]) {
       engagementQuotaWarned = true;
       scheduleStoreToast({
         tone: "error",
-        title: "Engagement save failed",
-        description:
-          "Browser storage is full or blocked. Evidence bytes stay in IndexedDB when they were saved.",
+        title: translate(
+          useDocTraceStore.getState().locale,
+          "persist.engagementSaveFailedTitle",
+        ),
+        description: translate(
+          useDocTraceStore.getState().locale,
+          "persist.engagementSaveFailedDesc",
+        ),
       });
     }
   }
@@ -415,6 +432,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
   snippingEnabled: false,
   identity: { ...EMPTY_AUDIT_IDENTITY },
   rowSignOffs: {},
+  todWorkpaperPack: initialActiveEngagement?.todWorkpaperPack,
+  pbcMinutesLinks: initialActiveEngagement?.pbcMinutesLinks,
   engagements: initialEngagements,
   activeEngagementId: initialActiveId,
   activeModule: resolveInitialActiveModule(),
@@ -596,6 +615,24 @@ export const useDocTraceStore = create<AppState>((set) => ({
         [signOff.rowNumber]: signOff,
       },
     })),
+  setTodWorkpaperPack: (todWorkpaperPack) =>
+    set((state) => {
+      const nextEngagements = state.engagements.map((eng) =>
+        eng.id === state.activeEngagementId
+          ? { ...eng, todWorkpaperPack }
+          : eng,
+      );
+      saveEngagementsToStorage(nextEngagements);
+      return { todWorkpaperPack, engagements: nextEngagements };
+    }),
+  setPbcMinutesLinks: (pbcMinutesLinks) =>
+    set((state) => {
+      const nextEngagements = state.engagements.map((eng) =>
+        eng.id === state.activeEngagementId ? { ...eng, pbcMinutesLinks } : eng,
+      );
+      saveEngagementsToStorage(nextEngagements);
+      return { pbcMinutesLinks, engagements: nextEngagements };
+    }),
   setModule: (activeModule) => {
     const next = isVisibleAppModule(activeModule)
       ? activeModule
@@ -641,6 +678,7 @@ export const useDocTraceStore = create<AppState>((set) => ({
         currency: DEFAULT_REPORTING_CURRENCY,
         ocrLanguage: DEFAULT_OCR_LANGUAGE,
         isLocked: false,
+        pbcMinutesLinks: [],
       };
       setReportingConfig({
         currency: newEngagement.currency,
@@ -654,6 +692,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
         activeEngagementId: newEngagement.id,
         documents: [],
         results: [],
+        todWorkpaperPack: undefined,
+        pbcMinutesLinks: [],
       };
     }),
   selectEngagement: (activeEngagementId) => {
@@ -668,6 +708,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
         activeEngagementId,
         documents: target?.documents || [],
         results: target?.results || [],
+        todWorkpaperPack: target?.todWorkpaperPack,
+        pbcMinutesLinks: target?.pbcMinutesLinks,
       };
     });
   },
@@ -767,6 +809,8 @@ export const useDocTraceStore = create<AppState>((set) => ({
         activeEngagementId: nextActiveId,
         documents: target?.documents || [],
         results: target?.results || [],
+        todWorkpaperPack: target?.todWorkpaperPack,
+        pbcMinutesLinks: target?.pbcMinutesLinks,
       };
     }),
 }));

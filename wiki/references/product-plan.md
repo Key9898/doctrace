@@ -2,8 +2,11 @@
 
 Living product thesis. Not an Impl log.
 
-- History: [implementation-phases.md](../architecture/implementation-phases.md) (through Impl 56)
+- History: [implementation-phases.md](../architecture/implementation-phases.md)
 - Optional local-cloud leftover after the client drop: [phase1-integration-remaining.md](../architecture/phase1-integration-remaining.md)
+- Phase 2 remaining (team and cloud, not leftover A-D): [phase2-remaining.md](../architecture/phase2-remaining.md)
+- Phase 3 remaining (LLM/ML, not leftover A-D): [phase3-remaining.md](../architecture/phase3-remaining.md)
+- Prep modules remaining (TB / workpapers / PBC, not a product phase): [prep-modules-remaining.md](../architecture/prep-modules-remaining.md)
 
 Original client files live in gitignored `docs/client-documents/`. They describe EZAI, a broader browser-based multi-tenant audit OS (BRD/PRD/SAD/vision), plus a strategy memo PDF that combined CaseWare, DataSnipper, dashboards, and AI. **This wiki wins where those files conflict:** Excel-native Test of Details, local-first Phase 1, no login wall, no DataSnipper-identical claim, no hosted API in the Phase 1 client drop.
 
@@ -26,8 +29,9 @@ Client docs also describe firm admin, partner, associate hierarchy, and a later 
 - **Phase 0 and Phase 1** are shipped. Do not paste Impl 1-44 here.
 - **Phase 1 client drop** is what the client can use without a hosted backend: Vercel or local task pane, empty `VITE_API_URL`, IndexedDB and workbook storage.
 - **After the drop (not a new product phase):** optional local key-swap A-D on the tracker.
-- **Phase 2** is team and cloud operating capability (public host, shared templates, firm auth, central evidence restore, admin, full i18n).
-- **Phase 3** is LLM/ML intelligence. Do not start it until Phase 2 identity and storage governance exist. Tesseract OCR and deterministic matching already exist in Phase 1 and stay.
+- **Phase 2** is team and cloud operating capability (public host, shared templates, firm auth, central evidence restore, admin, full i18n). Remaining list: [phase2-remaining.md](../architecture/phase2-remaining.md).
+- **Prep modules** are not Phase 2 cloud and not Phase 4. Mock Trial Balance, Workpapers, and Client PBC stay on `development` behind empty `VITE_SHOW_PREP_MODULES` (showcase default). Remaining list: [prep-modules-remaining.md](../architecture/prep-modules-remaining.md). EZAI Phase 4 stays regional SaaS.
+- **Phase 3** is LLM/ML intelligence. Do not start **live** assist until Phase 2 identity and storage governance exist. Signed-in Account already shows not-live chrome (Impl 58) plus governance copy (Impl 94). Remaining list: [phase3-remaining.md](../architecture/phase3-remaining.md). Tesseract OCR and deterministic matching already exist in Phase 1 and stay.
 
 ## Client docs vs DocTrace (wiki lock)
 
@@ -69,6 +73,9 @@ Excel ToD workflow. Detail: Impl 10-42 and the [architecture overview](../archit
 - Task pane viewer; visual snipping (text, region, table, form fields)
 - Confidence weights; materiality; ISA 230-oriented log (not ISA-certified)
 - IndexedDB persistence; workbook evidence embed; snip anchors; workbook-local document library
+
+**Public evidence lock (Impl 88):** No standalone Media Library (pane, site, or admin SPA). Auditor evidence stays in the workbook-local Document Library: Custom XML bytes when ExcelApi 1.5, IndexedDB as session cache and Browser Preview store. The public site does not take uploads. PBC files enter Matching via Import, not a CMS gallery and not the homepage. Optional Account Backup is a manual copy, not auto-upload on import. No DataSnipper-identical claim.
+
 - Engagements dashboard and reporting config
 - Myanmar-first i18n with English fallback
 - Production Vercel manifest for `https://doctrace-one.vercel.app/`
@@ -79,10 +86,11 @@ Exists in-repo. The pane does not use it unless `VITE_API_URL` is set.
 
 - `backend/` on `127.0.0.1:3001` (HTTPS when office-addin-dev-certs exist)
 - `GET /health` returns `{ ok: true }` without Postgres, R2, or Brevo
-- Fail-closed `/auth/*`, `PUT /evidence/:contentSha256`, `GET /evidence/:contentSha256` (`restore_not_live`), `POST /mail/account-notice`
-- Frontend clients exist (`cloud-auth`, `cloud-evidence`, `cloud-mail`). `AppLayout` calls `probeCloudHealth` (skips fetch when the URL is empty) and mounts `CloudSessionPanel` only when `isCloudEnabled()`
+- Fail-closed `/auth/*` (OTP request/verify; retired password login returns `password_auth_retired`), `PUT /evidence/:contentSha256`, `GET /evidence/:contentSha256` (`restore_not_live`), `POST /mail/account-notice`
+- Phase 2 fail-closed routes on the same backend (not leftover A–D): Bearer `GET`/`PUT /templates` (`templates_not_live`), Bearer `GET /admin/roster` and `GET /admin/deploy` (`admin_not_live`). Live team store and live Super Admin stay on [phase2-remaining.md](../architecture/phase2-remaining.md)
+- Frontend clients exist (`cloud-auth`, `cloud-evidence`, `cloud-mail`, `cloud-templates`, `cloud-admin`). `AppLayout` calls `probeCloudHealth` (skips fetch when the URL is empty) and mounts `CloudSessionPanel` only when `isCloudEnabled()`
 - Init SQL exists under `backend/prisma/migrations/` and was applied on this machine (Impl 46 leftover A)
-- Default CORS origin is `https://127.0.0.1:3000`
+- Default CORS origin is `https://127.0.0.1:3000`. Env may list extra origins (comma-separated); the API echoes a matching `Origin` and never `*`. Add `https://doctrace-one.vercel.app` when hosting a public API. The API is not publicly hosted in this drop.
 
 ### Phase 1 client drop
 
@@ -118,41 +126,29 @@ Dev-only local key-swap. Finish blank/fail-closed work first; ask the team leade
 
 - B. **Attempted (Impl 49, retried Impl 51):** R2 env non-empty; live PUT still 502 `r2_failed`. Brevo env empty; POST still 503 `brevo_unconfigured`. Need working R2 PutObject (200) and working Brevo (200). Not `VITE_` names. Backup/mail UI is already wired (Impl 50). Restore UI is already wired fail-closed (Impl 54).
 
-This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a public host stay Phase 2. Leftover B live PutObject/Brevo is not green yet (Impl 51 retry).
+This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a public host stay on [phase2-remaining.md](../architecture/phase2-remaining.md). Leftover B live PutObject/Brevo is not green yet (Impl 51 retry).
 
 ### Prep modules (not the client drop)
 
-Mock Trial Balance, Audit Workpapers, and Client PBC Portal live on `development` behind `VITE_SHOW_PREP_MODULES` (Impl 44). Empty or whitespace keeps them hidden for showcase. A non-empty gitignored `.env` value plus a Vite restart shows them while preparing. Do not set this on Vercel. Do not gate on localhost or the DEV badge. These mocks are not wiki Phase 2 (host, templates, firm auth, GET-restore) and not a git `phase-2` branch.
+Mock Trial Balance, Audit Workpapers, and Client PBC Portal live on `development` behind `VITE_SHOW_PREP_MODULES` (Impl 44). Empty or whitespace keeps them hidden for showcase. A non-empty gitignored `.env` value plus a Vite restart shows them while preparing. Do not set this on Vercel. Do not gate on localhost or the DEV badge. These mocks are not wiki Phase 2 (host, templates, firm auth, GET-restore) and not a git `phase-2` branch. This is not DocTrace Phase 4. EZAI Phase 4 stays regional SaaS.
+
+ISA-oriented flow (not ISA-certified): PBC intake, then trial-balance sample selection, then Matching Test of Details, then workpaper documentation (ISA 230-oriented). Human review before file sign-off. PBC is client evidence intake (ISA 500), not external confirmations (ISA 505) and not written representations (ISA 580). Do not build a CaseWare-class workpaper OS. No DataSnipper-identical claim.
+
+Living remaining list (scaffold vs open): [prep-modules-remaining.md](../architecture/prep-modules-remaining.md). Open has nothing remaining; do not reserve later Impl numbers there. Notes and PBC dashboard tiles stay mock (not a new numbered Impl). ToD PBC PDF / image / JSON files reach Matching Import (Impl 62). Ledgers, confirmations, minutes, trial balance, and `.xlsx` stay on the request list. PBC minutes with a file can appear on Workpapers as a documentation link (Impl 68); they stay off Matching Import. TB listing sample ticks reach Matching Step 1 via Zustand selection (Impl 63), not Import. Matching ToD results and snips assemble into a Workpapers pack with file sign-off (Impl 64), not a CaseWare OS. Trial Balance, Workpapers, and Client PBC chrome are in translations (Impl 65–67). Engagements workpaper tile follows ToD pack file sign-off (Impl 69); notes and PBC dashboard stats stay mock. ToD PBC Remove deletes Matching library documents by stored import ids (Impl 70); list-only Remove does not; leftover Import after remount is Matching Remove. Mock PBC request items and stored categories stay English. Task-pane `my-MM` switch uses Latin digits, short English nav labels, and letter-spacing/uppercase resets (Impl 71). Glossary/meaning copy keeps Trial Balance and PBC product terms in English (Impl 72). Public-site `my` copy and uppercase/tracking resets follow the same glossary (Impl 73). Pane `pushToast` and activity-feed copy is keyed in translations (Impl 74); CSV and matching-engine English stay.
 
 ## Phase 2 (team and cloud)
 
 Not in the Phase 1 client drop. Client EZAI docs call much of this cloud-native SaaS. DocTrace maps only outcomes that fit an Excel add-in plus an optional API. Phase 2 is **not done**. Local leftover A-D is not Phase 2.
 
-Status: **scaffold** = code exists, fail-closed without live keys. **open** = not built. Live PUT/mail 200 waits on team-leader R2 and Brevo.
+Living remaining list (scaffold vs open, plus out of scope unless re-scoped): [phase2-remaining.md](../architecture/phase2-remaining.md).
 
-- **Public API host (open):** Railway or equivalent; bind/CORS/`VITE_API_URL` for the Vercel pane, Excel on the web, and other PCs. Local `:3001` is not a public host. Not Phase 1.
-- **Organization templates (open):** team-wide cloud sync. Phase 1 keeps workbook-embedded templates and JSON export/import.
-- **Identity and firm access (open live firm auth, scaffold chrome + local login):** real firm-level roles and MFA once a host exists. Client docs add Super Admin, Firm Admin, associate restrictions, export authority. Signed-in Account panel shows read-only Local operator + MFA not-live chrome (Impl 56). Optional local login UI is leftover D (Impl 47). No login wall on matching. Scaffold: `/auth/*` and `cloud-auth.ts`.
-- **Central evidence (open live restore, scaffold GET/PUT):** live GetObject, retention, firm storage. Phase 1 source of truth stays IndexedDB and the workbook. Scaffold: R2 PUT, fail-closed GET (`restore_not_live`), Backup + Restore buttons. Restore does not write IndexedDB. No live GET-restore.
-- **Notifications (scaffold):** signed-in Mail button wired (Impl 50, fail-closed until Brevo). Scaffold: `POST /mail/account-notice` (session email only; no evidence payload).
-- **Admin and deploy tooling (open)**
-- **Full enterprise i18n:** EngagementManager placeholders (Impl 43) and remaining firm-terminology display (Impl 55) are done. Prep-module component copy stays later. Locale, date, number, currency, and OCR language stay centralized in `frontend/src/lib/i18n/`.
-
-### Explicitly not DocTrace Phase 2 unless re-scoped
-
-From client docs and wiki out-of-scope notes:
-
-- EZAI client portal / PBC room (mock shell may exist behind `VITE_SHOW_PREP_MODULES`; not the client drop and not Phase 2 cloud)
-- Trial-balance or ERP import as the core product (same: mock shell only, flag-gated)
-- Template marketplace storefront
-- DataSnipper-identical Professional pack, Find All Sums, version compare, comments/markup
-- SharePoint or OneDrive as required storage
-- Dedicated mobile apps
-- CaseWare-class workpaper OS (strategy PDF; mock workpapers shell is flag-gated on `development` only)
+Live public host, live organization template store, live firm auth, live GET-restore, and live Super Admin stay open. Fail-closed login, backup, mail, restore, Role/MFA, organization templates (`/templates`), and admin roster/deploy chrome (not the Account dropdown) already exist as scaffold. Matching stays unblocked.
 
 ## Phase 3 (AI/ML; after Phase 2 foundations)
 
-Do not start until Phase 2 identity and storage governance exist. Client vision "AI and evidence intelligence" and "reviewer support" map here. Phase 1 OCR/matching stay. LLM must remain reviewable, logged, and overridable.
+Do not start **live** assist until Phase 2 identity and storage governance exist. Signed-in Account shows read-only AI assist not-live chrome (Impl 58). Impl 94 added governance copy on that chrome (reviewable, logged, overridable). Live LLM and milestones 3.1–3.4 stay **open**. No login wall. Matching stays unblocked. Client vision "AI and evidence intelligence" and "reviewer support" map here. Phase 1 OCR/matching stay. LLM must remain reviewable, logged, and overridable.
+
+Living remaining list (scaffold vs open): [phase3-remaining.md](../architecture/phase3-remaining.md).
 
 Excel task pane constraints: no `framer-motion`; keep the sidebar fast on Windows, Mac, and Web; keep assistance explainable.
 

@@ -1,12 +1,22 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-import { CORS_ORIGIN } from "./config.js";
+import { CORS_ORIGINS } from "./config.js";
+import { resolveCorsOrigin } from "./cors-origin.js";
 
 const MAX_JSON_BYTES = 8 * 1024;
 const MAX_RAW_BYTES = 20 * 1024 * 1024;
 
-export function applyCors(response: ServerResponse): void {
-  response.setHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
+export function applyCors(
+  request: IncomingMessage,
+  response: ServerResponse,
+): void {
+  const header = request.headers.origin;
+  const requestOrigin = typeof header === "string" ? header : null;
+  const allowed = resolveCorsOrigin(requestOrigin, CORS_ORIGINS);
+  if (allowed) {
+    response.setHeader("Access-Control-Allow-Origin", allowed);
+    response.setHeader("Vary", "Origin");
+  }
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
   response.setHeader(
     "Access-Control-Allow-Headers",
@@ -15,11 +25,12 @@ export function applyCors(response: ServerResponse): void {
 }
 
 export function sendJson(
+  request: IncomingMessage,
   response: ServerResponse,
   status: number,
   body: Record<string, unknown>,
 ): void {
-  applyCors(response);
+  applyCors(request, response);
   response.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
   });

@@ -17,7 +17,7 @@ function handleRequest(
   response: ServerResponse,
 ): void {
   if (request.method === "OPTIONS") {
-    applyCors(response);
+    applyCors(request, response);
     response.writeHead(204);
     response.end();
     return;
@@ -27,7 +27,7 @@ function handleRequest(
     .pathname;
 
   if (request.method === "GET" && pathname === "/health") {
-    sendHealth(response);
+    sendHealth(request, response);
     return;
   }
 
@@ -36,7 +36,7 @@ function handleRequest(
       .then(({ handleAuth }) => handleAuth(request, response, pathname))
       .catch(() => {
         if (!response.headersSent) {
-          sendJson(response, 500, { ok: false, error: "internal" });
+          sendJson(request, response, 500, { ok: false, error: "internal" });
         }
       });
     return;
@@ -47,7 +47,7 @@ function handleRequest(
       .then(({ handleEvidence }) => handleEvidence(request, response, pathname))
       .catch(() => {
         if (!response.headersSent) {
-          sendJson(response, 500, { ok: false, error: "internal" });
+          sendJson(request, response, 500, { ok: false, error: "internal" });
         }
       });
     return;
@@ -58,13 +58,37 @@ function handleRequest(
       .then(({ handleMail }) => handleMail(request, response, pathname))
       .catch(() => {
         if (!response.headersSent) {
-          sendJson(response, 500, { ok: false, error: "internal" });
+          sendJson(request, response, 500, { ok: false, error: "internal" });
         }
       });
     return;
   }
 
-  sendJson(response, 404, { ok: false, error: "not_found" });
+  if (pathname.startsWith("/templates")) {
+    void import("./routes/templates.js")
+      .then(({ handleTemplates }) =>
+        handleTemplates(request, response, pathname),
+      )
+      .catch(() => {
+        if (!response.headersSent) {
+          sendJson(request, response, 500, { ok: false, error: "internal" });
+        }
+      });
+    return;
+  }
+
+  if (pathname.startsWith("/admin")) {
+    void import("./routes/admin.js")
+      .then(({ handleAdmin }) => handleAdmin(request, response, pathname))
+      .catch(() => {
+        if (!response.headersSent) {
+          sendJson(request, response, 500, { ok: false, error: "internal" });
+        }
+      });
+    return;
+  }
+
+  sendJson(request, response, 404, { ok: false, error: "not_found" });
 }
 
 const certDirectory = join(homedir(), ".office-addin-dev-certs");

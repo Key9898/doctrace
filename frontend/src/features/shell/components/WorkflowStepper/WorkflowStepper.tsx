@@ -33,7 +33,7 @@ export function WorkflowStepper({
   resultsReady,
   onNavigate,
 }: WorkflowStepperProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const states = [selectionReady, documentsReady, documentsReady, resultsReady];
 
   return (
@@ -73,7 +73,13 @@ export function WorkflowStepper({
                 index + 1
               )}
             </span>
-            <span className="w-full truncate text-[0.6rem] leading-tight font-bold">
+            <span
+              className={
+                locale === "my-MM"
+                  ? "w-full text-[0.6rem] font-bold"
+                  : "w-full truncate text-[0.6rem] leading-tight font-bold"
+              }
+            >
               {label}
             </span>
           </button>

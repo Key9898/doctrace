@@ -1,6 +1,16 @@
-﻿import { CheckCircle, FolderLock, PenTool, Send } from "lucide-react";
+import { CheckCircle, FolderLock, PenTool, Send } from "lucide-react";
 import { useState, useMemo } from "react";
+
+import { pbcMinutesDemoLinks } from "@/features/pbc-portal/services/pbc-minutes";
+import {
+  canSignTodWorkpaperFile,
+  hasFollowUpOpen,
+  unsignedOpenRows,
+} from "@/features/workpapers/services/wp-signoff";
+import { statusLabel } from "@/lib/formatters";
+import { useI18n } from "@/lib/i18n/useI18n";
 import { useDocTraceStore } from "@/stores/app-store";
+import type { PbcMinutesLink } from "@/types/domain";
 
 interface WorkpaperItem {
   reference: string;
@@ -98,12 +108,28 @@ const initialReviewNotes: ReviewNote[] = [
   },
 ];
 
-export function Workpapers() {
-  const { locale } = useDocTraceStore();
+export function Workpapers({
+  onSignTodWorkpaperFile,
+}: {
+  onSignTodWorkpaperFile: () => boolean;
+}) {
+  const {
+    todWorkpaperPack,
+    pbcMinutesLinks,
+    rowSignOffs,
+    identity,
+    engagements,
+    activeEngagementId,
+  } = useDocTraceStore();
+  const { t } = useI18n();
   const [workpapers] = useState<WorkpaperItem[]>(initialWorkpapers);
   const [notes, setNotes] = useState<ReviewNote[]>(initialReviewNotes);
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [responseText, setResponseText] = useState("");
+
+  const isLocked =
+    engagements.find((engagement) => engagement.id === activeEngagementId)
+      ?.isLocked ?? false;
 
   const activeNotesCount = useMemo(
     () => notes.filter((n) => n.status !== "Closed").length,
@@ -131,21 +157,233 @@ export function Workpapers() {
     );
   };
 
+  const workpaperStatusLabel = (status: WorkpaperItem["status"]) => {
+    switch (status) {
+      case "Approved":
+        return t("wp.statusApproved");
+      case "Ready for Review":
+        return t("wp.statusReadyForReview");
+      case "In Progress":
+        return t("wp.statusInProgress");
+      case "Not Started":
+        return t("wp.statusNotStarted");
+    }
+  };
+
+  const noteStatusLabel = (status: ReviewNote["status"]) => {
+    switch (status) {
+      case "Open":
+        return t("wp.noteOpen");
+      case "Responded":
+        return t("wp.noteResponded");
+      case "Closed":
+        return t("wp.noteClosed");
+    }
+  };
+
+  const hintCard = (
+    <section className="rounded-[2.5rem] border border-white/80 bg-white/40 p-5 shadow-sm backdrop-blur-md xl:col-span-2 dark:border-white/5 dark:bg-slate-900/40">
+      <div className="flex items-start gap-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-500/10">
+          <FolderLock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+        </div>
+        <p className="text-xs leading-relaxed font-medium text-slate-600 dark:text-slate-400">
+          {t("wp.fileHint")}
+        </p>
+      </div>
+    </section>
+  );
+
+  const titleBlock = (
+    <div>
+      <p className="dt-kicker">{t("wp.kicker")}</p>
+      <h2 className="dt-section-title">{t("wp.title")}</h2>
+    </div>
+  );
+
+  const minutesLinks = pbcMinutesLinks ?? pbcMinutesDemoLinks();
+
+  const minutesStatusLabel = (status: PbcMinutesLink["status"]) => {
+    switch (status) {
+      case "Pending":
+        return t("pbc.statusPending");
+      case "Uploaded":
+        return t("pbc.statusUploaded");
+      case "Approved":
+        return t("pbc.statusApproved");
+      case "Rejected":
+        return t("pbc.statusRejected");
+    }
+  };
+
+  const minutesPanel = (
+    <section className="dt-panel">
+      <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+        {t("wp.minutesTitle")}
+      </h3>
+      {minutesLinks.length === 0 ? (
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+          {t("wp.minutesEmpty")}
+        </p>
+      ) : (
+        <ul className="mt-3 grid gap-2">
+          {minutesLinks.map((link) => (
+            <li
+              key={link.requestId}
+              className="rounded-xl border border-slate-200/80 px-3 py-2 text-xs dark:border-slate-800"
+            >
+              <p className="font-bold text-slate-900 dark:text-white">
+                {link.item}
+              </p>
+              <p className="mt-1 text-slate-600 dark:text-slate-400">
+                {link.fileName}
+              </p>
+              <span className="dt-badge dt-badge-neutral mt-2">
+                {minutesStatusLabel(link.status)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+
+  if (todWorkpaperPack) {
+    const matchedCount = todWorkpaperPack.rows.filter(
+      (row) => row.status === "matched",
+    ).length;
+    const partialCount = todWorkpaperPack.rows.filter(
+      (row) => row.status === "partial",
+    ).length;
+    const exceptionCount = todWorkpaperPack.rows.filter(
+      (row) => row.status === "exception",
+    ).length;
+    const openRows = unsignedOpenRows(todWorkpaperPack, rowSignOffs);
+    const canSign =
+      canSignTodWorkpaperFile(todWorkpaperPack, rowSignOffs, identity) &&
+      !isLocked;
+    const followUp = hasFollowUpOpen(todWorkpaperPack, rowSignOffs);
+
+    return (
+      <div className="grid gap-3">
+        <section className="dt-panel">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            {titleBlock}
+            <button
+              className="dt-button-primary"
+              disabled={!canSign}
+              onClick={() => onSignTodWorkpaperFile()}
+              type="button"
+            >
+              <FolderLock className="h-4 w-4" />
+              {t("wp.signFile")}
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-slate-600 dark:text-slate-400">
+            {todWorkpaperPack.sentAt} · {todWorkpaperPack.identity.preparer} /{" "}
+            {todWorkpaperPack.identity.reviewer}
+          </p>
+          {todWorkpaperPack.fileSignOff ? (
+            <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+              {todWorkpaperPack.fileSignOff.signedAt} ·{" "}
+              {todWorkpaperPack.fileSignOff.preparer} /{" "}
+              {todWorkpaperPack.fileSignOff.reviewer}
+            </p>
+          ) : null}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="dt-badge dt-badge-success">
+              {matchedCount} {t("results.matched")}
+            </span>
+            <span className="dt-badge dt-badge-neutral">
+              {partialCount} {t("results.partial")}
+            </span>
+            <span className="dt-badge dt-badge-danger">
+              {exceptionCount} {t("results.exception")}
+            </span>
+            <span className="dt-badge dt-badge-neutral">
+              {t("wp.snipCount")}: {todWorkpaperPack.snips.length}
+            </span>
+          </div>
+          {openRows.length > 0 ? (
+            <p className="mt-3 text-xs font-medium text-rose-700 dark:text-rose-400">
+              {t("wp.unsignedHint")}
+            </p>
+          ) : null}
+          {followUp ? (
+            <p className="mt-3 text-xs font-medium text-amber-700 dark:text-amber-400">
+              {t("wp.followUpWarn")}
+            </p>
+          ) : null}
+        </section>
+
+        <section className="dt-panel overflow-x-auto">
+          <table className="w-full border-collapse text-left text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
+                <th className="px-3 py-2.5 font-bold">{t("results.row")}</th>
+                <th className="px-3 py-2.5 font-bold">{t("eng.status")}</th>
+                <th className="px-3 py-2.5 font-bold">
+                  {t("results.signOff")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {todWorkpaperPack.rows.map((row) => (
+                <tr
+                  key={row.rowNumber}
+                  className="border-b border-slate-100 dark:border-slate-800/60"
+                >
+                  <td className="px-3 py-2.5 font-mono font-bold">
+                    {row.rowNumber}
+                  </td>
+                  <td className="px-3 py-2.5">{statusLabel(row.status)}</td>
+                  <td className="px-3 py-2.5 text-slate-600 dark:text-slate-400">
+                    {rowSignOffs[row.rowNumber]?.action ?? "-"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="dt-panel">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            {t("wp.snipCount")}
+          </h3>
+          {todWorkpaperPack.snips.length === 0 ? (
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              {t("wp.noSnips")}
+            </p>
+          ) : (
+            <ul className="mt-3 grid gap-2">
+              {todWorkpaperPack.snips.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="rounded-xl border border-slate-200/80 px-3 py-2 text-xs dark:border-slate-800"
+                >
+                  {entry.fileName} · {entry.pageNumber}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {minutesPanel}
+
+        {hintCard}
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-3 xl:grid-cols-2">
       {/* Left side: Workpapers List */}
       <div className="grid gap-3 self-start">
         <section className="dt-panel">
           <div>
-            <p className="dt-kicker">≡ƒôü Audit Documentation</p>
-            <h2 className="dt-section-title">
-              {locale === "my-MM"
-                ? "Audit Workpapers ßÇàßÇ¼ßÇ¢ßÇäßÇ║ßÇ╕"
-                : "Audit Workpapers Checklist"}
-            </h2>
+            {titleBlock}
             <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-              Manage workpaper sign-offs, preparer assignments, and overall
-              execution progress.
+              {t("wp.subtitle")}
             </p>
           </div>
 
@@ -172,14 +410,16 @@ export function Workpapers() {
                                 : "dt-badge-neutral"
                         }`}
                       >
-                        {wp.status}
+                        {workpaperStatusLabel(wp.status)}
                       </span>
                     </div>
                     <h3 className="mt-2 text-sm font-bold text-slate-900 dark:text-white">
                       {wp.name}
                     </h3>
                     <p className="mt-1 text-[0.7rem] font-medium text-slate-500 dark:text-slate-400">
-                      Assigned: {wp.preparer} (Prep) | {wp.reviewer} (Review)
+                      {t("wp.assigned")
+                        .replace("{preparer}", wp.preparer)
+                        .replace("{reviewer}", wp.reviewer)}
                     </p>
                   </div>
                 </div>
@@ -211,18 +451,14 @@ export function Workpapers() {
         <section className="dt-panel">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="dt-kicker">≡ƒÆ¼ Auditor Feedback</p>
-              <h2 className="dt-section-title">
-                {locale === "my-MM"
-                  ? "ßÇÇßÇ╗ßÇößÇ║ßÇ¢ßÇ╛ßÇ¡ßÇößÇ▒ßÇ₧ßÇ▒ßÇ¼ Review Notes ßÇÖßÇ╗ßÇ¼ßÇ╕"
-                  : "Outstanding Review Notes"}
-              </h2>
+              <p className="dt-kicker">{t("wp.feedbackKicker")}</p>
+              <h2 className="dt-section-title">{t("wp.feedbackTitle")}</h2>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-                Clear manager and partner notes to finalize document sign-offs.
+                {t("wp.feedbackSubtitle")}
               </p>
             </div>
             <span className="dt-badge dt-badge-neutral" aria-live="polite">
-              {activeNotesCount} Notes
+              {t("wp.notesCount").replace("{count}", String(activeNotesCount))}
             </span>
           </div>
 
@@ -243,7 +479,7 @@ export function Workpapers() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="dark:text-slate-450 text-[0.62rem] font-bold tracking-wider text-slate-500">
-                      Workpaper:{" "}
+                      {t("wp.workpaperLabel")}{" "}
                       <strong className="font-mono text-sky-600 dark:text-sky-400">
                         {note.workpaperRef}
                       </strong>
@@ -257,13 +493,13 @@ export function Workpapers() {
                             : "dt-badge-danger"
                       }`}
                     >
-                      {note.status}
+                      {noteStatusLabel(note.status)}
                     </span>
                   </div>
 
                   <p className="mt-3 text-xs leading-relaxed font-semibold text-slate-900 dark:text-white">
                     <strong className="block text-[0.7rem] text-slate-500 dark:text-slate-400">
-                      Reviewer: {note.author}
+                      {t("wp.reviewerLabel")} {note.author}
                     </strong>
                     {note.message}
                   </p>
@@ -272,7 +508,7 @@ export function Workpapers() {
                   {note.response && (
                     <div className="mt-4 rounded-2xl bg-white/60 p-3 text-[0.75rem] leading-relaxed font-medium text-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
                       <span className="block text-[0.62rem] font-bold text-sky-600 dark:text-sky-400">
-                        Response:
+                        {t("wp.responseLabel")}
                       </span>
                       {note.response}
                     </div>
@@ -290,7 +526,7 @@ export function Workpapers() {
                           type="button"
                         >
                           <PenTool className="h-3 w-3" />
-                          Respond
+                          {t("wp.respond")}
                         </button>
                       )}
 
@@ -301,7 +537,7 @@ export function Workpapers() {
                           type="button"
                         >
                           <CheckCircle className="h-3 w-3" />
-                          Clear & Close
+                          {t("wp.clearClose")}
                         </button>
                       )}
                     </div>
@@ -312,7 +548,7 @@ export function Workpapers() {
                       <textarea
                         value={responseText}
                         onChange={(e) => setResponseText(e.target.value)}
-                        placeholder="Type your audit response details..."
+                        placeholder={t("wp.responsePlaceholder")}
                         className="w-full rounded-xl border border-slate-200 bg-white/60 p-3 text-xs text-slate-900 focus:border-sky-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950/40 dark:text-white"
                         rows={2}
                       />
@@ -322,7 +558,7 @@ export function Workpapers() {
                           className="dt-button-ghost px-3 py-1 text-[0.7rem]"
                           type="button"
                         >
-                          Cancel
+                          {t("wp.cancel")}
                         </button>
                         <button
                           onClick={() => handleSubmitResponse(note.id)}
@@ -330,7 +566,7 @@ export function Workpapers() {
                           type="button"
                         >
                           <Send className="h-3 w-3" />
-                          Submit
+                          {t("wp.submit")}
                         </button>
                       </div>
                     </div>
@@ -342,24 +578,10 @@ export function Workpapers() {
         </section>
       </div>
 
+      <div className="xl:col-span-2">{minutesPanel}</div>
+
       {/* Audit compliance notes card */}
-      <section className="rounded-[2.5rem] border border-white/80 bg-white/40 p-5 shadow-sm backdrop-blur-md xl:col-span-2 dark:border-white/5 dark:bg-slate-900/40">
-        <div className="flex items-start gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-500/10">
-            <FolderLock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-          </div>
-          <div className="grid gap-1">
-            <p className="text-sm font-bold text-slate-900 dark:text-white">
-              ISQM 1 Documentation Compliance
-            </p>
-            <p className="text-xs leading-relaxed font-medium text-slate-600 dark:text-slate-400">
-              In accordance with international audit standards, all outstanding
-              review queries must be cleared before the engagement partner can
-              sign off and execute final archival database locks.
-            </p>
-          </div>
-        </div>
-      </section>
+      {hintCard}
     </div>
   );
 }

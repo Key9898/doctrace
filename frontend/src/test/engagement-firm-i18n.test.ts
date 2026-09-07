@@ -14,10 +14,6 @@ const MY_MM_LEFTOVERS: ReadonlyArray<{
   key: TranslationKey;
   leftover: string;
 }> = [
-  { key: "nav.engagements", leftover: "📊 Engagement Dashboard" },
-  { key: "nav.trialBalance", leftover: "⚖️ Trial Balance" },
-  { key: "nav.workpapers", leftover: "📁 Audit Workpapers" },
-  { key: "nav.clientPortal", leftover: "🌐 Client PBC Portal" },
   { key: "eng.kicker", leftover: "DocTrace Modules" },
   { key: "eng.wizard.title", leftover: "Engagement Setup Wizard" },
 ];

@@ -13,6 +13,7 @@ import {
   Trash2,
   Zap,
   Lock,
+  Send,
 } from "lucide-react";
 
 import { buildResultsSummary } from "@/features/matching/services/matching.service";
@@ -55,6 +56,7 @@ interface ResultsPanelProps {
   trivialThreshold?: number;
   amountColumnId?: string;
   rowSignOffs?: Record<number, RowSignOff>;
+  onSendToWorkpapers?: () => void;
   onSignOff?: (
     rowNumber: number,
     action: ExceptionSignOffAction,
@@ -75,6 +77,7 @@ export function ResultsPanel({
   trivialThreshold,
   amountColumnId,
   rowSignOffs = {},
+  onSendToWorkpapers,
   onSignOff,
 }: ResultsPanelProps) {
   const { t } = useI18n();
@@ -105,6 +108,17 @@ export function ResultsPanel({
         <div className="flex items-center gap-3 px-1">
           {deferredResults.length > 0 && (
             <>
+              {onSendToWorkpapers ? (
+                <button
+                  className="dt-button-primary"
+                  disabled={isLocked}
+                  onClick={onSendToWorkpapers}
+                  type="button"
+                >
+                  <Send className="h-4 w-4" aria-hidden="true" />
+                  {t("results.sendToWorkpapers")}
+                </button>
+              ) : null}
               <button
                 className="dt-button-secondary"
                 onClick={handleExportCsv}

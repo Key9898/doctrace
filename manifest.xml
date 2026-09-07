@@ -6,8 +6,8 @@
   xsi:type="TaskPaneApp"
 >
   <Id>0f58f263-ea08-440c-8ce1-2ae8b61e1dd0</Id>
-  <Version>1.0.0.4</Version>
-  <ProviderName>DocTrace</ProviderName>
+  <Version>1.0.0.7</Version>
+  <ProviderName>Studio Next Steps</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="DocTrace" />
   <Description

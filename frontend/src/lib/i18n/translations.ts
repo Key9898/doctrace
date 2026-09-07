@@ -5,6 +5,7 @@ export type TranslationKey =
   | "app.workspace"
   | "app.excelConnected"
   | "app.browserPreview"
+  | "app.website"
   | "app.booting"
   | "app.description"
   | "app.selection"
@@ -14,15 +15,26 @@ export type TranslationKey =
   | "app.none"
   | "app.ready"
   | "app.language"
+  | "app.langSwitch"
+  | "app.langSwitchAria"
   | "cloud.session"
   | "cloud.email"
-  | "cloud.password"
+  | "cloud.otp"
+  | "cloud.sendCode"
+  | "cloud.verifyCode"
+  | "cloud.otpHint"
+  | "cloud.backToEmail"
   | "cloud.login"
   | "cloud.register"
   | "cloud.logout"
   | "cloud.failed"
   | "cloud.skipped"
   | "cloud.invalid"
+  | "cloud.invalidCode"
+  | "cloud.otpNotLive"
+  | "cloud.userNotFound"
+  | "cloud.emailTaken"
+  | "cloud.cooldown"
   | "cloud.signedIn"
   | "cloud.backup"
   | "cloud.mail"
@@ -34,11 +46,112 @@ export type TranslationKey =
   | "cloud.restore"
   | "cloud.restoreOk"
   | "cloud.restoreFailed"
+  | "cloud.templates"
+  | "cloud.templatesNotLive"
+  | "cloud.templatesFailed"
   | "cloud.firmRole"
   | "cloud.firmRoleLocal"
   | "cloud.firmAccessNotLive"
   | "cloud.mfa"
   | "cloud.mfaNotLive"
+  | "cloud.assist"
+  | "cloud.assistNotLive"
+  | "cloud.assistGovernance"
+  | "cloud.admin"
+  | "cloud.adminRoster"
+  | "cloud.adminDeploy"
+  | "cloud.adminNotLive"
+  | "cloud.adminFailed"
+  | "pbc.uploadToImport"
+  | "pbc.markReceived"
+  | "pbc.received"
+  | "pbc.todHint"
+  | "pbc.listOnlyHint"
+  | "pbc.kicker"
+  | "pbc.title"
+  | "pbc.subtitle"
+  | "pbc.statPending"
+  | "pbc.statUploaded"
+  | "pbc.statApproved"
+  | "pbc.checklist"
+  | "pbc.idLabel"
+  | "pbc.deadlineLabel"
+  | "pbc.uploadedFile"
+  | "pbc.approve"
+  | "pbc.reject"
+  | "pbc.removeFile"
+  | "pbc.statusPending"
+  | "pbc.statusUploaded"
+  | "pbc.statusApproved"
+  | "pbc.statusRejected"
+  | "pbc.catAccountsPayable"
+  | "pbc.catCashBank"
+  | "pbc.catExpenses"
+  | "pbc.catFixedAssets"
+  | "pbc.catGovernance"
+  | "pbc.whatTitle"
+  | "pbc.whatBody"
+  | "tb.importTb"
+  | "tb.importListing"
+  | "tb.sendToMatching"
+  | "tb.pickLead"
+  | "tb.tieOutOk"
+  | "tb.tieOutWarn"
+  | "tb.parseFailed"
+  | "tb.sendHint"
+  | "tb.selectAll"
+  | "tb.listingEmpty"
+  | "tb.kicker"
+  | "tb.title"
+  | "tb.subtitle"
+  | "tb.balanceOk"
+  | "tb.balanceWarn"
+  | "tb.balanceHint"
+  | "tb.debits"
+  | "tb.credits"
+  | "tb.mappings"
+  | "tb.searchPlaceholder"
+  | "tb.colCode"
+  | "tb.colDescription"
+  | "tb.colDebit"
+  | "tb.colCredit"
+  | "tb.colMapping"
+  | "tb.colInvoice"
+  | "tb.colDate"
+  | "tb.colAmount"
+  | "tb.guidelinesTitle"
+  | "results.sendToWorkpapers"
+  | "wp.signFile"
+  | "wp.fileHint"
+  | "wp.unsignedHint"
+  | "wp.followUpWarn"
+  | "wp.snipCount"
+  | "wp.noSnips"
+  | "wp.minutesTitle"
+  | "wp.minutesEmpty"
+  | "wp.kicker"
+  | "wp.title"
+  | "wp.subtitle"
+  | "wp.feedbackKicker"
+  | "wp.feedbackTitle"
+  | "wp.feedbackSubtitle"
+  | "wp.notesCount"
+  | "wp.assigned"
+  | "wp.workpaperLabel"
+  | "wp.reviewerLabel"
+  | "wp.responseLabel"
+  | "wp.respond"
+  | "wp.clearClose"
+  | "wp.cancel"
+  | "wp.submit"
+  | "wp.responsePlaceholder"
+  | "wp.statusNotStarted"
+  | "wp.statusInProgress"
+  | "wp.statusReadyForReview"
+  | "wp.statusApproved"
+  | "wp.noteOpen"
+  | "wp.noteResponded"
+  | "wp.noteClosed"
   | "app.browserWarning"
   | "project.kicker"
   | "project.title"
@@ -182,6 +295,8 @@ export type TranslationKey =
   | "import.invoiceLibrary"
   | "import.bankLibrary"
   | "import.pageImported"
+  | "import.docCount"
+  | "import.fileCount"
   | "import.id"
   | "import.amount"
   | "import.date"
@@ -317,6 +432,8 @@ export type TranslationKey =
   | "viewer.fileNotFound"
   | "viewer.extractedSnippet"
   | "viewer.manualSnip"
+  | "viewer.imageRegion"
+  | "viewer.imageRegionHint"
   | "snips.kicker"
   | "snips.title"
   | "snips.desc"
@@ -324,6 +441,7 @@ export type TranslationKey =
   | "snips.statLinked"
   | "snips.statOpen"
   | "snips.emptyState"
+  | "snips.goToPage"
   | "snips.linked"
   | "snips.needsLink"
   | "snips.linkAnother"
@@ -420,14 +538,225 @@ export type TranslationKey =
   | "snip.noTextLayer"
   | "snip.mergedDestination"
   | "snip.undoSessionWeak"
-  | "viewer.fieldLocationUnavailable";
+  | "viewer.fieldLocationUnavailable"
+  | "persist.sessionCacheFailedTitle"
+  | "persist.sessionCacheFailedDesc"
+  | "persist.evidenceOpenFailedTitle"
+  | "persist.evidenceOpenFailedDesc"
+  | "persist.evidenceNotStoredTitle"
+  | "persist.evidenceNotStoredWorkbookDesc"
+  | "persist.evidenceNotStoredIdbDesc"
+  | "persist.workbookEmbedFailedTitle"
+  | "persist.workbookEmbedFailedDesc"
+  | "persist.templatesLoadFailedTitle"
+  | "persist.templatesLoadFailedFallback"
+  | "persist.auditLogLoadFailedTitle"
+  | "persist.auditLogLoadFailedFallback"
+  | "persist.fileTooLargeTitle"
+  | "persist.fileTooLargeDesc"
+  | "persist.workbookEmbedUnavailableTitle"
+  | "persist.workbookEmbedUnavailableDesc"
+  | "persist.workbookEvidenceRemoveFailedTitle"
+  | "persist.workbookEvidenceRemoveFailedFallback"
+  | "persist.evidenceFileMissingTitle"
+  | "persist.evidenceFileMissingDesc"
+  | "persist.parseCacheMissingTitle"
+  | "persist.parseCacheMissingDesc"
+  | "persist.workbookEvidenceReadFailedTitle"
+  | "persist.workbookEvidenceReadFailedFallback"
+  | "persist.snipAnchorsRestoreFailedTitle"
+  | "persist.snipAnchorsRestoreFailedFallback"
+  | "persist.evidenceCacheSaveFailedTitle"
+  | "persist.evidenceCacheSaveFailedDesc"
+  | "persist.engagementSaveFailedTitle"
+  | "persist.engagementSaveFailedDesc"
+  | "match.sampleRequiredTitle"
+  | "match.sampleRequiredMappingDesc"
+  | "match.sampleRequiredTbDesc"
+  | "match.mappingAppliedTitle"
+  | "match.mappingAppliedDesc"
+  | "match.excelContextTitle"
+  | "match.excelContextCaptureDesc"
+  | "match.selectionCapturedTitle"
+  | "match.selectionCapturedDesc"
+  | "match.selectionFailedTitle"
+  | "match.selectionFailedFallback"
+  | "match.tbSampleReadyTitle"
+  | "match.tbSampleReadyDesc"
+  | "match.noSampleTitle"
+  | "match.noSampleDocsDesc"
+  | "match.noSampleDesc"
+  | "match.noEvidenceTitle"
+  | "match.noEvidenceRunDesc"
+  | "match.noEvidenceDesc"
+  | "match.noOutputTitle"
+  | "match.noOutputDesc"
+  | "match.outputIncompleteTitle"
+  | "match.outputIncompleteBeforeDesc"
+  | "match.outputIncompleteDesc"
+  | "match.outputDuplicateTitle"
+  | "match.outputDuplicateDesc"
+  | "match.completedTitle"
+  | "match.completedDesc"
+  | "match.failedTitle"
+  | "match.failedFallback"
+  | "match.rowNotFoundTitle"
+  | "match.rowNotFoundDesc"
+  | "match.rowMatchedTitle"
+  | "match.rowMatchedDesc"
+  | "match.rowFailedTitle"
+  | "match.excelConnectionTitle"
+  | "match.excelConnectionDesc"
+  | "match.outOfBoundsTitle"
+  | "match.outOfBoundsDesc"
+  | "match.activeRowFailedTitle"
+  | "match.activeRowFailedFallback"
+  | "match.clearedTitle"
+  | "match.clearedExcelDesc"
+  | "match.clearedUiDesc"
+  | "match.clearFailedTitle"
+  | "match.clearFailedFallback"
+  | "wp.sendBlockedTitle"
+  | "wp.sendBlockedDesc"
+  | "wp.matchRequiredTitle"
+  | "wp.matchRequiredDesc"
+  | "wp.packReadyTitle"
+  | "wp.packReadyDesc"
+  | "wp.signBlockedTitle"
+  | "wp.signBlockedLockedDesc"
+  | "wp.signBlockedReviewDesc"
+  | "wp.signedTitle"
+  | "wp.signedDesc"
+  | "results.signOffExceptionOnly"
+  | "results.signOffLogFailedTitle"
+  | "results.signOffLogFailedFallback"
+  | "template.savedTitle"
+  | "template.savedDesc"
+  | "template.appliedTitle"
+  | "template.appliedDesc"
+  | "template.deletedTitle"
+  | "template.deletedFallback"
+  | "template.exportedTitle"
+  | "template.exportedDesc"
+  | "template.importedTitle"
+  | "template.importedDesc"
+  | "template.importFailedTitle"
+  | "template.importFailedFallback"
+  | "snip.emptyIgnoredTitle"
+  | "snip.emptyIgnoredDesc"
+  | "snip.alreadyCapturedTitle"
+  | "snip.alreadyCapturedDesc"
+  | "snip.addFailedTitle"
+  | "snip.undoFailedTitle"
+  | "snip.undoFailedFallback"
+  | "snip.excelContextLinkDesc"
+  | "snip.linkFailedTitle"
+  | "snip.linkFailedNoDocument"
+  | "snip.linkFailedFallback"
+  | "snip.formWriteFailedTitle"
+  | "snip.formWriteFailedFallback"
+  | "snip.replacedTitle"
+  | "snip.linkedTitle"
+  | "snip.linkedSessionTitle"
+  | "snip.replacedDesc"
+  | "snip.linkedDesc"
+  | "snip.hostNoBindingsCells"
+  | "snip.hostNoBindingsCell"
+  | "snip.hashMissingAnchor"
+  | "snip.hostTopLeftOnly"
+  | "snip.sessionKeepCellsFallback"
+  | "snip.sessionKeepCellFallback"
+  | "app.runtimeError"
+  | "app.unhandledRejection"
+  | "identity.readFailedFallback"
+  | "identity.saveFailedFallback"
+  | "eng.reportingReadFailedFallback"
+  | "eng.reportingSaveFailedFallback"
+  | "activity.sessionCacheFailedDesc"
+  | "activity.evidenceNotStoredBothDesc"
+  | "activity.evidenceNotStoredIdbDesc"
+  | "activity.templatesLoadedTitle"
+  | "activity.templatesLoadedDesc"
+  | "activity.templatesFailedTitle"
+  | "activity.mappingBlockedTitle"
+  | "activity.mappingBlockedDesc"
+  | "activity.mappingAppliedDesc"
+  | "activity.selectionBlockedTitle"
+  | "activity.selectionBlockedDesc"
+  | "activity.capturingSelectionTitle"
+  | "activity.selectionCapturedDesc"
+  | "activity.selectionCapturedEmptyTitle"
+  | "activity.selectionCapturedEmptyDesc"
+  | "activity.tbBlockedTitle"
+  | "activity.tbBlockedDesc"
+  | "activity.tbSentTitle"
+  | "activity.tbSentDesc"
+  | "activity.todBlockedTitle"
+  | "activity.todBlockedLockedDesc"
+  | "activity.todBlockedNoResultsDesc"
+  | "activity.todSentTitle"
+  | "activity.todSentDesc"
+  | "activity.signBlockedLockedDesc"
+  | "activity.signBlockedUnsignedDesc"
+  | "activity.workpaperFileSignedTitle"
+  | "activity.identityPairDesc"
+  | "activity.fileTooLargeDesc"
+  | "activity.invoicePickerDismissed"
+  | "activity.bankPickerDismissed"
+  | "activity.evidenceRemovedTitle"
+  | "activity.matchBlockedTitle"
+  | "activity.matchBlockedNoSampleDesc"
+  | "activity.matchBlockedNoEvidenceDesc"
+  | "activity.matchBlockedNoOutputDesc"
+  | "activity.matchBlockedIncompleteDesc"
+  | "activity.matchBlockedDuplicateDesc"
+  | "activity.matchingRunningTitle"
+  | "activity.matchingRunningDesc"
+  | "activity.workerFallbackTitle"
+  | "activity.matchingCompletedDesc"
+  | "activity.singleRowRunningTitle"
+  | "activity.singleRowRunningDesc"
+  | "activity.rowMatchedDesc"
+  | "activity.matchClearedDesc"
+  | "activity.signOffRowDesc"
+  | "activity.templatesImportedDesc"
+  | "activity.viewerFocusedTitle"
+  | "activity.viewerFocusedFallback"
+  | "activity.duplicateSnipTitle"
+  | "activity.duplicateSnipDesc"
+  | "activity.textSnippedTitle"
+  | "activity.textSnippedDesc"
+  | "activity.ocrActiveTitle"
+  | "activity.ocrActiveDesc"
+  | "activity.ocrExtractedTitle"
+  | "activity.ocrExtractedDesc"
+  | "activity.ocrFailedTitle"
+  | "activity.ocrFailedDesc"
+  | "activity.snipUndoneTitle"
+  | "activity.tableSnipLinkedTitle"
+  | "activity.formFieldsWrittenTitle"
+  | "activity.snipReplacedTitle"
+  | "activity.snipLinkedToCellTitle"
+  | "activity.snipModeOnTitle"
+  | "activity.snipModeOffTitle"
+  | "activity.snipModeOnDesc"
+  | "activity.snipModeOffDesc"
+  | "activity.snipFocusedTitle"
+  | "activity.snipFocusedDesc"
+  | "activity.snipRemovedTitle"
+  | "activity.snipLinkRemovedTitle"
+  | "activity.sessionRestoredTitle"
+  | "activity.sessionRestoredDesc"
+  | "app.officeBootstrapFallback"
+  | "app.officeReadyFailedFallback";
 
 const translations: Record<AppLocale, Record<TranslationKey, string>> = {
   "my-MM": {
     "app.skip": "အဓိကအကြောင်းအရာသို့ ကျော်သွားရန်",
     "app.workspace": "Excel စာရင်းစစ်လုပ်ငန်းခွင်",
     "app.excelConnected": "Excel ချိတ်ဆက်ပြီး",
-    "app.browserPreview": "Browser စမ်းသပ်ပြသမှုစနစ်",
+    "app.browserPreview": "Browser preview",
+    "app.website": "Website",
     "app.booting": "စတင်နေသည်",
     "app.description":
       "Excel အတွင်း Substantive Test of Details စစ်ဆေးမှုများအတွက် အချက်အလက် တိုက်ဆိုင်စစ်ဆေးပေးသည့် စနစ် ဖြစ်သည်။",
@@ -438,18 +767,29 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.none": "မရွေးရသေးပါ",
     "app.ready": "အသင့်ဖြစ်ပါပြီ",
     "app.language": "ဘာသာစကား",
+    "app.langSwitch": "EN",
+    "app.langSwitchAria": "Switch to English",
     "cloud.session": "အကောင့်",
     "cloud.email": "အီးမေးလ်",
-    "cloud.password": "စကားဝှက်",
+    "cloud.otp": "ကုဒ်",
+    "cloud.sendCode": "ကုဒ်ပို့မည်",
+    "cloud.verifyCode": "ကုဒ်အတည်ပြုမည်",
+    "cloud.otpHint": "မေးလ်မလှုပ်သေးသ၍ 123456 ကို သုံးပါ။",
+    "cloud.backToEmail": "အီးမေးလ်သို့ ပြန်ရန်",
     "cloud.login": "ဝင်မည်",
     "cloud.register": "အကောင့်ဖွင့်မည်",
     "cloud.logout": "ထွက်မည်",
     "cloud.failed": "ဆက်သွယ်၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
     "cloud.skipped": "API URL မရှိသေးပါ။",
-    "cloud.invalid": "အီးမေးလ်နှင့် စကားဝှက် (အနည်းဆုံး ၈ လုံး) ထည့်ပါ။",
+    "cloud.invalid": "အီးမေးလ် ထည့်ပါ။",
+    "cloud.invalidCode": "ဂဏန်း ၆ လုံး ကုဒ် ထည့်ပါ။",
+    "cloud.otpNotLive": "OTP မေးလ် မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.userNotFound": "ဤအီးမေးလ်ဖြင့် အကောင့် မရှိသေးပါ။",
+    "cloud.emailTaken": "ဤအီးမေးလ်ဖြင့် အကောင့် ရှိပြီးသား။",
+    "cloud.cooldown": "ခဏစောင့်ပြီး ထပ်ပို့ပါ။",
     "cloud.signedIn": "ဝင်ရောက်ထားသည်",
     "cloud.backup": "အရန်သိမ်းမည်",
-    "cloud.mail": "အီးမေးလ်",
+    "cloud.mail": "အကြောင်းကြားစာ",
     "cloud.backupOk": "အရန်သိမ်းပြီးပါပြီ။",
     "cloud.mailOk": "အကြောင်းကြားစာ ပို့ပြီးပါပြီ။",
     "cloud.backupFailed": "အရန်သိမ်း၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
@@ -459,12 +799,130 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "cloud.restoreOk": "ပြန်ယူပြီးပါပြီ။",
     "cloud.restoreFailed":
       "Cloud မှ ပြန်ယူ၍ မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
-    "cloud.firmRole": "အခန်းကဏ္ဍ",
+    "cloud.templates": "ပုံစံခွက်များ",
+    "cloud.templatesNotLive":
+      "အဖွဲ့ ပုံစံခွက် sync မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.templatesFailed":
+      "ပုံစံခွက် sync မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.firmRole": "Firm role",
     "cloud.firmRoleLocal": "စက်တွင်း လုပ်ကိုင်သူ",
     "cloud.firmAccessNotLive":
       "Firm roles မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
     "cloud.mfa": "MFA",
     "cloud.mfaNotLive": "MFA မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.assist": "AI assist",
+    "cloud.assistNotLive":
+      "AI assist မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.assistGovernance":
+      "လှုပ်လာလျှင် ရလဒ်များကို ပြန်စစ်နိုင်၊ မှတ်တမ်းတင်၊ ပြင်နိုင်သည်။",
+    "cloud.admin": "Admin",
+    "cloud.adminRoster": "Roster",
+    "cloud.adminDeploy": "Deploy",
+    "cloud.adminNotLive":
+      "Admin roster နှင့် deploy မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "cloud.adminFailed": "Admin console မရပါ။ Matching ကို ဆက်သုံးနိုင်သည်။",
+    "pbc.uploadToImport": "Import သို့ တင်မည်",
+    "pbc.markReceived": "လက်ခံပြီးဟု မှတ်မည်",
+    "pbc.received": "လက်ခံပြီး",
+    "pbc.todHint": "PDF၊ ပုံ၊ သို့မဟုတ် JSON ကို Matching Import သို့ ပို့သည်။",
+    "pbc.listOnlyHint": "ဤစာရင်းတွင်သာ ရှိသည်။ Matching သို့ မတင်ပါ။",
+    "pbc.kicker": "Client PBC Portal",
+    "pbc.title": "ကလိုင်းယင့် PBC Portal နှင့် တောင်းဆိုချက်များ",
+    "pbc.subtitle":
+      "စာရင်းစစ် စမ်းသပ်ရန် client ပြင်ဆင်သော (PBC) စာရွက်စာတမ်း တောင်းဆိုချက်များကို ခြေရာခံပြီး စစ်ပါ။",
+    "pbc.statPending": "ဆိုင်းငံ့ PBC",
+    "pbc.statUploaded": "တင်ပြီး / မစစ်ရသေး",
+    "pbc.statApproved": "အတည်ပြုပြီး စာရင်းစစ်ရန် အသင့်",
+    "pbc.checklist": "လက်ရှိ PBC စစ်ဆေးစာရင်း (တောင်းဆို {count} ခု)",
+    "pbc.idLabel": "ID:",
+    "pbc.deadlineLabel": "နောက်ဆုံးရက်:",
+    "pbc.uploadedFile": "တင်ထားသော ဖိုင်",
+    "pbc.approve": "အတည်ပြုမည်",
+    "pbc.reject": "ငြင်းပယ်မည်",
+    "pbc.removeFile": "ဖိုင် ဖယ်ထုတ်မည်",
+    "pbc.statusPending": "ဆိုင်းငံ့",
+    "pbc.statusUploaded": "တင်ပြီး",
+    "pbc.statusApproved": "အတည်ပြုပြီး",
+    "pbc.statusRejected": "ငြင်းပယ်ပြီး",
+    "pbc.catAccountsPayable": "Accounts Payable",
+    "pbc.catCashBank": "Cash & Bank",
+    "pbc.catExpenses": "Expenses",
+    "pbc.catFixedAssets": "Fixed Assets",
+    "pbc.catGovernance": "Governance",
+    "pbc.whatTitle": "PBC List ဆိုသည်မှာ?",
+    "pbc.whatBody":
+      "PBC stands for Prepared by Client. စာရင်းစစ်အဖွဲ့က client ထံ တောင်းသော စာရွက်စာတမ်း စာရင်းဖြစ်သည်။ ToD invoice နှင့် bank PDF၊ ပုံ၊ သို့မဟုတ် JSON ကို Matching Import သို့ ပို့နိုင်သည်။ Ledger၊ confirmation၊ minutes၊ trial balance နှင့် spreadsheet များ ဤစာရင်းတွင်သာ ရှိသည်။",
+    "tb.importTb": "Trial Balance တင်မည်",
+    "tb.importListing": "Listing တင်မည်",
+    "tb.sendToMatching": "Matching သို့ ပို့မည်",
+    "tb.pickLead": "Lead ရွေးပါ",
+    "tb.tieOutOk": "Listing နှင့် TB lead ကိုက်သည်။",
+    "tb.tieOutWarn":
+      "Listing နှင့် TB lead မကိုက်သေးပါ။ Sample ကို ဆက်ပို့နိုင်သည်။",
+    "tb.parseFailed":
+      "Spreadsheet ကို ဖတ်မရပါ။ လိုအပ်သော header ရှိမရှိ စစ်ပါ။",
+    "tb.sendHint":
+      "Lead ရွေးပြီး listing လိုင်းကို tick ကာ Matching Step 1 သို့ ပို့ပါ။ Debit နှင့် credit ညီရုံဖြင့် မပိတ်ပါ။",
+    "tb.selectAll": "ပြထားသည်များ အားလုံးရွေး",
+    "tb.listingEmpty": "ဤ lead အတွက် listing လိုင်း မရှိသေးပါ။",
+    "tb.kicker": "Trial Balance",
+    "tb.title": "Trial Balance စစ်ဆေးခြင်း",
+    "tb.subtitle":
+      "စာရင်းစစ် trial balance တင်ပြီး ledger အကောင့်များကို ချိတ်ကာ ဂဏန်းညီညွတ်မှုကို စစ်ပါ။",
+    "tb.balanceOk": "လက်ကျန်အခြေအနေ: Ledger ညီသည်",
+    "tb.balanceWarn": "လက်ကျန်အခြေအနေ: Ledger မညီသေးပါ",
+    "tb.balanceHint":
+      "စုစုပေါင်း Debit နှင့် Credit ကို ပြသည်။ မညီလည်း sample ပို့ခြင်းကို မပိတ်ပါ။",
+    "tb.debits": "စုစုပေါင်း Debit:",
+    "tb.credits": "စုစုပေါင်း Credit:",
+    "tb.mappings": "Ledger အကောင့် ချိတ်ဆက်မှုများ",
+    "tb.searchPlaceholder": "ကုဒ် သို့မဟုတ် အမည် ရှာပါ...",
+    "tb.colCode": "ကုဒ်",
+    "tb.colDescription": "အကောင့်အကြောင်းအရာ",
+    "tb.colDebit": "Debit",
+    "tb.colCredit": "Credit",
+    "tb.colMapping": "F/S အုပ်စု Mapping",
+    "tb.colInvoice": "Invoice",
+    "tb.colDate": "ရက်စွဲ",
+    "tb.colAmount": "ပမာဏ",
+    "tb.guidelinesTitle": "Listing sample ကို Matching သို့ ပို့ပါ",
+    "results.sendToWorkpapers": "Workpapers သို့ ပို့မည်",
+    "wp.signFile": "Workpaper လက်မှတ်ထိုးမည်",
+    "wp.fileHint":
+      "Matching Review မှ ToD ရလဒ်ကို ပို့ပြီး exception / partial ကို လက်မှတ်ထိုးမှ file ကို ထိုးပါ။ Follow-up ရှိရင် မြင်ရသော်လည်း မပိတ်ပါ။",
+    "wp.unsignedHint":
+      "Exception သို့မဟုတ် partial လိုင်းကို Matching Review တွင် အရင် လက်မှတ်ထိုးပါ။",
+    "wp.followUpWarn":
+      "Follow-up မှတ်ထားသော လိုင်းရှိသည်။ File ကို ဆက်ထိုးနိုင်သည်။",
+    "wp.snipCount": "Snip များ",
+    "wp.noSnips": "ဤ pack တွင် snip မရှိသေးပါ။",
+    "wp.minutesTitle": "PBC အစည်းအဝေးမှတ်တမ်း",
+    "wp.minutesEmpty": "ဤဖိုင်တွင် minutes မရှိသေးပါ။",
+    "wp.kicker": "စာရင်းစစ်မှတ်တမ်း",
+    "wp.title": "စာရင်းစစ်မှတ်တမ်း စစ်ဆေးစာရင်း",
+    "wp.subtitle":
+      "Workpaper လက်မှတ်၊ ပြင်ဆင်သူ တာဝန်ပေးမှုနှင့် အကောင်အထည်ဖော်မှု တိုးတက်မှုကို စီမံပါ။",
+    "wp.feedbackKicker": "စာရင်းစစ် တုံ့ပြန်ချက်",
+    "wp.feedbackTitle": "ကျန်ရှိသော Review Notes",
+    "wp.feedbackSubtitle":
+      "စာရွက်စာတမ်း လက်မှတ်ထိုးပြီးစီးရန် မန်နေဂျာနှင့် ပါတနာ မှတ်ချက်များကို ရှင်းပါ။",
+    "wp.notesCount": "မှတ်ချက် {count} ခု",
+    "wp.assigned": "တာဝန်: {preparer} (ပြင်ဆင်) | {reviewer} (စစ်ဆေး)",
+    "wp.workpaperLabel": "Workpaper:",
+    "wp.reviewerLabel": "စစ်ဆေးသူ:",
+    "wp.responseLabel": "တုံ့ပြန်ချက်:",
+    "wp.respond": "တုံ့ပြန်မည်",
+    "wp.clearClose": "ရှင်းပြီး ပိတ်မည်",
+    "wp.cancel": "ပယ်ဖျက်မည်",
+    "wp.submit": "တင်မည်",
+    "wp.responsePlaceholder": "စာရင်းစစ် တုံ့ပြန်ချက် ရေးပါ...",
+    "wp.statusNotStarted": "မစသေးပါ",
+    "wp.statusInProgress": "လုပ်ဆောင်နေသည်",
+    "wp.statusReadyForReview": "စစ်ဆေးရန် အသင့်",
+    "wp.statusApproved": "အတည်ပြုပြီး",
+    "wp.noteOpen": "ဖွင့်ထားသည်",
+    "wp.noteResponded": "တုံ့ပြန်ပြီး",
+    "wp.noteClosed": "ပိတ်ပြီး",
     "app.browserWarning":
       "စမ်းသပ်ပြသမှုစနစ် (Browser preview mode) ဖြစ်နေပါသည်။ စာရင်းဇယားရွေးချယ်ခြင်း၊ ရလဒ်များကို Excel ထဲသို့ ပြန်လည်ရေးသားခြင်းနှင့် Hidden audit log များ သိမ်းဆည်းရန်အတွက် Excel အတွင်း DocTrace ကို ဖွင့်လှစ်အသုံးပြုပေးပါ။",
     "project.kicker": "DOCTRACE အကြောင်း",
@@ -512,11 +970,11 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "status.matched": "တိုက်ဆိုင်မှုရှိသည်",
     "status.partial": "တစ်စိတ်တစ်ပိုင်းကိုက်ညီ",
     "status.exception": "လွဲမှားမှုရှိသည်",
-    "nav.matching": "🛠️ စာရင်းတိုက်ဆိုင်စစ်ဆေးရေး",
-    "nav.engagements": "📊 စာရင်းစစ်လုပ်ငန်း Dashboard",
-    "nav.trialBalance": "⚖️ စမ်းသပ်လက်ကျန် (Trial Balance)",
-    "nav.workpapers": "📁 စာရင်းစစ်မှတ်တမ်းတွဲများ",
-    "nav.clientPortal": "🌐 ကလိုင်းယင့် PBC Portal",
+    "nav.matching": "🛠️ Matching",
+    "nav.engagements": "📊 Engagements",
+    "nav.trialBalance": "⚖️ Trial Balance",
+    "nav.workpapers": "📁 Workpapers",
+    "nav.clientPortal": "🌐 Client Portal",
     "eng.title": "စာရင်းစစ်လုပ်ငန်းများနှင့် Dashboard",
     "eng.kicker": "DocTrace မော်ဂျူးများ",
     "eng.new": "စာရင်းစစ်လုပ်ငန်း အသစ်ဖန်တီးရန်",
@@ -625,7 +1083,9 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
       "DocTrace သည် သက်သေခံစာရွက်စာတမ်းမျိုးစုံ ပါဝင်သော JSON ဖိုင်များကို အလိုအလျောက် တင်သွင်းပေးနိုင်သည်။ စတင်ရန် Browse မှတဆင့် ရွေးချယ်ပါ။",
     "import.invoiceLibrary": "ပြေစာ (Invoice) စာကြည့်တိုက်",
     "import.bankLibrary": "ဘဏ်ရှင်းတမ်း (Bank Statement) စာကြည့်တိုက်",
-    "import.pageImported": "စာမျက်နှာ - တင်သွင်းပြီးရက်စွဲ",
+    "import.pageImported": "စာမျက်နှာ - တင်သွင်းပြီး",
+    "import.docCount": "သက်သေခံစာရွက်စာတမ်း {count} ခု",
+    "import.fileCount": "ဖိုင် {count} ခု",
     "import.id": "ID (နံပါတ်)",
     "import.amount": "ပမာဏ",
     "import.date": "ရက်စွဲ",
@@ -682,7 +1142,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "config.dateCol": "ရက်စွဲကော်လံ (Date column)",
     "config.refCol": "ပြေစာ/ကိုးကားချက်ကော်လံ (Invoice/reference column)",
     "config.selectCol": "ကော်လံတစ်ခု ရွေးချယ်ပါ",
-    "config.matchingLogic": "တိုက်ဆိုင်စစ်ဆေးမှု ယုတ္တိဗေဒ (Matching Logic)",
+    "config.matchingLogic": "Matching Logic",
     "config.amountTol": "ခွင့်ပြုနိုင်သော ကွာဟချက်ပမာဏ (Amount tolerance)",
     "config.amountTolPercent":
       "ခွင့်ပြုနိုင်သော ကွာဟချက် ရာခိုင်နှုန်း (Amount tolerance %)",
@@ -740,7 +1200,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
       "Match မစခင် ပြင်ဆင်သူနှင့် စစ်ဆေးသူ အတိုကောက် နှစ်ခုလုံး ရိုက်ထည့်ပါ။",
     "identity.sameNameTitle": "ပြင်ဆင်သူနှင့် စစ်ဆေးသူ တူနေသည်",
     "identity.sameNameDescription":
-      "P0 တွင် ဆက်လုပ်နိုင်သည်။ သီးခြား reviewer ကို နောက်မှ ပြင်နိုင်သည်။",
+      "ဤထုတ်ဝေမှုတွင် ဆက်လုပ်နိုင်သည်။ သီးခြား reviewer ကို နောက်မှ ပြင်နိုင်သည်။",
     "identity.saveFailed": "Identity ကို workbook ထဲသို့ မသိမ်းနိုင်ပါ။",
     "results.signOffSuccessTitle": "Exception လက်မှတ်ထိုးပြီး",
     "results.signOffSuccessDescription":
@@ -757,7 +1217,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "activity.events": "ခု တွေ့ရှိရသည်",
     "activity.emptyState":
       "လုပ်ငန်းစဉ်တစ်ခုကို ကလစ်နှိပ်ပါက ရလဒ်များ ဤနေရာတွင် ပေါ်လာပါမည်။",
-    "activity.justNow": "ခုတင်တင်",
+    "activity.justNow": "ခုလေးတင်",
     "viewer.kicker": "Inspection pane",
     "viewer.title": "သက်သေခံချက် စစ်ဆေးခြင်း",
     "viewer.desc":
@@ -788,8 +1248,11 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "viewer.fileNotFound":
       "ဒေသတွင်းသိုလှောင်မှုတွင် ဖိုင်ကို ရှာမတွေ့ပါ။ ကျေးဇူးပြု၍ ဖိုင်ကို ပြန်လည်တင်ပေးပါ။",
     "viewer.extractedSnippet": "ထုတ်ယူထားသော အကျဉ်းချုပ်",
-    "viewer.manualSnip": "ကိုယ်တိုင် ဖြတ်ညုံချက်",
-    "snips.kicker": "အမြင်အာရုံ ဖြတ်ညှပ်စနစ် (Visual Snipping)",
+    "viewer.manualSnip": "ကိုယ်တိုင် ဖြတ်ညှပ်ချက်",
+    "viewer.imageRegion": "ပုံရိပ်အပိုင်းအခြား - စာမျက်နှာ {page}",
+    "viewer.imageRegionHint":
+      "ပုံရိပ်အကွက်အသစ်ဆွဲရန် ဖိဆွဲပါ သို့မဟုတ် သတ်မှတ်ပြီးသားအကွက်သုံးရန် ကလစ်နှိပ်ပါ",
+    "snips.kicker": "Visual Snipping",
     "snips.title": "ဖြတ်ညှပ်ထားသော သက်သေခံချက်များ",
     "snips.desc":
       "သက်သေခံချက် အချက်အလက်များစွာကို ဖမ်းယူပြီး အရင်းအမြစ်တစ်ခုချင်းစီကို ဆန်းစစ်ကာ Excel သို့ ပြန်လည်ချိတ်ဆက်ပါ။",
@@ -798,6 +1261,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "snips.statOpen": "ကျန်ရှိ",
     "snips.emptyState":
       "ကြည့်ရှုစနစ်တွင် Snip mode ကို ဖွင့်ပြီး သက်သေခံချက်များ စုဆောင်းရန် PDF စာသား သို့မဟုတ် ပုံရိပ်အပိုင်းအခြားများကို ကလစ်နှိပ်ပါ။",
+    "snips.goToPage": "{fileName} ၏ စာမျက်နှာ {page} သို့ သွားရန်",
     "snips.linked": "ချိတ်ဆက်ပြီး",
     "snips.needsLink": "ချိတ်ဆက်ရန် လိုအပ်သည်",
     "snips.linkAnother": "အခြားတစ်ခု ချိတ်ဆက်မည်",
@@ -910,12 +1374,292 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
       "စာသားပြန်ပြီး။ Excel click-back ကို ဤ session တွင် မသိမ်းနိုင်ပါ။",
     "viewer.fieldLocationUnavailable":
       "ဤစာမျက်နှာ၏ စာသားအလွှာတွင် ကိုက်ညီသော အကွက်ကို ရှာမတွေ့ပါ။",
+    "persist.sessionCacheFailedTitle": "Session cache မအောင်မြင်ပါ",
+    "persist.sessionCacheFailedDesc":
+      "ဖိုင်သည် ဤ workbook ထဲတွင် ရှိသည်။ IndexedDB က ဤ session အတွက် cache မလုပ်နိုင်ပါ။",
+    "persist.evidenceOpenFailedTitle": "သက်သေခံချက် ဖွင့်မရပါ",
+    "persist.evidenceOpenFailedDesc":
+      "ချိတ်ထားသော ဖိုင်သည် ဤ workbook ထဲတွင် မရှိပါ။",
+    "persist.evidenceNotStoredTitle": "သက်သေခံချက် မသိမ်းနိုင်ပါ",
+    "persist.evidenceNotStoredWorkbookDesc":
+      "ဖိုင်ကို workbook သို့မဟုတ် session cache ထဲ မသိမ်းနိုင်ပါ။",
+    "persist.evidenceNotStoredIdbDesc":
+      "IndexedDB က ဤဖိုင်ကို မသိမ်းနိုင်ပါ။ ဤ session တွင်သာ ရနိုင်သည်။",
+    "persist.workbookEmbedFailedTitle": "Workbook embed မအောင်မြင်ပါ",
+    "persist.workbookEmbedFailedDesc":
+      "သက်သေခံချက်ကို ဤ session အတွက် IndexedDB ထဲ ထားထားသည်။",
+    "persist.templatesLoadFailedTitle": "Template များ ဖတ်မရပါ",
+    "persist.templatesLoadFailedFallback": "Workbook template များ မရနိုင်ပါ။",
+    "persist.auditLogLoadFailedTitle": "Audit log ဖတ်မရပါ",
+    "persist.auditLogLoadFailedFallback":
+      "ဝှက်ထားသော ISA log sheet ကို ဖတ်မရပါ။",
+    "persist.fileTooLargeTitle": "{name} ကို မသိမ်းနိုင်ပါ",
+    "persist.fileTooLargeDesc":
+      "ဖိုင်သည် စီမံပြီးနောက် 20 MB ကျော်သဖြင့် workbook ဘေးကင်းရေး ကန့်သတ်ချက်ကို ကျော်သည်။",
+    "persist.workbookEmbedUnavailableTitle": "Workbook embed မရနိုင်ပါ",
+    "persist.workbookEmbedUnavailableDesc":
+      "ဤ Excel host က Custom XML parts မပံ့ပိုးပါ။ သက်သေခံချက်သည် IndexedDB ဖြင့် ဤ session တွင် ရှိသည်။",
+    "persist.workbookEvidenceRemoveFailedTitle": "Workbook သက်သေခံချက် ဖယ်မရပါ",
+    "persist.workbookEvidenceRemoveFailedFallback":
+      "စာရွက်စာတမ်းကို ဤ session မှ ဖယ်ပြီးပါပြီ။",
+    "persist.evidenceFileMissingTitle": "သက်သေခံဖိုင် ပျောက်နေသည်",
+    "persist.evidenceFileMissingDesc":
+      "Parse စာသား ပြန်ရပြီ။ PDF သို့မဟုတ် ပုံ bytes က IndexedDB ထဲ မရှိပါ။",
+    "persist.parseCacheMissingTitle": "Parse cache မရှိပါ",
+    "persist.parseCacheMissingDesc":
+      "စာရွက်စာတမ်းဖိုင်များ ကြည့်နိုင်သေးသည်။ Matching စာသားက IndexedDB ထဲ မရှိသဖြင့် ပြန်မဖတ်ပါ။",
+    "persist.workbookEvidenceReadFailedTitle": "Workbook သက်သေခံချက် ဖတ်မရပါ",
+    "persist.workbookEvidenceReadFailedFallback":
+      "ဤ session အတွက် IndexedDB သို့ ပြန်သုံးသည်။",
+    "persist.snipAnchorsRestoreFailedTitle": "Snip anchor များ ပြန်မရပါ",
+    "persist.snipAnchorsRestoreFailedFallback":
+      "ဤ workbook ထဲရှိ ချိတ်ထားသော cell များကို ဖတ်မရပါ။",
+    "persist.evidenceCacheSaveFailedTitle": "Evidence cache မသိမ်းနိုင်ပါ",
+    "persist.evidenceCacheSaveFailedDesc":
+      "Parse စာသားကို IndexedDB ထဲ မသိမ်းနိုင်ပါ။ ဤ session တွင် စာရွက်စာတမ်းများ ရှိနေသေးသည်။",
+    "persist.engagementSaveFailedTitle": "Engagement မသိမ်းနိုင်ပါ",
+    "persist.engagementSaveFailedDesc":
+      "Browser storage ပြည့်နေသည် သို့မဟုတ် ပိတ်ထားသည်။ သိမ်းပြီးသား evidence bytes က IndexedDB ထဲ ရှိသည်။",
+    "match.sampleRequiredTitle": "Sample ရွေးရန် လိုအပ်သည်",
+    "match.sampleRequiredMappingDesc":
+      "DocTrace က input ကော်လံ အကြံပြုနိုင်ရန် Excel အပိုင်းကို အရင် ဖမ်းပါ။",
+    "match.sampleRequiredTbDesc":
+      "Matching သို့ မပို့မီ listing အတန်း အနည်းဆုံး တစ်ခုကို မှတ်ပါ။",
+    "match.mappingAppliedTitle": "အကြံပြု mapping သုံးပြီး",
+    "match.mappingAppliedDesc":
+      "ဖမ်းထားသော sample မှ input role နှင့် output ကော်လံများကို ပြန်သတ်မှတ်ပြီး။",
+    "match.excelContextTitle": "Excel ဆက်သွယ်မှု လိုအပ်သည်",
+    "match.excelContextCaptureDesc":
+      "Workbook ရွေးချယ်မှု ဖမ်းရန် DocTrace ကို Excel ထဲတွင် ဖွင့်ပါ။",
+    "match.selectionCapturedTitle": "ရွေးချယ်မှု ဖမ်းပြီး",
+    "match.selectionCapturedDesc":
+      "Matching အတွက် sample အတန်း {count} ခု အသင့်ရှိသည်။",
+    "match.selectionFailedTitle": "ရွေးချယ်မှု ဖမ်းမရပါ",
+    "match.selectionFailedFallback": "Excel ရွေးချယ်မှုကို ဖတ်မရပါ။",
+    "match.tbSampleReadyTitle": "TB sample အသင့်",
+    "match.tbSampleReadyDesc":
+      "listing အတန်း {count} ခု Matching Step 1 တွင် အသင့်ရှိသည်။",
+    "match.noSampleTitle": "Sample မရွေးရသေးပါ",
+    "match.noSampleDocsDesc":
+      "စာရွက်စာတမ်း Matching မလုပ်မီ Excel sample အပိုင်းကို ဖမ်းပါ။",
+    "match.noSampleDesc": "Matching မလုပ်မီ Excel sample အပိုင်းကို ဖမ်းပါ။",
+    "match.noEvidenceTitle": "သက်သေခံချက် မတင်သေးပါ",
+    "match.noEvidenceRunDesc":
+      "Match မလုပ်မီ ပြေစာနှင့် ဘဏ်ရှင်းတမ်းများကို တင်သွင်းပါ။",
+    "match.noEvidenceDesc":
+      "Matching မလုပ်မီ ပြေစာနှင့် ဘဏ်ရှင်းတမ်းများကို တင်သွင်းပါ။",
+    "match.noOutputTitle": "Output အကွက် မရွေးရသေးပါ",
+    "match.noOutputDesc":
+      "Matching မလုပ်မီ output အကွက် အနည်းဆုံး တစ်ခု ရွေးပါ။",
+    "match.outputIncompleteTitle": "Output mapping မပြည့်သေးပါ",
+    "match.outputIncompleteBeforeDesc":
+      "Matching မလုပ်မီ ဖွင့်ထားသော output အကွက်တိုင်း Excel ကော်လံ လိုအပ်သည်။",
+    "match.outputIncompleteDesc":
+      "ဖွင့်ထားသော output အကွက်တိုင်း ပစ်မှတ် Excel ကော်လံ လိုအပ်သည်။",
+    "match.outputDuplicateTitle": "Output ကော်လံများ ထပ်နေသည်",
+    "match.outputDuplicateDesc":
+      "ဖွင့်ထားသော output အကွက်တိုင်း မတူသော Excel ကော်လံသို့ ရေးရမည်။",
+    "match.completedTitle": "Matching ပြီးပါပြီ",
+    "match.completedDesc":
+      "sample အတန်း {count} ခု တွက်ပြီး Excel သို့ ပြန်ရေးပြီး။",
+    "match.failedTitle": "Matching မအောင်မြင်ပါ",
+    "match.failedFallback": "Matching ပြေးခြင်း မပြီးပါ။",
+    "match.rowNotFoundTitle": "အတန်း ရှာမတွေ့ပါ",
+    "match.rowNotFoundDesc":
+      "အတန်း {row} သည် ဖမ်းထားသော ရွေးချယ်မှု အပိုင်း အပြင်တွင် ရှိသည်။",
+    "match.rowMatchedTitle": "အတန်း {row} ကိုက်ညီပြီး",
+    "match.rowMatchedDesc":
+      "အတန်း {row} ကိုက်ညီပြီး ({confidence}% ယုံကြည်မှု)။",
+    "match.rowFailedTitle": "အတန်း {row} Matching မအောင်မြင်ပါ",
+    "match.excelConnectionTitle": "Excel ချိတ်ဆက်မှု လိုအပ်သည်",
+    "match.excelConnectionDesc":
+      "လက်ရှိအတန်း Matching ကို Excel ထဲတွင်သာ သုံးနိုင်သည်။",
+    "match.outOfBoundsTitle": "ရွေးချယ်မှု အပိုင်းပြင်တွင် ရှိသည်",
+    "match.outOfBoundsDesc":
+      "Excel cursor ကို ဖမ်းထားသော အပိုင်းထဲ ထားပါ (အတန်း {min} - {max})။",
+    "match.activeRowFailedTitle": "လက်ရှိအတန်း Matching မရပါ",
+    "match.activeRowFailedFallback": "Excel cursor အတန်းကို ရှာမရပါ။",
+    "match.clearedTitle": "Match ရှင်းပြီး",
+    "match.clearedExcelDesc": "Match ရလဒ်များကို Excel နှင့် UI မှ ရှင်းပြီး။",
+    "match.clearedUiDesc": "Match ရလဒ်များကို UI မှ ရှင်းပြီး။",
+    "match.clearFailedTitle": "ရှင်းမရပါ",
+    "match.clearFailedFallback": "Excel အပိုင်းကို ရှင်းမရပါ။",
+    "wp.sendBlockedTitle": "Workpaper ပို့ခြင်း ပိတ်ထားသည်",
+    "wp.sendBlockedDesc": "ဤ engagement ကို လော့ခ်ချထားသည်။",
+    "wp.matchRequiredTitle": "Match ရလဒ်များ လိုအပ်သည်",
+    "wp.matchRequiredDesc":
+      "ToD pack ကို Workpapers သို့ မပို့မီ Matching ပြေးပါ။",
+    "wp.packReadyTitle": "ToD pack အသင့်",
+    "wp.packReadyDesc": "အတန်း {count} ခု Workpapers အညွှန်းတွင် ရှိသည်။",
+    "wp.signBlockedTitle": "Workpaper လက်မှတ်ထိုးခြင်း ပိတ်ထားသည်",
+    "wp.signBlockedLockedDesc": "ဤ engagement ကို လော့ခ်ချထားသည်။",
+    "wp.signBlockedReviewDesc":
+      "Matching Review တွင် exception နှင့် partial အတန်းများကို အရင် လက်မှတ်ထိုးပြီး ပြင်ဆင်သူနှင့် စစ်ဆေးသူ အတိုကောက် ထည့်ပါ။",
+    "wp.signedTitle": "Workpaper လက်မှတ်ထိုးပြီး",
+    "wp.signedDesc": "{preparer} / {reviewer} က ToD pack ကို လက်မှတ်ထိုးပြီး။",
+    "results.signOffExceptionOnly":
+      "မကိုက်ညီသော exception အတန်းများကိုသာ လက်မှတ်ထိုးနိုင်သည်။",
+    "results.signOffLogFailedTitle": "လက်မှတ်ထိုးမှု မှတ်တမ်းမတင်နိုင်ပါ",
+    "results.signOffLogFailedFallback":
+      "ဝှက်ထားသော ISA log sheet ကို မပြင်နိုင်ပါ။",
+    "template.savedTitle": "Template သိမ်းပြီး",
+    "template.savedDesc": "{name} ကို ဤ workbook တွင် သုံးနိုင်သည်။",
+    "template.appliedTitle": "Template သုံးပြီး",
+    "template.appliedDesc": "{name} ကို ယခု သုံးနေသည်။",
+    "template.deletedTitle": "Template ဖျက်ပြီး",
+    "template.deletedFallback": "Template ကို ဖယ်ပြီးပါပြီ။",
+    "template.exportedTitle": "Template များ ထုတ်ပြီး",
+    "template.exportedDesc":
+      "Workbook template အစုကို JSON အဖြစ် ဒေါင်းလုဒ်လုပ်ပြီး။",
+    "template.importedTitle": "Template များ တင်သွင်းပြီး",
+    "template.importedDesc": "Template {count} ခု ယခု သုံးနိုင်သည်။",
+    "template.importFailedTitle": "Template တင်သွင်းမှု မအောင်မြင်ပါ",
+    "template.importFailedFallback": "ရွေးထားသော template ဖိုင်ကို ဖတ်မရပါ။",
+    "snip.emptyIgnoredTitle": "ဗလာ Snip ကို ကျော်သည်",
+    "snip.emptyIgnoredDesc":
+      "စာသားတန်ဖိုး သို့မဟုတ် အကြောင်းအရာရှိသော သက်သေခံ ဧရိယာ ရွေးပါ။",
+    "snip.alreadyCapturedTitle": "Snip ဖမ်းပြီးသား",
+    "snip.alreadyCapturedDesc": '"{text}" သည် snip စာရင်းတွင် ရှိပြီး။',
+    "snip.addFailedTitle": "Snip ထည့်မရပါ",
+    "snip.undoFailedTitle": "Snip ပြန်ပြင်မရပါ",
+    "snip.undoFailedFallback": "အရင် Snip ကို ပြန်မထားနိုင်ပါ။",
+    "snip.excelContextLinkDesc":
+      "Snip များကို cell နှင့် ချိတ်ရန် DocTrace ကို Excel ထဲတွင် ဖွင့်ပါ။",
+    "snip.linkFailedTitle": "Snip ချိတ်မရပါ",
+    "snip.linkFailedNoDocument":
+      "ရင်းမြစ် စာရွက်စာတမ်းသည် ဤ session တွင် မရှိတော့ပါ။",
+    "snip.linkFailedFallback": "ရွေးထားသော cell သို့ မရေးနိုင်ပါ။",
+    "snip.formWriteFailedTitle": "ဖောင်ရေးခြင်း မအောင်မြင်ပါ",
+    "snip.formWriteFailedFallback":
+      "မှတ်သားထားသော အကွက်များကို Excel သို့ မရေးနိုင်ပါ။",
+    "snip.replacedTitle": "Cell ပေါ်ရှိ Snip ကို အစားထိုးပြီး",
+    "snip.linkedTitle": "Snip ချိတ်ပြီး",
+    "snip.linkedSessionTitle": "ဤ session တွင် Snip ချိတ်ပြီး",
+    "snip.replacedDesc":
+      '"{text}" က {cell} ပေါ်ရှိ အရင် Snip ကို အစားထိုးပြီး။',
+    "snip.linkedDesc": '"{text}" -> {cell}',
+    "snip.hostNoBindingsCells":
+      "ဤ Excel host က snip binding မသိမ်းနိုင်ပါ။ Cell များကို ဤ session အတွက်သာ ဖြည့်ပြီး။",
+    "snip.hostNoBindingsCell":
+      "ဤ Excel host က snip binding မသိမ်းနိုင်ပါ။ Cell ကို ဤ session အတွက်သာ ဖြည့်ပြီး။",
+    "snip.hashMissingAnchor":
+      "သက်သေခံဖိုင် hash မရှိသဖြင့် ပြန်ဖွင့်နိုင်သော anchor မသိမ်းပါ။",
+    "snip.hostTopLeftOnly":
+      "ဤ Excel host က ဘယ်အပေါ် cell တစ်ခုသာ ချိတ်သည်။ အခြား ဇယား cell များက PDF ကို ပြန်မဖွင့်နိုင်ပါ။",
+    "snip.sessionKeepCellsFallback":
+      "Cell များကို ဤ session အတွက် ဖြည့်ပြီး။ Workbook က snip တည်နေရာ မသိမ်းပါ။",
+    "snip.sessionKeepCellFallback":
+      "Cell ကို ဤ session အတွက် ဖြည့်ပြီး။ Workbook က snip တည်နေရာ မသိမ်းပါ။",
+    "app.runtimeError": "Runtime အမှား",
+    "app.unhandledRejection": "မကိုင်တွယ်သော promise ငြင်းပယ်မှု",
+    "identity.readFailedFallback": "Workbook အတိုကောက်များကို ဖတ်မရပါ။",
+    "identity.saveFailedFallback": "Workbook အတိုကောက်များကို မသိမ်းနိုင်ပါ။",
+    "eng.reportingReadFailedFallback": "Workbook reporting ကို ဖတ်မရပါ။",
+    "eng.reportingSaveFailedFallback": "Workbook reporting ကို မသိမ်းနိုင်ပါ။",
+    "activity.sessionCacheFailedDesc":
+      "Workbook embed အောင်မြင်သည်။ IndexedDB cache မအောင်မြင်ပါ။",
+    "activity.evidenceNotStoredBothDesc":
+      "Workbook embed နှင့် IndexedDB နှစ်ခုလုံး မအောင်မြင်ပါ။",
+    "activity.evidenceNotStoredIdbDesc": "IndexedDB blob persist မအောင်မြင်ပါ။",
+    "activity.templatesLoadedTitle": "Workbook template များ ဖတ်ပြီး",
+    "activity.templatesLoadedDesc":
+      "Template {count} ခု ဤ workbook တွင် သုံးနိုင်သည်။",
+    "activity.templatesFailedTitle": "Workbook template များ မအောင်မြင်ပါ",
+    "activity.mappingBlockedTitle": "အကြံပြု mapping ပိတ်ထားသည်",
+    "activity.mappingBlockedDesc": "Excel sample မရှိသေးပါ။",
+    "activity.mappingAppliedDesc": "ဖမ်းထားသော ကော်လံ {count} ခု ချိတ်ပြီး။",
+    "activity.selectionBlockedTitle": "ရွေးချယ်မှု ဖမ်းခြင်း ပိတ်ထားသည်",
+    "activity.selectionBlockedDesc":
+      "Add-in သည် Excel host နှင့် မချိတ်ဆက်ရသေးပါ။",
+    "activity.capturingSelectionTitle": "Excel ရွေးချယ်မှု ဖမ်းနေသည်",
+    "activity.selectionCapturedDesc":
+      "{address} သည် mapping အတွက် အသင့်ရှိသည်။",
+    "activity.selectionCapturedEmptyTitle":
+      "ရွေးချယ်မှု ဖမ်းပြီး sample အတန်း မရှိပါ",
+    "activity.selectionCapturedEmptyDesc":
+      "Header အောက်တွင် ဒေတာအတန်း အနည်းဆုံး တစ်ခု ရွေးပြီး ပြန်ဖမ်းပါ။",
+    "activity.tbBlockedTitle": "TB sample ပိတ်ထားသည်",
+    "activity.tbBlockedDesc": "Listing အတန်း မမှတ်ရသေးပါ။",
+    "activity.tbSentTitle": "TB sample ကို Matching သို့ ပို့ပြီး",
+    "activity.tbSentDesc": "{sheet} မှ အတန်း {count} ခု။",
+    "activity.todBlockedTitle": "ToD workpaper ပိတ်ထားသည်",
+    "activity.todBlockedLockedDesc": "Engagement ကို လော့ခ်ချထားသည်။",
+    "activity.todBlockedNoResultsDesc": "စုစည်းရန် Match ရလဒ် မရှိပါ။",
+    "activity.todSentTitle": "ToD ကို Workpapers သို့ ပို့ပြီး",
+    "activity.todSentDesc": "အတန်း {count} ခု၊ snip {snips} ခု။",
+    "activity.signBlockedLockedDesc": "Engagement ကို လော့ခ်ချထားသည်။",
+    "activity.signBlockedUnsignedDesc":
+      "Exception လက်မှတ်မထိုးရသေး သို့မဟုတ် identity မပြည့်ပါ။",
+    "activity.workpaperFileSignedTitle": "Workpaper ဖိုင် လက်မှတ်ထိုးပြီး",
+    "activity.identityPairDesc": "{preparer} / {reviewer}။",
+    "activity.fileTooLargeDesc":
+      "သက်သေခံချက်သည် workbook ဘေးကင်းရေး ကန့်သတ်ချက် 20 MB ကို ကျော်သည်။",
+    "activity.invoicePickerDismissed": "ပြေစာ picker ပိတ်လိုက်သည်",
+    "activity.bankPickerDismissed": "ဘဏ် picker ပိတ်လိုက်သည်",
+    "activity.evidenceRemovedTitle": "သက်သေခံချက် ဖယ်ပြီး",
+    "activity.matchBlockedTitle": "Matching ပိတ်ထားသည်",
+    "activity.matchBlockedNoSampleDesc": "Excel sample မဖမ်းရသေးပါ။",
+    "activity.matchBlockedNoEvidenceDesc": "သက်သေခံစာရွက်စာတမ်း မတင်ရသေးပါ။",
+    "activity.matchBlockedNoOutputDesc": "Output အကွက် မဖွင့်ရသေးပါ။",
+    "activity.matchBlockedIncompleteDesc":
+      "ဖွင့်ထားသော output အကွက်အချို့တွင် ပစ်မှတ် Excel ကော်လံ မရှိသေးပါ။",
+    "activity.matchBlockedDuplicateDesc":
+      "ထပ်နေသော Excel output ကော်လံများ တွေ့သည်။",
+    "activity.matchingRunningTitle": "Deterministic Matching ပြေးနေသည်",
+    "activity.matchingRunningDesc":
+      "sample အတန်း {rows} ခုနှင့် စာရွက်စာတမ်း {docs} ခု။",
+    "activity.workerFallbackTitle": "Matching worker fallback",
+    "activity.matchingCompletedDesc":
+      "အတန်း {count} ခု တွက်ပြီး၊ ပြည့်စုံကိုက်ညီမှု {matched} ခု။",
+    "activity.singleRowRunningTitle": "အတန်းတစ်ခု Matching ပြေးနေသည်",
+    "activity.singleRowRunningDesc": "{sheet} မှ အတန်း {row}။",
+    "activity.rowMatchedDesc": "အခြေအနေ: {status}၊ ယုံကြည်မှု: {confidence}%။",
+    "activity.matchClearedDesc":
+      "Match ရလဒ်များကို Excel နှင့် UI မှ ရှင်းပြီး။",
+    "activity.signOffRowDesc": "အတန်း {row}: {action}",
+    "activity.templatesImportedDesc": "{name} မှ template {count} ခု ဖတ်ပြီး။",
+    "activity.viewerFocusedTitle": "Viewer အာရုံစိုက်ပြီး",
+    "activity.viewerFocusedFallback": "သက်သေခံ အကြိုကြည့် ပြင်ပြီး။",
+    "activity.duplicateSnipTitle": "ထပ်နေသော Snip ကို အာရုံစိုက်ပြီး",
+    "activity.duplicateSnipDesc": '"{text}" ကို ဖမ်းပြီးသား။',
+    "activity.textSnippedTitle": "စာသား Snip ပြီး",
+    "activity.textSnippedDesc": '"{text}" — {name}',
+    "activity.ocrActiveTitle": "စာသား ထုတ်ယူနေသည်",
+    "activity.ocrActiveDesc": "ပုံဧရိယာပေါ် OCR ပြေးနေသည်...",
+    "activity.ocrExtractedTitle": "ဧရိယာမှ စာသား ထုတ်ပြီး",
+    "activity.ocrExtractedDesc":
+      '"{text}" က ကိုဩဒိနိတ် placeholder ကို အစားထိုးပြီး။',
+    "activity.ocrFailedTitle": "စာသား ထုတ်ယူမှု မအောင်မြင်ပါ",
+    "activity.ocrFailedDesc": "ရွေးထားသော ဧရိယာမှ စာသား မထုတ်နိုင်ပါ။",
+    "activity.snipUndoneTitle": "Snip ပြန်ပြင်ပြီး",
+    "activity.tableSnipLinkedTitle": "ဇယား Snip ကို cell များနှင့် ချိတ်ပြီး",
+    "activity.formFieldsWrittenTitle":
+      "ဖောင်အကွက်များကို cell များသို့ ရေးပြီး",
+    "activity.snipReplacedTitle": "Cell ပေါ်ရှိ Snip ကို အစားထိုးပြီး",
+    "activity.snipLinkedToCellTitle": "Snip ကို cell နှင့် ချိတ်ပြီး",
+    "activity.snipModeOnTitle": "Snip mode ဖွင့်ပြီး",
+    "activity.snipModeOffTitle": "Snip mode ပိတ်ပြီး",
+    "activity.snipModeOnDesc":
+      "PDF စာသား၊ ပုံဧရိယာ၊ သို့မဟုတ် viewer snippet ကို ကလစ်နှိပ်၍ သက်သေခံချက် ဖမ်းပါ။",
+    "activity.snipModeOffDesc":
+      "ဖမ်းပြီးသား snip များသည် snip စစ်ဆေး panel တွင် ရှိနေသေးသည်။",
+    "activity.snipFocusedTitle": "Snip အာရုံစိုက်ပြီး",
+    "activity.snipFocusedDesc": "{name} စာမျက်နှာ {page}",
+    "activity.snipRemovedTitle": "Snip ဖယ်ပြီး",
+    "activity.snipLinkRemovedTitle": "Snip ချိတ် ဖယ်ပြီး",
+    "activity.sessionRestoredTitle": "Session ပြန်ထားပြီး",
+    "activity.sessionRestoredDesc":
+      "ယခင် browser session ဒေတာကို IndexedDB မှ ဖတ်ပြီး။",
+    "app.officeBootstrapFallback": "Office bootstrap fallback",
+    "app.officeReadyFailedFallback":
+      "Office အသင့်ဖြစ်မှု စစ်ဆေးခြင်း မအောင်မြင်ပါ။",
   },
   "en-US": {
     "app.skip": "Skip to main content",
     "app.workspace": "Excel audit workspace",
     "app.excelConnected": "Excel connected",
     "app.browserPreview": "Browser preview",
+    "app.website": "Website",
     "app.booting": "Booting",
     "app.description":
       "Deterministic document matching for Test of Details workflows, built for audit teams working directly in Excel.",
@@ -926,15 +1670,26 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.none": "None",
     "app.ready": "Ready",
     "app.language": "Language",
+    "app.langSwitch": "မြန်မာ",
+    "app.langSwitchAria": "Switch to Myanmar",
     "cloud.session": "Account",
     "cloud.email": "Email",
-    "cloud.password": "Password",
+    "cloud.otp": "Code",
+    "cloud.sendCode": "Send code",
+    "cloud.verifyCode": "Verify code",
+    "cloud.otpHint": "Until mail is live, use 123456.",
+    "cloud.backToEmail": "Back to email",
     "cloud.login": "Sign in",
     "cloud.register": "Create account",
     "cloud.logout": "Sign out",
     "cloud.failed": "Cloud sign-in failed. Matching still works.",
     "cloud.skipped": "API URL is not set.",
-    "cloud.invalid": "Enter an email and a password of at least 8 characters.",
+    "cloud.invalid": "Enter an email address.",
+    "cloud.invalidCode": "Enter the 6-digit code.",
+    "cloud.otpNotLive": "OTP mail is not live. Matching still works.",
+    "cloud.userNotFound": "No account exists for this email.",
+    "cloud.emailTaken": "An account already exists for this email.",
+    "cloud.cooldown": "Wait a moment, then send again.",
     "cloud.signedIn": "Signed in",
     "cloud.backup": "Backup",
     "cloud.mail": "Mail",
@@ -946,11 +1701,127 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "cloud.restore": "Restore",
     "cloud.restoreOk": "Restore finished.",
     "cloud.restoreFailed": "Cloud restore failed. Matching still works.",
+    "cloud.templates": "Templates",
+    "cloud.templatesNotLive":
+      "Organization template sync is not live. Matching still works.",
+    "cloud.templatesFailed": "Template sync failed. Matching still works.",
     "cloud.firmRole": "Role",
     "cloud.firmRoleLocal": "Local operator",
     "cloud.firmAccessNotLive": "Firm roles are not live. Matching still works.",
     "cloud.mfa": "MFA",
     "cloud.mfaNotLive": "MFA is not live. Matching still works.",
+    "cloud.assist": "AI assist",
+    "cloud.assistNotLive": "AI assist is not live. Matching still works.",
+    "cloud.assistGovernance":
+      "When live, outputs stay reviewable, logged, and overridable.",
+    "cloud.admin": "Admin",
+    "cloud.adminRoster": "Roster",
+    "cloud.adminDeploy": "Deploy",
+    "cloud.adminNotLive":
+      "Admin roster and deploy are not live. Matching still works.",
+    "cloud.adminFailed": "Admin console failed. Matching still works.",
+    "pbc.uploadToImport": "Upload to Import",
+    "pbc.markReceived": "Mark received",
+    "pbc.received": "Received",
+    "pbc.todHint": "PDF, image, or JSON goes to Matching Import.",
+    "pbc.listOnlyHint": "Stays on this list. Not imported to Matching.",
+    "pbc.kicker": "Client Communication Portal",
+    "pbc.title": "Client PBC Portal & Requests",
+    "pbc.subtitle":
+      "Track and verify document request templates prepared by the client (PBC) for audit testing.",
+    "pbc.statPending": "Pending PBC",
+    "pbc.statUploaded": "Uploaded / Unreviewed",
+    "pbc.statApproved": "Approved & Audit-Ready",
+    "pbc.checklist": "Active PBC Checklist ({count} requested)",
+    "pbc.idLabel": "ID:",
+    "pbc.deadlineLabel": "Deadline:",
+    "pbc.uploadedFile": "Uploaded File",
+    "pbc.approve": "Approve",
+    "pbc.reject": "Reject",
+    "pbc.removeFile": "Remove file",
+    "pbc.statusPending": "Pending",
+    "pbc.statusUploaded": "Uploaded",
+    "pbc.statusApproved": "Approved",
+    "pbc.statusRejected": "Rejected",
+    "pbc.catAccountsPayable": "Accounts Payable",
+    "pbc.catCashBank": "Cash & Bank",
+    "pbc.catExpenses": "Expenses",
+    "pbc.catFixedAssets": "Fixed Assets",
+    "pbc.catGovernance": "Governance",
+    "pbc.whatTitle": "What is a PBC List?",
+    "pbc.whatBody":
+      "PBC stands for Prepared by Client. It is the request list of documents the audit team asks the client to provide. ToD invoice and bank PDF, image, or JSON can go to Matching Import. Ledgers, confirmations, minutes, trial balance, and spreadsheets stay on this list.",
+    "tb.importTb": "Import trial balance",
+    "tb.importListing": "Import listing",
+    "tb.sendToMatching": "Send to Matching",
+    "tb.pickLead": "Select lead",
+    "tb.tieOutOk": "Listing agrees to the TB lead.",
+    "tb.tieOutWarn":
+      "Listing does not agree to the TB lead. You can still send the sample.",
+    "tb.parseFailed":
+      "Could not read that spreadsheet. Check required headers and try again.",
+    "tb.sendHint":
+      "Map a lead, tick listing rows, then send them to Matching Step 1. Debit-equals-credit does not block the sample.",
+    "tb.selectAll": "Select all in view",
+    "tb.listingEmpty": "No listing rows for this lead yet.",
+    "tb.kicker": "Trial Balance Module",
+    "tb.title": "Trial Balance Verification",
+    "tb.subtitle":
+      "Import audit trial balances, map ledger accounts, and verify mathematical accuracy.",
+    "tb.balanceOk": "Balance Status: Ledger Balanced",
+    "tb.balanceWarn": "Balance Status: Ledger Imbalance",
+    "tb.balanceHint":
+      "Total Debits and Total Credits are shown. A mismatch does not block sending the sample.",
+    "tb.debits": "Debits:",
+    "tb.credits": "Credits:",
+    "tb.mappings": "Ledger Account Mappings",
+    "tb.searchPlaceholder": "Search code or name...",
+    "tb.colCode": "Code",
+    "tb.colDescription": "Account Description",
+    "tb.colDebit": "Debit",
+    "tb.colCredit": "Credit",
+    "tb.colMapping": "F/S Group Mapping",
+    "tb.colInvoice": "Invoice",
+    "tb.colDate": "Date",
+    "tb.colAmount": "Amount",
+    "tb.guidelinesTitle": "Send a listing sample to Matching",
+    "results.sendToWorkpapers": "Send to Workpapers",
+    "wp.signFile": "Sign workpaper",
+    "wp.fileHint":
+      "Send ToD results from Matching Review, sign exception and partial rows, then sign the file. Follow-up is visible and does not block.",
+    "wp.unsignedHint":
+      "Sign exception or partial rows in Matching Review before signing this file.",
+    "wp.followUpWarn":
+      "Follow-up rows are documented. You can still sign the file.",
+    "wp.snipCount": "Snips",
+    "wp.noSnips": "No snips in this pack yet.",
+    "wp.minutesTitle": "PBC minutes",
+    "wp.minutesEmpty": "No minutes on this file yet.",
+    "wp.kicker": "Audit Documentation",
+    "wp.title": "Audit Workpapers Checklist",
+    "wp.subtitle":
+      "Manage workpaper sign-offs, preparer assignments, and overall execution progress.",
+    "wp.feedbackKicker": "Auditor Feedback",
+    "wp.feedbackTitle": "Outstanding Review Notes",
+    "wp.feedbackSubtitle":
+      "Clear manager and partner notes to finalize document sign-offs.",
+    "wp.notesCount": "{count} Notes",
+    "wp.assigned": "Assigned: {preparer} (Prep) | {reviewer} (Review)",
+    "wp.workpaperLabel": "Workpaper:",
+    "wp.reviewerLabel": "Reviewer:",
+    "wp.responseLabel": "Response:",
+    "wp.respond": "Respond",
+    "wp.clearClose": "Clear & Close",
+    "wp.cancel": "Cancel",
+    "wp.submit": "Submit",
+    "wp.responsePlaceholder": "Type your audit response details...",
+    "wp.statusNotStarted": "Not Started",
+    "wp.statusInProgress": "In Progress",
+    "wp.statusReadyForReview": "Ready for Review",
+    "wp.statusApproved": "Approved",
+    "wp.noteOpen": "Open",
+    "wp.noteResponded": "Responded",
+    "wp.noteClosed": "Closed",
     "app.browserWarning":
       "Browser preview mode is active. Open DocTrace inside Excel to capture worksheet selections, write mapped output columns, and update the hidden audit log.",
     "project.kicker": "ABOUT DOCTRACE",
@@ -1105,6 +1976,8 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "import.invoiceLibrary": "Invoices Library",
     "import.bankLibrary": "Bank statements Library",
     "import.pageImported": "page(s) - Imported",
+    "import.docCount": "{count} document(s)",
+    "import.fileCount": "{count} file(s)",
     "import.id": "ID",
     "import.amount": "Amount",
     "import.date": "Date",
@@ -1265,6 +2138,9 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
       "Document file not found in local storage. Please re-upload the document.",
     "viewer.extractedSnippet": "extracted-snippet",
     "viewer.manualSnip": "manual-snip",
+    "viewer.imageRegion": "Image region - page {page}",
+    "viewer.imageRegionHint":
+      "Drag to draw a custom image region, or click to use default box",
     "snips.kicker": "Visual Snipping",
     "snips.title": "Snip review queue",
     "snips.desc":
@@ -1274,6 +2150,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "snips.statOpen": "Open",
     "snips.emptyState":
       "Turn on Snip mode in the viewer, then click PDF text, image regions, or extracted snippets to build your evidence queue.",
+    "snips.goToPage": "Go to page {page} of {fileName}",
     "snips.linked": "Linked",
     "snips.needsLink": "Needs link",
     "snips.linkAnother": "Link another",
@@ -1384,6 +2261,286 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
       "Cell content was restored. Workbook click-back was not kept for this session.",
     "viewer.fieldLocationUnavailable":
       "Matched fields could not be located on this page text layer.",
+    "persist.sessionCacheFailedTitle": "Session cache failed",
+    "persist.sessionCacheFailedDesc":
+      "The file is in this workbook. IndexedDB could not cache it for this session.",
+    "persist.evidenceOpenFailedTitle": "Evidence could not be opened",
+    "persist.evidenceOpenFailedDesc":
+      "The linked file is not in this workbook.",
+    "persist.evidenceNotStoredTitle": "Evidence was not stored",
+    "persist.evidenceNotStoredWorkbookDesc":
+      "The file could not be saved to the workbook or the session cache.",
+    "persist.evidenceNotStoredIdbDesc":
+      "IndexedDB could not save this file. It remains available in this session only.",
+    "persist.workbookEmbedFailedTitle": "Workbook embed failed",
+    "persist.workbookEmbedFailedDesc":
+      "Evidence was kept in IndexedDB for this session.",
+    "persist.templatesLoadFailedTitle": "Templates could not be loaded",
+    "persist.templatesLoadFailedFallback":
+      "Workbook templates are unavailable.",
+    "persist.auditLogLoadFailedTitle": "Audit log could not be loaded",
+    "persist.auditLogLoadFailedFallback":
+      "The hidden ISA log sheet could not be read.",
+    "persist.fileTooLargeTitle": "{name} was not stored",
+    "persist.fileTooLargeDesc":
+      "The file is over 20 MB after processing and exceeds the workbook safety limit.",
+    "persist.workbookEmbedUnavailableTitle": "Workbook embed unavailable",
+    "persist.workbookEmbedUnavailableDesc":
+      "This Excel host does not support Custom XML parts. Evidence stays in this session via IndexedDB.",
+    "persist.workbookEvidenceRemoveFailedTitle":
+      "Workbook evidence could not be removed",
+    "persist.workbookEvidenceRemoveFailedFallback":
+      "The document was removed from this session.",
+    "persist.evidenceFileMissingTitle": "Evidence file is missing",
+    "persist.evidenceFileMissingDesc":
+      "Parse text was restored but the PDF or image bytes are not in IndexedDB.",
+    "persist.parseCacheMissingTitle": "Parse cache missing",
+    "persist.parseCacheMissingDesc":
+      "Document files may still preview. Matching text was not in IndexedDB and was not re-run.",
+    "persist.workbookEvidenceReadFailedTitle":
+      "Workbook evidence could not be read",
+    "persist.workbookEvidenceReadFailedFallback":
+      "Falling back to IndexedDB for this session.",
+    "persist.snipAnchorsRestoreFailedTitle":
+      "Snip anchors could not be restored",
+    "persist.snipAnchorsRestoreFailedFallback":
+      "Linked cells in this workbook could not be read.",
+    "persist.evidenceCacheSaveFailedTitle": "Evidence cache could not be saved",
+    "persist.evidenceCacheSaveFailedDesc":
+      "Parse text could not be stored in IndexedDB. This session still has the documents.",
+    "persist.engagementSaveFailedTitle": "Engagement save failed",
+    "persist.engagementSaveFailedDesc":
+      "Browser storage is full or blocked. Evidence bytes stay in IndexedDB when they were saved.",
+    "match.sampleRequiredTitle": "Sample selection required",
+    "match.sampleRequiredMappingDesc":
+      "Capture an Excel range first so DocTrace can suggest the input columns.",
+    "match.sampleRequiredTbDesc":
+      "Tick at least one listing row before sending to Matching.",
+    "match.mappingAppliedTitle": "Suggested mapping applied",
+    "match.mappingAppliedDesc":
+      "Input roles and output columns were refreshed from the captured sample.",
+    "match.excelContextTitle": "Excel context required",
+    "match.excelContextCaptureDesc":
+      "Open DocTrace inside Excel to capture a workbook selection.",
+    "match.selectionCapturedTitle": "Selection captured",
+    "match.selectionCapturedDesc":
+      "{count} sample rows are ready for matching.",
+    "match.selectionFailedTitle": "Selection capture failed",
+    "match.selectionFailedFallback": "Excel selection could not be read.",
+    "match.tbSampleReadyTitle": "TB sample ready",
+    "match.tbSampleReadyDesc":
+      "{count} listing row(s) are ready in Matching Step 1.",
+    "match.noSampleTitle": "No sample selected",
+    "match.noSampleDocsDesc":
+      "Capture the Excel sample range before matching documents.",
+    "match.noSampleDesc": "Capture the Excel sample range before matching.",
+    "match.noEvidenceTitle": "No evidence imported",
+    "match.noEvidenceRunDesc":
+      "Import invoices and bank statements before running a match.",
+    "match.noEvidenceDesc":
+      "Import invoices and bank statements before matching.",
+    "match.noOutputTitle": "No output fields selected",
+    "match.noOutputDesc": "Choose at least one output field before matching.",
+    "match.outputIncompleteTitle": "Output mapping incomplete",
+    "match.outputIncompleteBeforeDesc":
+      "Every enabled output field needs a target Excel column before matching.",
+    "match.outputIncompleteDesc":
+      "Every enabled output field needs a target Excel column.",
+    "match.outputDuplicateTitle": "Output columns are duplicated",
+    "match.outputDuplicateDesc":
+      "Each enabled output field must write to a different Excel column.",
+    "match.completedTitle": "Matching completed",
+    "match.completedDesc":
+      "{count} sample row(s) were processed and written back to Excel.",
+    "match.failedTitle": "Matching failed",
+    "match.failedFallback": "The matching run did not complete.",
+    "match.rowNotFoundTitle": "Row not found",
+    "match.rowNotFoundDesc":
+      "Row {row} is outside the captured selection range.",
+    "match.rowMatchedTitle": "Row {row} matched",
+    "match.rowMatchedDesc":
+      "Row {row} matched successfully ({confidence}% confidence).",
+    "match.rowFailedTitle": "Row {row} match failed",
+    "match.excelConnectionTitle": "Excel connection required",
+    "match.excelConnectionDesc":
+      "Active row matching is only available inside Excel.",
+    "match.outOfBoundsTitle": "Selection out of bounds",
+    "match.outOfBoundsDesc":
+      "Place your Excel cursor inside the captured range (Rows {min} - {max}).",
+    "match.activeRowFailedTitle": "Could not match active row",
+    "match.activeRowFailedFallback": "Failed to resolve Excel cursor row.",
+    "match.clearedTitle": "Match cleared",
+    "match.clearedExcelDesc": "Match results were cleared from Excel and UI.",
+    "match.clearedUiDesc": "Match results were cleared from UI.",
+    "match.clearFailedTitle": "Clear failed",
+    "match.clearFailedFallback": "Unable to clear Excel range.",
+    "wp.sendBlockedTitle": "Workpaper send blocked",
+    "wp.sendBlockedDesc": "This engagement is locked.",
+    "wp.matchRequiredTitle": "Match results required",
+    "wp.matchRequiredDesc":
+      "Run matching before sending a ToD pack to Workpapers.",
+    "wp.packReadyTitle": "ToD pack ready",
+    "wp.packReadyDesc": "{count} row(s) are in the Workpapers index.",
+    "wp.signBlockedTitle": "Workpaper sign-off blocked",
+    "wp.signBlockedLockedDesc": "This engagement is locked.",
+    "wp.signBlockedReviewDesc":
+      "Sign exception and partial rows in Matching Review first, and enter preparer and reviewer initials.",
+    "wp.signedTitle": "Workpaper signed",
+    "wp.signedDesc": "{preparer} / {reviewer} signed the ToD pack.",
+    "results.signOffExceptionOnly":
+      "Only unmatched exception rows can be signed off.",
+    "results.signOffLogFailedTitle": "Sign-off could not be logged",
+    "results.signOffLogFailedFallback":
+      "The hidden ISA log sheet could not be updated.",
+    "template.savedTitle": "Template saved",
+    "template.savedDesc": "{name} is available for this workbook.",
+    "template.appliedTitle": "Template applied",
+    "template.appliedDesc": "{name} is now active.",
+    "template.deletedTitle": "Template deleted",
+    "template.deletedFallback": "The template was removed.",
+    "template.exportedTitle": "Templates exported",
+    "template.exportedDesc":
+      "The workbook template bundle was downloaded as JSON.",
+    "template.importedTitle": "Templates imported",
+    "template.importedDesc": "{count} template(s) are now available.",
+    "template.importFailedTitle": "Template import failed",
+    "template.importFailedFallback":
+      "The selected template file could not be read.",
+    "snip.emptyIgnoredTitle": "Empty snip ignored",
+    "snip.emptyIgnoredDesc":
+      "Choose a text value or evidence region with content.",
+    "snip.alreadyCapturedTitle": "Snip already captured",
+    "snip.alreadyCapturedDesc": '"{text}" is already in the snip list.',
+    "snip.addFailedTitle": "Add snip failed",
+    "snip.undoFailedTitle": "Snip undo failed",
+    "snip.undoFailedFallback": "The previous snip could not be restored.",
+    "snip.excelContextLinkDesc":
+      "Open DocTrace inside Excel to link snips to cells.",
+    "snip.linkFailedTitle": "Snip link failed",
+    "snip.linkFailedNoDocument":
+      "The source document is no longer in this session.",
+    "snip.linkFailedFallback": "Could not write to the selected cell.",
+    "snip.formWriteFailedTitle": "Form write failed",
+    "snip.formWriteFailedFallback":
+      "The tagged fields could not be written to Excel.",
+    "snip.replacedTitle": "Snip replaced on cell",
+    "snip.linkedTitle": "Snip linked",
+    "snip.linkedSessionTitle": "Snip linked in this session",
+    "snip.replacedDesc": '"{text}" replaced the previous snip on {cell}.',
+    "snip.linkedDesc": '"{text}" -> {cell}',
+    "snip.hostNoBindingsCells":
+      "This Excel host cannot store snip bindings. The cells were filled for this session only.",
+    "snip.hostNoBindingsCell":
+      "This Excel host cannot store snip bindings. The cell was filled for this session only.",
+    "snip.hashMissingAnchor":
+      "The evidence file hash is missing, so a reopen-safe anchor was not stored.",
+    "snip.hostTopLeftOnly":
+      "This Excel host bound only the top-left cell. Other table cells may not reopen the PDF.",
+    "snip.sessionKeepCellsFallback":
+      "The cells were filled for this session. The workbook did not keep the snip location.",
+    "snip.sessionKeepCellFallback":
+      "The cell was filled for this session. The workbook did not keep the snip location.",
+    "app.runtimeError": "Runtime error",
+    "app.unhandledRejection": "Unhandled promise rejection",
+    "identity.readFailedFallback": "Workbook initials could not be read.",
+    "identity.saveFailedFallback": "Workbook initials could not be saved.",
+    "eng.reportingReadFailedFallback": "Workbook reporting could not be read.",
+    "eng.reportingSaveFailedFallback": "Workbook reporting could not be saved.",
+    "activity.sessionCacheFailedDesc":
+      "Workbook embed succeeded; IndexedDB cache failed.",
+    "activity.evidenceNotStoredBothDesc":
+      "Workbook embed and IndexedDB both failed.",
+    "activity.evidenceNotStoredIdbDesc": "IndexedDB blob persist failed.",
+    "activity.templatesLoadedTitle": "Workbook templates loaded",
+    "activity.templatesLoadedDesc":
+      "{count} template(s) available in this workbook.",
+    "activity.templatesFailedTitle": "Workbook templates failed",
+    "activity.mappingBlockedTitle": "Suggested mapping blocked",
+    "activity.mappingBlockedDesc": "No Excel sample is active yet.",
+    "activity.mappingAppliedDesc": "Mapped {count} captured column(s).",
+    "activity.selectionBlockedTitle": "Selection capture blocked",
+    "activity.selectionBlockedDesc":
+      "The add-in is not connected to an Excel host.",
+    "activity.capturingSelectionTitle": "Capturing Excel selection",
+    "activity.selectionCapturedDesc": "{address} is ready for mapping.",
+    "activity.selectionCapturedEmptyTitle":
+      "Selection captured without sample rows",
+    "activity.selectionCapturedEmptyDesc":
+      "Select at least one data row below the header row and capture again.",
+    "activity.tbBlockedTitle": "TB sample blocked",
+    "activity.tbBlockedDesc": "No listing rows were ticked.",
+    "activity.tbSentTitle": "TB sample sent to Matching",
+    "activity.tbSentDesc": "{count} row(s) from {sheet}.",
+    "activity.todBlockedTitle": "ToD workpaper blocked",
+    "activity.todBlockedLockedDesc": "Engagement is locked.",
+    "activity.todBlockedNoResultsDesc": "No match results to assemble.",
+    "activity.todSentTitle": "ToD sent to Workpapers",
+    "activity.todSentDesc": "{count} row(s), {snips} snip(s).",
+    "activity.signBlockedLockedDesc": "Engagement is locked.",
+    "activity.signBlockedUnsignedDesc":
+      "Unsigned exceptions or incomplete identity.",
+    "activity.workpaperFileSignedTitle": "Workpaper file signed",
+    "activity.identityPairDesc": "{preparer} / {reviewer}.",
+    "activity.fileTooLargeDesc":
+      "Evidence exceeded the 20 MB workbook safety limit.",
+    "activity.invoicePickerDismissed": "Invoice picker dismissed",
+    "activity.bankPickerDismissed": "Bank picker dismissed",
+    "activity.evidenceRemovedTitle": "Evidence removed",
+    "activity.matchBlockedTitle": "Matching blocked",
+    "activity.matchBlockedNoSampleDesc":
+      "No Excel sample has been captured yet.",
+    "activity.matchBlockedNoEvidenceDesc":
+      "No evidence documents are loaded yet.",
+    "activity.matchBlockedNoOutputDesc": "No output fields are enabled.",
+    "activity.matchBlockedIncompleteDesc":
+      "Some enabled output fields do not have target Excel columns yet.",
+    "activity.matchBlockedDuplicateDesc":
+      "Duplicate Excel output columns were detected.",
+    "activity.matchingRunningTitle": "Running deterministic matching",
+    "activity.matchingRunningDesc":
+      "{rows} sample row(s) and {docs} document(s).",
+    "activity.workerFallbackTitle": "Matching worker fallback",
+    "activity.matchingCompletedDesc":
+      "{count} row(s) processed with {matched} full match(es).",
+    "activity.singleRowRunningTitle": "Running single-row match",
+    "activity.singleRowRunningDesc": "Row {row} from {sheet}.",
+    "activity.rowMatchedDesc": "Status: {status}, Confidence: {confidence}%.",
+    "activity.matchClearedDesc": "Match results cleared from Excel and UI.",
+    "activity.signOffRowDesc": "Row {row}: {action}",
+    "activity.templatesImportedDesc": "{count} template(s) loaded from {name}.",
+    "activity.viewerFocusedTitle": "Viewer focused",
+    "activity.viewerFocusedFallback": "Evidence preview updated.",
+    "activity.duplicateSnipTitle": "Duplicate snip focused",
+    "activity.duplicateSnipDesc": '"{text}" was already captured.',
+    "activity.textSnippedTitle": "Text snipped",
+    "activity.textSnippedDesc": '"{text}" from {name}',
+    "activity.ocrActiveTitle": "Text extraction active",
+    "activity.ocrActiveDesc": "Running OCR on image region...",
+    "activity.ocrExtractedTitle": "Text extracted from region",
+    "activity.ocrExtractedDesc": '"{text}" replaced coordinate placeholder.',
+    "activity.ocrFailedTitle": "Text extraction failed",
+    "activity.ocrFailedDesc":
+      "Could not extract text from the selected region.",
+    "activity.snipUndoneTitle": "Snip undone",
+    "activity.tableSnipLinkedTitle": "Table snip linked to cells",
+    "activity.formFieldsWrittenTitle": "Form fields written to cells",
+    "activity.snipReplacedTitle": "Snip replaced on cell",
+    "activity.snipLinkedToCellTitle": "Snip linked to cell",
+    "activity.snipModeOnTitle": "Snip mode enabled",
+    "activity.snipModeOffTitle": "Snip mode disabled",
+    "activity.snipModeOnDesc":
+      "Click PDF text, image regions, or viewer snippets to capture evidence.",
+    "activity.snipModeOffDesc":
+      "Captured snips remain available in the snip review panel.",
+    "activity.snipFocusedTitle": "Snip focused",
+    "activity.snipFocusedDesc": "{name} page {page}",
+    "activity.snipRemovedTitle": "Snip removed",
+    "activity.snipLinkRemovedTitle": "Snip link removed",
+    "activity.sessionRestoredTitle": "Session restored",
+    "activity.sessionRestoredDesc":
+      "Previous browser session data was loaded from IndexedDB.",
+    "app.officeBootstrapFallback": "Office bootstrap fallback",
+    "app.officeReadyFailedFallback": "Office readiness detection failed.",
   },
 };
 

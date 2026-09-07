@@ -61,7 +61,7 @@ export function DocumentLibraryPanel({
   onDownload,
   isLocked = false,
 }: DocumentLibraryPanelProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const invoiceInputRef = useRef<HTMLInputElement>(null);
   const bankInputRef = useRef<HTMLInputElement>(null);
   const invoices = documents.filter((document) => document.kind === "invoice");
@@ -94,9 +94,7 @@ export function DocumentLibraryPanel({
   };
 
   const getDocCountText = (count: number) => {
-    return locale === "my-MM"
-      ? `သက်သေခံစာရွက်စာတမ်း ${count} ခု`
-      : `${count} document${count === 1 ? "" : "s"}`;
+    return t("import.docCount").replace("{count}", String(count));
   };
 
   return (
@@ -275,12 +273,10 @@ function DocumentGroup({
   onDownload,
   isLocked = false,
 }: DocumentGroupProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
 
   const getFileCountText = (count: number) => {
-    return locale === "my-MM"
-      ? `ဖိုင် ${count} ခု`
-      : `${count} file${count === 1 ? "" : "s"}`;
+    return t("import.fileCount").replace("{count}", String(count));
   };
 
   return (

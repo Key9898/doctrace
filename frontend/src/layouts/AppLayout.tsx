@@ -5,6 +5,7 @@ import { useDocTraceStore } from "@/stores/app-store";
 import { useDocTraceController } from "@/app/useDocTraceController";
 import { ActivityPanel } from "@/features/shell/components/ActivityPanel/ActivityPanel";
 import { AppShell } from "@/features/shell/components/AppShell/AppShell";
+import { AdminConsolePanel } from "@/features/shell/components/AdminConsolePanel/AdminConsolePanel";
 import { CloudSessionPanel } from "@/features/shell/components/CloudSessionPanel/CloudSessionPanel";
 import { DiagnosticsPanel } from "@/features/shell/components/DiagnosticsPanel/DiagnosticsPanel";
 import { DocumentLibraryPanel } from "@/features/documents/components/DocumentLibraryPanel/DocumentLibraryPanel";
@@ -166,20 +167,49 @@ export function AppLayout() {
           ) : null
         }
       >
+        {isCloudEnabled() ? (
+          <AdminConsolePanel
+            hidden={inspectionFocused && activeModule === "matching"}
+            locale={controller.locale}
+          />
+        ) : null}
+
         {activeModule === "engagements" && <EngagementManager />}
 
         {activeModule === "trial-balance" &&
         isVisibleAppModule("trial-balance") ? (
-          <TrialBalance />
+          <TrialBalance
+            onApplyTbSampleSelection={(selection) => {
+              const applied =
+                controller.actions.applyTbSampleSelection(selection);
+              if (applied) {
+                setActiveStep("step-selection");
+              }
+              return applied;
+            }}
+          />
         ) : null}
 
         {activeModule === "workpapers" && isVisibleAppModule("workpapers") ? (
-          <Workpapers />
+          <Workpapers
+            onSignTodWorkpaperFile={() =>
+              controller.actions.signTodWorkpaperFile()
+            }
+          />
         ) : null}
 
         {activeModule === "client-portal" &&
         isVisibleAppModule("client-portal") ? (
-          <ClientPortal />
+          <ClientPortal
+            onImportPickedFiles={(kind, files) =>
+              controller.actions.importPickedDocuments(kind, files)
+            }
+            onRemoveImportedDocuments={(documentIds) => {
+              for (const documentId of documentIds) {
+                controller.actions.removeDocument(documentId);
+              }
+            }}
+          />
         ) : null}
 
         {activeModule === "matching" && (
@@ -342,6 +372,9 @@ export function AppLayout() {
                 trivialThreshold={activeEngagement?.trivialThreshold}
                 amountColumnId={controller.config.amountColumnId}
                 rowSignOffs={controller.rowSignOffs}
+                onSendToWorkpapers={() =>
+                  controller.actions.applyTodWorkpaperPack()
+                }
                 onSignOff={(rowNumber, action, comment) =>
                   void controller.actions.signOffException(
                     rowNumber,

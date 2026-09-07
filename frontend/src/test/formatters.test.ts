@@ -42,6 +42,9 @@ describe("locale-aware formatters", () => {
     expect(formatNumber(1512.4)).not.toBe("--");
     expect(formatCurrency(1512.4)).not.toContain("$");
     expect(formatDate("2020-07-11")).not.toBe("--");
+    expect(formatNumber(1512.4)).not.toMatch(/[၀-၉]/);
+    expect(formatCurrency(1512.4)).not.toMatch(/[၀-၉]/);
+    expect(formatDate("2020-07-11")).not.toMatch(/[၀-၉]/);
     expect(statusLabel("exception")).toBe("လွဲမှားမှုရှိသည်");
 
     expect(
@@ -97,7 +100,7 @@ describe("locale-aware formatters", () => {
         "my-MM",
       ),
     ).toBe(
-      "ပြေစာပါ ပြေစာနံပါတ်၊ ပမာဏ ဖြင့် တိုက်ဆိုင်ကိုက်ညီမှုရှိသည် (ပမာဏ ±1 or 1%၊ ရက်စွဲ ±5d); ဘဏ်ရှင်းတမ်း တိုက်ဆိုင်မှု မရှိပါ (ပမာဏ ±1 or 1%၊ ရက်စွဲ ±5d)",
+      "ပြေစာပါ ပြေစာနံပါတ်၊ ပမာဏ ဖြင့် တိုက်ဆိုင်ကိုက်ညီမှုရှိသည် (ပမာဏ ±1 သို့မဟုတ် 1%၊ ရက်စွဲ ±5d); ဘဏ်ရှင်းတမ်း တိုက်ဆိုင်မှု မရှိပါ (ပမာဏ ±1 သို့မဟုတ် 1%၊ ရက်စွဲ ±5d)",
     );
   });
 });

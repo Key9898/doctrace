@@ -349,6 +349,38 @@ export interface EngagementTeam {
   eqReviewer: string;
 }
 
+export interface TodWorkpaperRow {
+  rowNumber: number;
+  status: MatchStatus;
+}
+
+export interface TodWorkpaperSnip {
+  id: string;
+  fileName: string;
+  pageNumber: number;
+}
+
+export interface TodWorkpaperFileSignOff {
+  signedAt: string;
+  preparer: string;
+  reviewer: string;
+}
+
+export interface TodWorkpaperPack {
+  sentAt: string;
+  identity: AuditIdentity;
+  rows: TodWorkpaperRow[];
+  snips: TodWorkpaperSnip[];
+  fileSignOff?: TodWorkpaperFileSignOff;
+}
+
+export interface PbcMinutesLink {
+  requestId: string;
+  item: string;
+  fileName: string;
+  status: "Pending" | "Uploaded" | "Approved" | "Rejected";
+}
+
 export interface Engagement {
   id: string;
   clientName: string;
@@ -360,6 +392,8 @@ export interface Engagement {
   teamAssignments: EngagementTeam;
   documents?: ParsedDocument[];
   results?: MatchResult[];
+  todWorkpaperPack?: TodWorkpaperPack;
+  pbcMinutesLinks?: PbcMinutesLink[];
   overallMateriality?: number;
   performanceMateriality?: number;
   trivialThreshold?: number;
