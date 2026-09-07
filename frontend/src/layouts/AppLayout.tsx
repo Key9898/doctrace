@@ -10,6 +10,9 @@ import { CloudSessionPanel } from "@/features/shell/components/CloudSessionPanel
 import { DiagnosticsPanel } from "@/features/shell/components/DiagnosticsPanel/DiagnosticsPanel";
 import { DocumentLibraryPanel } from "@/features/documents/components/DocumentLibraryPanel/DocumentLibraryPanel";
 import { EngagementManager } from "@/features/engagements/components/EngagementManager/EngagementManager";
+import { ClientPortal } from "@/features/pbc-portal/components/ClientPortal/ClientPortal";
+import { TrialBalance } from "@/features/trial-balance/components/TrialBalance/TrialBalance";
+import { Workpapers } from "@/features/workpapers/components/Workpapers/Workpapers";
 import { MatchConfigPanel } from "@/features/matching/components/MatchConfigPanel/MatchConfigPanel";
 import { ResultsPanel } from "@/features/matching/components/ResultsPanel/ResultsPanel";
 import { SelectionPanel } from "@/features/office/components/SelectionPanel/SelectionPanel";
@@ -22,6 +25,7 @@ import { WorkflowStepper } from "@/features/shell/components/WorkflowStepper/Wor
 import { queriesForMatch } from "@/features/snipping/services/field-highlight";
 import { isCloudEnabled } from "@/lib/cloud/cloud-config";
 import { probeCloudHealth } from "@/lib/cloud/cloud-health";
+import { isVisibleAppModule } from "@/lib/prep-modules";
 import { setActiveLocale, LOCALE_CONFIGS } from "@/lib/i18n/locales";
 import { translate } from "@/lib/i18n/translations";
 
@@ -88,6 +92,12 @@ export function AppLayout() {
       abortController.abort();
     };
   }, []);
+
+  useEffect(() => {
+    if (!isVisibleAppModule(activeModule)) {
+      setModule("engagements");
+    }
+  }, [activeModule, setModule]);
 
   useEffect(() => {
     if (lastEpochRef.current === null) {
@@ -165,6 +175,42 @@ export function AppLayout() {
         ) : null}
 
         {activeModule === "engagements" && <EngagementManager />}
+
+        {activeModule === "trial-balance" &&
+        isVisibleAppModule("trial-balance") ? (
+          <TrialBalance
+            onApplyTbSampleSelection={(selection) => {
+              const applied =
+                controller.actions.applyTbSampleSelection(selection);
+              if (applied) {
+                setActiveStep("step-selection");
+              }
+              return applied;
+            }}
+          />
+        ) : null}
+
+        {activeModule === "workpapers" && isVisibleAppModule("workpapers") ? (
+          <Workpapers
+            onSignTodWorkpaperFile={() =>
+              controller.actions.signTodWorkpaperFile()
+            }
+          />
+        ) : null}
+
+        {activeModule === "client-portal" &&
+        isVisibleAppModule("client-portal") ? (
+          <ClientPortal
+            onImportPickedFiles={(kind, files) =>
+              controller.actions.importPickedDocuments(kind, files)
+            }
+            onRemoveImportedDocuments={(documentIds) => {
+              for (const documentId of documentIds) {
+                controller.actions.removeDocument(documentId);
+              }
+            }}
+          />
+        ) : null}
 
         {activeModule === "matching" && (
           <>
@@ -326,6 +372,9 @@ export function AppLayout() {
                 trivialThreshold={activeEngagement?.trivialThreshold}
                 amountColumnId={controller.config.amountColumnId}
                 rowSignOffs={controller.rowSignOffs}
+                onSendToWorkpapers={() =>
+                  controller.actions.applyTodWorkpaperPack()
+                }
                 onSignOff={(rowNumber, action, comment) =>
                   void controller.actions.signOffException(
                     rowNumber,

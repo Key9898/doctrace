@@ -1,6 +1,6 @@
 # Prep modules remaining
 
-Living list for Trial Balance, Audit Workpapers, and Client PBC Portal on `development`. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 95).
+Living list for Trial Balance, Audit Workpapers, and Client PBC Portal on `main` and `development`. Product thesis stays in [product-plan.md](../references/product-plan.md). Impl history stays in [implementation-phases.md](implementation-phases.md) (last numbered Impl is 95).
 
 This is **not** a product phase number. It is not Phase 2 cloud. It is not Phase 4. EZAI Phase 4 stays regional SaaS. Leftover A–D (including leftover B) stays in [phase1-integration-remaining.md](phase1-integration-remaining.md). Team and cloud stays in [phase2-remaining.md](phase2-remaining.md). Phase 3 stays in [phase3-remaining.md](phase3-remaining.md).
 
@@ -12,7 +12,7 @@ Status: **scaffold** = mock UI exists behind an empty-by-default flag. **open** 
 
 Code exists. Mock only. Hidden unless `VITE_SHOW_PREP_MODULES` is non-empty.
 
-- **Flag-gated mocks (Impl 44):** `frontend/src/features/trial-balance`, `workpapers`, and `pbc-portal`. Empty or whitespace hides them (showcase and client drop). Do not set the flag on Vercel. Do not gate on localhost or the DEV badge. Not on `main`. Not a git `phase-2` branch.
+- **Flag-gated mocks (Impl 44):** `frontend/src/features/trial-balance`, `workpapers`, and `pbc-portal`. Empty or whitespace hides them (showcase and client drop). Do not set the flag on Vercel. Do not gate on localhost or the DEV badge. Not a git `phase-2` branch.
 - **Local env on (this machine, Impl 61):** gitignored root `.env` `VITE_SHOW_PREP_MODULES=1`. Vite restarted. Committed `.env.example` stays empty. Not Vercel. Vitest pins the flag empty so unit tests keep the two-tab contract.
 - **PBC into Import (Impl 62):** ToD invoice and bank PDF / image / JSON from Client Portal call existing Matching `importPickedDocuments`. List-only stays on the request list: confirmations (ISA 505), minutes, ledgers, trial balance, and `.xlsx`. Completeness is correct routing, not stuffing every row into Import. Remove on the PBC list does not delete Matching library documents.
 - **TB sample into Matching (Impl 63):** two `.xlsx` parses (TB accounts + detail listing), F/S lead mapping, auditor ticks, then Zustand `selection` for Matching Step 1. Listing files do not enter Matching Import. Debit-equals-credit and tie-out are visible only. Mapping is by account code, not filtered-row index.
@@ -38,4 +38,4 @@ Notes and PBC dashboard tiles stay mock (Scaffold Engagements placeholders). The
 - Phase 3 live LLM: [phase3-remaining.md](phase3-remaining.md). Account not-live chrome is Impl 58 / 94.
 - ISA 505 confirmation portal. ISA 580 representation letters.
 - CaseWare-class workpaper OS.
-- `VITE_SHOW_PREP_MODULES` on Vercel. Merge of the `development` tip into `main` while prep-module files are on `development`.
+- `VITE_SHOW_PREP_MODULES` on Vercel. Merge of the `development` tip into `main` (would bring `samples/` and `scripts/`).

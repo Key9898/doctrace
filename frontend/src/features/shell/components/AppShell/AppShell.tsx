@@ -5,6 +5,7 @@ import { translate } from "@/lib/i18n/translations";
 import { ThemeToggle } from "@/features/shell/components/ThemeToggle/ThemeToggle";
 import { showPreviewWebsiteLink } from "@/lib/theme";
 
+import { navTranslationKey, visibleAppModules } from "@/lib/prep-modules";
 import type { AppModule } from "@/types/domain";
 
 interface AppShellProps {
@@ -33,7 +34,7 @@ export function AppShell({
   children,
 }: AppShellProps) {
   const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
-  const modules: AppModule[] = ["engagements", "matching"];
+  const modules = visibleAppModules();
 
   return (
     <div className="dt-shell min-h-0 min-w-0">
@@ -133,7 +134,7 @@ export function AppShell({
                   : "border border-white/60 bg-white/45 text-slate-600 hover:bg-white dark:border-white/5 dark:bg-slate-800/40 dark:text-slate-400 dark:hover:bg-slate-800"
               }`}
             >
-              {t(mod === "matching" ? "nav.matching" : "nav.engagements")}
+              {t(navTranslationKey(mod))}
             </button>
           ))}
         </nav>

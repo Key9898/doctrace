@@ -45,6 +45,7 @@ frontend/
       cloud/cloud-evidence.ts
       cloud/cloud-backup-pick.ts
       cloud/cloud-mail.ts
+      prep-modules.ts
     features/
       matching/
         components/MatchConfigPanel/
@@ -76,6 +77,12 @@ frontend/
         hooks/useOfficeReady.ts
       engagements/
         components/EngagementManager/
+      trial-balance/
+        components/TrialBalance/
+      workpapers/
+        components/Workpapers/
+      pbc-portal/
+        components/ClientPortal/
       snipping/
         components/ViewerPane/   (ViewerPane, PdfTextLayer, SnipToolbar)
         components/SnipPanel/

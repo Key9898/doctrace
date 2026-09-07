@@ -34,6 +34,8 @@ import {
   matchSingleRow,
 } from "@/features/matching/services/matching.service";
 import { runDocumentMatchingInWorker } from "@/features/matching/services/matching-worker.service";
+import { buildTodWorkpaperPack } from "@/features/workpapers/services/wp-pack";
+import { canSignTodWorkpaperFile } from "@/features/workpapers/services/wp-signoff";
 import {
   appendAuditLog,
   captureSelection,
@@ -113,6 +115,7 @@ import type {
   MaterialityAssessmentKey,
   ParsedDocument,
   RowSignOff,
+  SelectionSnapshot,
   Snip,
   SnipLink,
   SourceKind,
@@ -1073,6 +1076,169 @@ export function useDocTraceController() {
     } finally {
       state.setBusyMessage(undefined);
     }
+  };
+
+  const applyTbSampleSelection = (selection: SelectionSnapshot) => {
+    if (!selection.rowCount) {
+      state.pushToast({
+        tone: "error",
+        title: toastT("match.sampleRequiredTitle"),
+        description: toastT("match.sampleRequiredTbDesc"),
+      });
+      recordActivity(
+        "error",
+        toastT("activity.tbBlockedTitle"),
+        toastT("activity.tbBlockedDesc"),
+      );
+      return false;
+    }
+
+    const nextConfig = suggestInitialConfig(
+      selection,
+      state.config.outputFields,
+    );
+
+    startTransition(() => {
+      state.setSelection(selection);
+      state.setConfig(nextConfig);
+      state.resetResults();
+    });
+
+    state.pushToast({
+      tone: "success",
+      title: toastT("match.tbSampleReadyTitle"),
+      description: toastT("match.tbSampleReadyDesc").replace(
+        "{count}",
+        String(selection.rowCount),
+      ),
+    });
+    recordActivity(
+      "success",
+      toastT("activity.tbSentTitle"),
+      toastT("activity.tbSentDesc")
+        .replace("{count}", String(selection.rowCount))
+        .replace("{sheet}", selection.sheetName),
+    );
+
+    return true;
+  };
+
+  const applyTodWorkpaperPack = () => {
+    if (activeEngagement?.isLocked) {
+      state.pushToast({
+        tone: "error",
+        title: toastT("wp.sendBlockedTitle"),
+        description: toastT("wp.sendBlockedDesc"),
+      });
+      recordActivity(
+        "error",
+        toastT("activity.todBlockedTitle"),
+        toastT("activity.todBlockedLockedDesc"),
+      );
+      return false;
+    }
+
+    const built = buildTodWorkpaperPack(
+      state.results,
+      state.snips,
+      state.identity,
+    );
+
+    if (!built.ok) {
+      state.pushToast({
+        tone: "error",
+        title: toastT("wp.matchRequiredTitle"),
+        description: toastT("wp.matchRequiredDesc"),
+      });
+      recordActivity(
+        "error",
+        toastT("activity.todBlockedTitle"),
+        toastT("activity.todBlockedNoResultsDesc"),
+      );
+      return false;
+    }
+
+    state.setTodWorkpaperPack(built.value);
+    state.pushToast({
+      tone: "success",
+      title: toastT("wp.packReadyTitle"),
+      description: toastT("wp.packReadyDesc").replace(
+        "{count}",
+        String(built.value.rows.length),
+      ),
+    });
+    recordActivity(
+      "success",
+      toastT("activity.todSentTitle"),
+      toastT("activity.todSentDesc")
+        .replace("{count}", String(built.value.rows.length))
+        .replace("{snips}", String(built.value.snips.length)),
+    );
+    return true;
+  };
+
+  const signTodWorkpaperFile = () => {
+    if (activeEngagement?.isLocked) {
+      state.pushToast({
+        tone: "error",
+        title: toastT("wp.signBlockedTitle"),
+        description: toastT("wp.signBlockedLockedDesc"),
+      });
+      recordActivity(
+        "error",
+        toastT("wp.signBlockedTitle"),
+        toastT("activity.signBlockedLockedDesc"),
+      );
+      return false;
+    }
+
+    const pack = state.todWorkpaperPack;
+    if (!canSignTodWorkpaperFile(pack, state.rowSignOffs, state.identity)) {
+      state.pushToast({
+        tone: "error",
+        title: toastT("wp.signBlockedTitle"),
+        description: toastT("wp.signBlockedReviewDesc"),
+      });
+      recordActivity(
+        "error",
+        toastT("wp.signBlockedTitle"),
+        toastT("activity.signBlockedUnsignedDesc"),
+      );
+      return false;
+    }
+
+    if (!pack) {
+      return false;
+    }
+
+    const gate = evaluateIdentity(state.identity);
+    if (!gate.ok) {
+      return false;
+    }
+
+    state.setTodWorkpaperPack({
+      ...pack,
+      fileSignOff: {
+        signedAt: new Date().toISOString(),
+        preparer: gate.identity.preparer,
+        reviewer: gate.identity.reviewer,
+      },
+    });
+    state.pushToast({
+      tone: "success",
+      title: toastT("wp.signedTitle"),
+      description: toastT("wp.signedDesc")
+        .replace("{preparer}", gate.identity.preparer)
+        .replace("{reviewer}", gate.identity.reviewer),
+    });
+    recordActivity(
+      "success",
+      toastT("activity.workpaperFileSignedTitle"),
+      toastT("activity.identityPairDesc")
+        .replace("{preparer}", gate.identity.preparer)
+        .replace("{reviewer}", gate.identity.reviewer),
+    );
+    return true;
   };
 
   const importDocumentFiles = async (
@@ -3942,6 +4108,9 @@ export function useDocTraceController() {
     ...state,
     actions: {
       applySuggestedMapping,
+      applyTbSampleSelection,
+      applyTodWorkpaperPack,
+      signTodWorkpaperFile,
       captureCurrentSelection,
       importDocuments,
       importPickedDocuments,

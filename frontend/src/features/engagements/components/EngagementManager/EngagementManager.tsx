@@ -15,6 +15,7 @@ import {
   Unlock,
 } from "lucide-react";
 
+import { todWorkpaperDashboardCounts } from "@/features/workpapers/services/wp-dashboard";
 import { useDocTraceStore } from "@/stores/app-store";
 import { translate } from "@/lib/i18n/translations";
 import { formatCurrency } from "@/lib/formatters";
@@ -134,6 +135,14 @@ export function EngagementManager() {
         ),
       }
     : null;
+
+  const workpaperCounts = todWorkpaperDashboardCounts(
+    activeEngagement?.todWorkpaperPack,
+  );
+  const workpaperBarPercent =
+    workpaperCounts.total === 0
+      ? 0
+      : (workpaperCounts.completed / workpaperCounts.total) * 100;
 
   const storedCurrency = resolveCurrency(activeEngagement?.currency);
   const storedOcr = resolveOcrLanguage(activeEngagement?.ocrLanguage);
@@ -1095,23 +1104,10 @@ export function EngagementManager() {
                   </h4>
                   <div className="mt-4 flex items-baseline gap-2">
                     <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
-                      {
-                        getMockStats(
-                          activeEngagement.id,
-                          activeEngagement.progressPercentage,
-                          activeEngagement.status,
-                        ).workpapers.completed
-                      }
+                      {workpaperCounts.completed}
                     </span>
                     <span className="text-sm font-semibold text-slate-500">
-                      /{" "}
-                      {
-                        getMockStats(
-                          activeEngagement.id,
-                          activeEngagement.progressPercentage,
-                          activeEngagement.status,
-                        ).workpapers.total
-                      }
+                      / {workpaperCounts.total}
                     </span>
                   </div>
                 </div>
@@ -1121,19 +1117,7 @@ export function EngagementManager() {
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-500"
                       style={{
-                        width: `${
-                          (getMockStats(
-                            activeEngagement.id,
-                            activeEngagement.progressPercentage,
-                            activeEngagement.status,
-                          ).workpapers.completed /
-                            getMockStats(
-                              activeEngagement.id,
-                              activeEngagement.progressPercentage,
-                              activeEngagement.status,
-                            ).workpapers.total) *
-                          100
-                        }%`,
+                        width: `${workpaperBarPercent}%`,
                       }}
                     />
                   </div>
