@@ -14,6 +14,17 @@
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
   <body
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -196,13 +208,19 @@
       </div>
     </header>
     <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="contactKicker"></p>
-      <h1 class="site-title" data-i18n="contactTitle"></h1>
-      <p class="site-lead" data-i18n="contactLead"></p>
-      <p class="site-prose" data-i18n="contactNotLive"></p>
+      <p class="site-kicker" data-i18n="contactKicker">Get in touch</p>
+      <h1 class="site-title" data-i18n="contactTitle">Get in touch</h1>
+      <p class="site-lead" data-i18n="contactLead">
+        This form does not reach a live inbox yet. The details below are
+        placeholders.
+      </p>
+      <p class="site-prose" data-i18n="contactNotLive">
+        This mailbox is not live. The form will not send until the customer
+        provides an address.
+      </p>
       <dl class="mt-10 space-y-3 font-mono text-sm">
         <div>
-          <dt class="inline" data-i18n="contactEmailLabel"></dt>
+          <dt class="inline" data-i18n="contactEmailLabel">Email</dt>
           <dd class="ml-2 inline">
             <a class="text-tick underline" href="mailto:support@example.com"
               >support@example.com</a
@@ -210,33 +228,37 @@
           </dd>
         </div>
         <div>
-          <dt class="inline" data-i18n="contactPhoneLabel"></dt>
-          <dd class="ml-2 inline" data-i18n="contactPhoneValue"></dd>
+          <dt class="inline" data-i18n="contactPhoneLabel">Phone</dt>
+          <dd class="ml-2 inline" data-i18n="contactPhoneValue">
+            +95 00 000 0000
+          </dd>
         </div>
         <div>
-          <dt class="inline" data-i18n="contactAddressLabel"></dt>
-          <dd class="ml-2 inline" data-i18n="contactAddressValue"></dd>
+          <dt class="inline" data-i18n="contactAddressLabel">Address</dt>
+          <dd class="ml-2 inline" data-i18n="contactAddressValue">
+            Studio Next Steps · Yangon · street address to be provided
+          </dd>
         </div>
       </dl>
       <form class="site-form" data-contact-form>
         <label>
-          <span data-i18n="contactNameLabel"></span>
+          <span data-i18n="contactNameLabel">Name</span>
           <input name="name" required type="text" />
         </label>
         <label>
-          <span data-i18n="contactEmailFieldLabel"></span>
+          <span data-i18n="contactEmailFieldLabel">Email</span>
           <input name="email" required type="email" />
         </label>
         <label>
-          <span data-i18n="contactPhoneFieldLabel"></span>
+          <span data-i18n="contactPhoneFieldLabel">Phone (optional)</span>
           <input name="phone" type="tel" />
         </label>
         <label>
-          <span data-i18n="contactFirmLabel"></span>
+          <span data-i18n="contactFirmLabel">Firm (optional)</span>
           <input name="firm" type="text" />
         </label>
         <label>
-          <span data-i18n="contactMessageLabel"></span>
+          <span data-i18n="contactMessageLabel">Message</span>
           <textarea name="message" required rows="6"></textarea>
         </label>
         <button data-i18n="contactSubmit" type="submit">Submit</button>
@@ -246,7 +268,10 @@
           data-contact-status
           data-i18n="contactNotLive"
           role="status"
-        ></p>
+        >
+          This mailbox is not live. The form will not send until the customer
+          provides an address.
+        </p>
       </form>
     </main>
     <footer
@@ -256,7 +281,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

@@ -6,14 +6,13 @@ This is **not** a product phase number. It is not Phase 2 cloud. It is not Phase
 
 ISA-oriented, not ISA-certified. PBC intake then TB sample then Matching ToD then workpaper documentation (ISA 230-oriented). Human review before file sign-off. No DataSnipper-identical claim. No CaseWare-class workpaper OS.
 
-Status: **scaffold** = mock UI exists behind an empty-by-default flag. **open** = not wired yet.
+Status: **scaffold** = mock UI exists and is always visible. **open** = not wired yet.
 
 ## Scaffold
 
-Code exists. Mock only. Hidden unless `VITE_SHOW_PREP_MODULES` is non-empty.
+Code exists. Mock only. Always visible on the public pane (Impl 109).
 
-- **Flag-gated mocks (Impl 44):** `frontend/src/features/trial-balance`, `workpapers`, and `pbc-portal`. Empty or whitespace hides them (showcase and client drop). Do not set the flag on Vercel. Do not gate on localhost or the DEV badge. Not a git `phase-2` branch.
-- **Local env on (this machine, Impl 61):** gitignored root `.env` `VITE_SHOW_PREP_MODULES=1`. Vite restarted. Committed `.env.example` stays empty. Not Vercel. Vitest pins the flag empty so unit tests keep the two-tab contract.
+- **Always-visible mocks (Impl 44, ungated Impl 109):** `frontend/src/features/trial-balance`, `workpapers`, and `pbc-portal`. Empty `VITE_API_URL` stays local-first. Not a git `phase-2` branch.
 - **PBC into Import (Impl 62):** ToD invoice and bank PDF / image / JSON from Client Portal call existing Matching `importPickedDocuments`. List-only stays on the request list: confirmations (ISA 505), minutes, ledgers, trial balance, and `.xlsx`. Completeness is correct routing, not stuffing every row into Import. Remove on the PBC list does not delete Matching library documents.
 - **TB sample into Matching (Impl 63):** two `.xlsx` parses (TB accounts + detail listing), F/S lead mapping, auditor ticks, then Zustand `selection` for Matching Step 1. Listing files do not enter Matching Import. Debit-equals-credit and tie-out are visible only. Mapping is by account code, not filtered-row index.
 - **ToD into workpaper sign-off (Impl 64):** Matching Review Send snapshots results and snip metadata onto the engagement. First send replaces the fake workpaper list. File sign-off is blocked while partial/exception rows lack a live row sign-off. Follow-up is visible only. No Excel file-level log. Dashboard counts stay placeholders.
@@ -38,4 +37,4 @@ Notes and PBC dashboard tiles stay mock (Scaffold Engagements placeholders). The
 - Phase 3 live LLM: [phase3-remaining.md](phase3-remaining.md). Account not-live chrome is Impl 58 / 94.
 - ISA 505 confirmation portal. ISA 580 representation letters.
 - CaseWare-class workpaper OS.
-- `VITE_SHOW_PREP_MODULES` on Vercel. Merge of the `development` tip into `main` (would bring `samples/` and `scripts/`).
+- Merge of the `development` tip into `main` (would bring `samples/` and `scripts/`).

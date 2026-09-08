@@ -9,25 +9,12 @@ export const PREP_APP_MODULES: AppModule[] = [
   "client-portal",
 ];
 
-export function isPrepModulesEnabled(
-  flag: string | undefined = import.meta.env.VITE_SHOW_PREP_MODULES,
-): boolean {
-  return Boolean(flag?.trim());
+export function visibleAppModules(): AppModule[] {
+  return [...CORE_APP_MODULES, ...PREP_APP_MODULES];
 }
 
-export function visibleAppModules(
-  flag: string | undefined = import.meta.env.VITE_SHOW_PREP_MODULES,
-): AppModule[] {
-  return isPrepModulesEnabled(flag)
-    ? [...CORE_APP_MODULES, ...PREP_APP_MODULES]
-    : [...CORE_APP_MODULES];
-}
-
-export function isVisibleAppModule(
-  module: AppModule,
-  flag: string | undefined = import.meta.env.VITE_SHOW_PREP_MODULES,
-): boolean {
-  return visibleAppModules(flag).includes(module);
+export function isVisibleAppModule(module: AppModule): boolean {
+  return visibleAppModules().includes(module);
 }
 
 export function navTranslationKey(module: AppModule): TranslationKey {

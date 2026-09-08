@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="DocTrace support: Excel Get Support, sideload, Browser Preview, and placeholder contact."
+      content="Help for the DocTrace Excel add-in: Getting started, FAQ, and how to reach us."
     />
     <title>DocTrace support</title>
     <link
@@ -13,6 +13,17 @@
       type="image/png"
       sizes="32x32"
       href="/assets/favicon-32.png"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
     />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -44,14 +56,20 @@
       </a>
       <nav data-nav-stuck aria-label="Site">
         <a href="/guide.html" data-i18n="navGuide">Guide</a>
-        <a href="/support.html" data-i18n="navSupport">Support</a>
+        <a href="/support.html" data-i18n="navSupport" aria-current="page"
+          >Support</a
+        >
         <a href="/contact.html" data-i18n="navContact">Get in touch</a>
       </nav>
       <div
         class="flex min-w-0 items-center justify-end gap-3 text-sm md:gap-5"
         data-header-utils
       >
-        <a class="md:hidden" href="/support.html" data-i18n="navSupport"
+        <a
+          class="md:hidden"
+          href="/support.html"
+          data-i18n="navSupport"
+          aria-current="page"
           >Support</a
         >
         <div class="relative md:hidden" data-more>
@@ -122,7 +140,9 @@
         </div>
         <nav data-nav-rest aria-label="Site">
           <a href="/guide.html" data-i18n="navGuide">Guide</a>
-          <a href="/support.html" data-i18n="navSupport">Support</a>
+          <a href="/support.html" data-i18n="navSupport" aria-current="page"
+            >Support</a
+          >
           <a href="/contact.html" data-i18n="navContact">Get in touch</a>
         </nav>
         <button
@@ -196,114 +216,93 @@
       </div>
     </header>
     <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="supportKicker"></p>
-      <h1 class="site-title" data-i18n="supportTitle"></h1>
-      <p class="site-lead" data-i18n="supportLead"></p>
+      <p class="site-kicker" data-i18n="supportKicker">Get Support</p>
+      <h1 class="site-title" data-i18n="supportTitle">DocTrace support</h1>
+      <p class="site-lead" data-i18n="supportLead">
+        How to open DocTrace in Excel, where workbook and evidence stay, and how
+        to reach us. Matching works without an account.
+      </p>
+      <div class="site-hub">
+        <a class="site-hub-card" href="/guide.html">
+          <h2 class="site-hub-card-title" data-i18n="guideTitle">
+            Getting started
+          </h2>
+          <p class="site-prose" data-i18n="supportHubGuideBody">
+            Open in Excel, matching steps, and pane screenshots.
+          </p>
+        </a>
+        <a class="site-hub-card" href="/faq.html">
+          <h2 class="site-hub-card-title" data-i18n="faqTitle">FAQ</h2>
+          <p class="site-prose" data-i18n="supportHubFaqBody">
+            Short answers about accounts, files, Excel, and the add-in.
+          </p>
+        </a>
+        <a class="site-hub-card" href="/contact.html">
+          <h2 class="site-hub-card-title" data-i18n="navContact">
+            Get in touch
+          </h2>
+          <p class="site-prose" data-i18n="supportHubContactBody">
+            Mailbox and form. Those addresses are not live yet.
+          </p>
+        </a>
+      </div>
+      <div class="site-hub-actions">
+        <a
+          class="border-ink border px-5 py-3 text-sm"
+          href="/taskpane.html"
+          data-i18n="ctaPane"
+          >Add-in preview</a
+        >
+      </div>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportWhatTitle"></h2>
-        <p class="site-prose" data-i18n="supportWhatBody"></p>
-      </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportHowTitle"></h2>
-        <ol class="site-prose list-decimal space-y-4 pl-5">
-          <li data-i18n="supportHow1"></li>
-          <li data-i18n="supportHow2"></li>
-        </ol>
-        <p class="mt-4">
+        <h2 class="site-section-title" data-i18n="supportFaqTitle">FAQ</h2>
+        <details class="site-details">
+          <summary data-i18n="faq1Q">Do I need an account?</summary>
+          <p class="site-prose" data-i18n="faq1A">
+            Matching has no login wall. You can use it without an account.
+            Optional cloud is only for account, backup, and mail.
+          </p>
+        </details>
+        <details class="site-details">
+          <summary data-i18n="faq2Q">Where do my files stay?</summary>
+          <p class="site-prose" data-i18n="faq2A">
+            Workbook and evidence stay on this computer or browser unless you
+            connect optional cloud. The add-in does not send those files to a
+            DocTrace server by default.
+          </p>
+        </details>
+        <div class="mt-6 flex flex-wrap gap-3">
           <a
-            class="text-tick underline"
-            href="/guide.html"
-            data-i18n="supportGuideLink"
-            >Getting started</a
-          >
-        </p>
-      </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportLocalTitle"></h2>
-        <p class="site-prose" data-i18n="supportHow3"></p>
-      </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportDataTitle"></h2>
-        <p class="site-prose" data-i18n="supportDataBody"></p>
-      </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportHostTitle"></h2>
-        <p class="site-prose" data-i18n="supportHostBody"></p>
-      </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportFaqTitle"></h2>
-        <div class="site-teaser">
-          <h3 data-i18n="faq1Q"></h3>
-          <p class="site-prose" data-i18n="faq1A"></p>
-          <p class="mt-2">
-            <a
-              class="text-tick underline"
-              href="/faq.html#faq-1"
-              data-i18n="supportFaqOpen"
-              >Open this question</a
-            >
-          </p>
-        </div>
-        <div class="site-teaser">
-          <h3 data-i18n="faq2Q"></h3>
-          <p class="site-prose" data-i18n="faq2A"></p>
-          <p class="mt-2">
-            <a
-              class="text-tick underline"
-              href="/faq.html#faq-2"
-              data-i18n="supportFaqOpen"
-              >Open this question</a
-            >
-          </p>
-        </div>
-        <div class="site-teaser">
-          <h3 data-i18n="faq4Q"></h3>
-          <p class="site-prose" data-i18n="faq4A"></p>
-          <p class="mt-2">
-            <a
-              class="text-tick underline"
-              href="/faq.html#faq-4"
-              data-i18n="supportFaqOpen"
-              >Open this question</a
-            >
-          </p>
-        </div>
-        <div class="site-teaser">
-          <h3 data-i18n="faq12Q"></h3>
-          <p class="site-prose" data-i18n="faq12A"></p>
-          <p class="mt-2">
-            <a
-              class="text-tick underline"
-              href="/faq.html#faq-12"
-              data-i18n="supportFaqOpen"
-              >Open this question</a
-            >
-          </p>
-        </div>
-        <p class="mt-6">
-          <a
-            class="text-tick underline"
+            class="bg-ink text-wash px-5 py-3 text-sm no-underline"
             href="/faq.html"
             data-i18n="supportSeeFaq"
             >All questions</a
           >
-        </p>
+        </div>
       </section>
-      <section class="site-section">
-        <h2 class="site-section-title" data-i18n="supportContactTitle"></h2>
-        <p class="site-prose" data-i18n="supportContactBody"></p>
-        <p class="mt-4 font-mono text-sm">
-          <span data-i18n="supportEmailLabel"></span>
-          <a class="text-tick ml-2 underline" href="mailto:support@example.com"
-            >support@example.com</a
-          >
+      <section class="site-section" id="support-contact">
+        <h2 class="site-section-title" data-i18n="supportContactTitle">
+          Contact
+        </h2>
+        <p class="site-prose" data-i18n="supportContactBody">
+          These addresses are not live until the customer provides them.
         </p>
-        <p class="mt-2 font-mono text-sm">
-          <span data-i18n="privacyEmailLabel"></span>
-          <a class="text-tick ml-2 underline" href="mailto:privacy@example.com"
-            >privacy@example.com</a
-          >
-        </p>
+        <dl class="mt-4 space-y-3 font-mono text-sm">
+          <div>
+            <dt class="inline" data-i18n="contactEmailLabel">Email</dt>
+            <dd class="ml-2 inline">
+              <a class="text-tick underline" href="mailto:support@example.com"
+                >support@example.com</a
+              >
+            </dd>
+          </div>
+          <div>
+            <dt class="inline" data-i18n="contactPhoneLabel">Phone</dt>
+            <dd class="ml-2 inline" data-i18n="contactPhoneValue">
+              +95 00 000 0000
+            </dd>
+          </div>
+        </dl>
       </section>
     </main>
     <footer
@@ -313,7 +312,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

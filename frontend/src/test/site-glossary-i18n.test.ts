@@ -42,7 +42,7 @@ describe("public site glossary i18n", () => {
 
   it("keeps product terms in English on my copy", () => {
     expect(copy.my.kicker).toContain("Test of Details");
-    expect(copy.my.not3).toContain("Trial Balance");
+    expect(copy.my.guideTocTb).toContain("Trial Balance");
     expect(copy.my.not1).toContain("DataSnipper");
     expect(copy.my.not2).toContain("ISA");
   });
@@ -94,14 +94,24 @@ describe("public site glossary i18n", () => {
     }
   });
 
-  it("keeps localhost only on the local sideload support line", () => {
-    expect(copy.en.supportWhatBody).not.toContain("127.0.0.1");
-    expect(copy.en.supportHow1).not.toContain("127.0.0.1");
-    expect(copy.en.supportHow2).not.toContain("127.0.0.1");
-    expect(copy.en.supportHow3).toContain("127.0.0.1");
-    expect(copy.my.supportHow1).not.toContain("127.0.0.1");
-    expect(copy.my.supportHow2).not.toContain("127.0.0.1");
-    expect(copy.my.supportHow3).toContain("127.0.0.1");
+  it("keeps Support copy free of localhost and the production host", () => {
+    const keys = [
+      "supportLead",
+      "supportHubGuideBody",
+      "supportHubFaqBody",
+      "supportHubContactBody",
+      "supportContactBody",
+    ] as const satisfies readonly CopyKey[];
+    for (const key of keys) {
+      expect(copy.en[key], `en.${key}`).not.toContain("127.0.0.1");
+      expect(copy.my[key], `my.${key}`).not.toContain("127.0.0.1");
+      expect(copy.en[key], `en.${key}`).not.toContain(
+        "doctrace-one.vercel.app",
+      );
+      expect(copy.my[key], `my.${key}`).not.toContain(
+        "doctrace-one.vercel.app",
+      );
+    }
   });
 
   it("names DocTrace and Studio Next Steps on the privacy notice", () => {

@@ -316,34 +316,27 @@ export function Workpapers({
           ) : null}
         </section>
 
-        <section className="dt-panel overflow-x-auto">
-          <table className="w-full border-collapse text-left text-xs">
-            <thead>
-              <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
-                <th className="px-3 py-2.5 font-bold">{t("results.row")}</th>
-                <th className="px-3 py-2.5 font-bold">{t("eng.status")}</th>
-                <th className="px-3 py-2.5 font-bold">
-                  {t("results.signOff")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {todWorkpaperPack.rows.map((row) => (
-                <tr
-                  key={row.rowNumber}
-                  className="border-b border-slate-100 dark:border-slate-800/60"
-                >
-                  <td className="px-3 py-2.5 font-mono font-bold">
+        <section className="dt-panel">
+          <div className="flex min-w-0 flex-col gap-2">
+            {todWorkpaperPack.rows.map((row) => (
+              <article
+                key={row.rowNumber}
+                className="flex min-w-0 flex-col gap-1 rounded-xl border border-slate-200/80 bg-white/60 p-3 dark:border-white/10 dark:bg-slate-950/40"
+              >
+                <div className="flex min-w-0 items-baseline justify-between gap-2">
+                  <span className="shrink-0 font-mono text-xs font-bold text-slate-900 dark:text-white">
                     {row.rowNumber}
-                  </td>
-                  <td className="px-3 py-2.5">{statusLabel(row.status)}</td>
-                  <td className="px-3 py-2.5 text-slate-600 dark:text-slate-400">
-                    {rowSignOffs[row.rowNumber]?.action ?? "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </span>
+                  <span className="min-w-0 truncate text-xs text-slate-700 dark:text-slate-300">
+                    {statusLabel(row.status)}
+                  </span>
+                </div>
+                <p className="text-[0.65rem] text-slate-600 dark:text-slate-400">
+                  {rowSignOffs[row.rowNumber]?.action ?? "-"}
+                </p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="dt-panel">

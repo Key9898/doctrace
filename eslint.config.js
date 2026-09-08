@@ -11,6 +11,7 @@ export default tseslint.config(
       "node_modules/**",
       "scratch/**",
       "backend/node_modules/**",
+      "docs/sessions/**",
     ],
   },
   js.configs.recommended,

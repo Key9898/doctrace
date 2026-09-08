@@ -34,13 +34,13 @@ Not built. Needs a public host deploy and, for live PUT/mail/restore, leftover B
 
 From client docs and wiki out-of-scope notes:
 
-- EZAI client portal / PBC room (mock shell may exist behind `VITE_SHOW_PREP_MODULES`; not the client drop and not Phase 2 cloud). ISA-oriented prep remaining is the re-scope target: [prep-modules-remaining.md](prep-modules-remaining.md). Still not Phase 2 cloud.
-- Trial-balance or ERP import as the core product (same: mock shell only, flag-gated). Same prep tracker. Still not Phase 2 cloud.
+- EZAI client portal / PBC room (mock shell exists on the public pane; not Phase 2 cloud). ISA-oriented prep remaining is the re-scope target: [prep-modules-remaining.md](prep-modules-remaining.md). Still not Phase 2 cloud.
+- Trial-balance or ERP import as the core product (same: mock shell only). Same prep tracker. Still not Phase 2 cloud.
 - Template marketplace storefront
 - DataSnipper-identical Professional pack, Find All Sums, version compare, comments/markup
 - SharePoint or OneDrive as required storage
 - Dedicated mobile apps
-- CaseWare-class workpaper OS (strategy PDF; mock workpapers shell is flag-gated on `development` only). Prep remaining does not make this a CaseWare OS.
+- CaseWare-class workpaper OS (strategy PDF; mock workpapers shell is always visible, not a CaseWare OS). Prep remaining does not make this a CaseWare OS.
 
 ## Not this list
 

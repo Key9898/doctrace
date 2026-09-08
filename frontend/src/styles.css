@@ -35,6 +35,11 @@
     -ms-touch-action: manipulation;
   }
 
+  html,
+  #root {
+    background-color: transparent;
+  }
+
   /* Excel WebView2 Task Pane: Enable natural viewport scrolling to fix hit-testing and repaint freezing */
   .dt-excel-host {
     min-height: 100% !important;
@@ -112,6 +117,10 @@
 
   .dark .dt-hero {
     @apply border-white/10 bg-slate-900/60 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)];
+  }
+
+  .dt-skeleton {
+    @apply animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800;
   }
 
   .dt-panel {

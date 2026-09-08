@@ -40,7 +40,7 @@ Team and cloud remaining work lives in [phase2-remaining.md](phase2-remaining.md
 
 LLM/ML remaining work lives in [phase3-remaining.md](phase3-remaining.md). Not leftover A–D. Do not start live assist from this file.
 
-## Not this client drop (prep modules)
+## Prep modules remaining (not leftover A-D)
 
 Trial Balance, Workpapers, and Client PBC remaining work lives in [prep-modules-remaining.md](prep-modules-remaining.md). That list is not leftover A–D and not Phase 2 cloud. Do not add TB/PBC under leftover A–D. Leftover B stays on this file.
 

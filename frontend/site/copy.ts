@@ -48,7 +48,7 @@ export const copy = {
     notTitle: "ဘာမဟုတ်လဲ",
     not1: "DataSnipper-identical မဟုတ်ပါ။",
     not2: "ISA-certified မဟုတ်ပါ။ IAASB က ဆော့ဖ်ဝဲကို certify မလုပ်ပါ။",
-    not3: "Trial Balance suite သို့မဟုတ် LLM extractor မဟုတ်ပါ။",
+    not3: "LLM extractor မဟုတ်ပါ။",
     not4: "Login wall မရှိ။ အကောင့်မရှိလည်း Matching သုံးလို့ရသည်။",
     not5: "Matching နှင့် log သည် tests of details (ISA 330) ကို ကူညီသည်။ စာရင်းစစ်အမြင် မဟုတ်။ Sufficient appropriate evidence (ISA 500) နှင့် documentation (ISA 230) က auditor တာဝန်။",
     dataTitle: "ဖိုင်တွေ ဘယ်မှာလဲ",
@@ -62,34 +62,17 @@ export const copy = {
     footerNote: "DocTrace · Excel-native Test of Details",
     footerPowered: "Powered By Studio Next Steps. All rights reserved.",
     supportTitle: "DocTrace အကူအညီ",
-    supportKicker: "Get Support",
+    supportKicker: "အကူအညီ",
     supportLead:
-      "Excel Personality menu က Get Support သည် ဤစာမျက်နှာကို OS browser မှာ ဖွင့်သည်။ Pane ထဲ မဖွင့်ပါ။",
-    supportWhatTitle: "Product",
-    supportWhatBody:
-      "DocTrace သည် Excel ထဲက Test of Details matching add-in။ Local-first။ DataSnipper-identical မဟုတ်။ ISA-certified မဟုတ်။",
-    supportHowTitle: "Excel မှာ ဖွင့်ပုံ",
-    supportHow1:
-      "Excel Desktop ၏ Data tab က DocTrace ကို ဖွင့်ပါ။ Production Get Support: https://doctrace-one.vercel.app/support.html",
-    supportHow2:
-      "Excel မဖွင့်ရင် Add-in preview: https://doctrace-one.vercel.app/taskpane.html",
-    supportLocalTitle: "Local sideload",
-    supportHow3:
-      "ဤစက်မှာသာ: manifest.xml ကို Excel Desktop မှာ တင်ပါ။ Local SupportUrl က https://127.0.0.1:3000/support.html မို့ npm run dev ဖွင့်ထားရမည်။",
-    supportDataTitle: "ဒေတာ",
-    supportDataBody:
-      "Workbook နှင့် evidence ဖိုင်က စက်ထဲ။ Optional cloud က အကောင့်၊ backup၊ mail။ Cloud ပိတ်ထားရင်လည်း Matching အလုပ်လုပ်သည်။",
-    supportHostTitle: "Excel host chrome",
-    supportHostBody:
-      "ညာဘက်အစွန်းက ပါးလွှာတဲ့ Personality menu (Get Support, Reload, Attach Debugger, Security Info) က Excel ပိုင်သည်။ DocTrace က ပိတ်၊ ပြင်၊ ခလုတ်ထပ် မထည့်နိုင်ပါ။",
+      "Excel မှာ DocTrace ဖွင့်ပုံ၊ workbook နှင့် evidence ဘယ်မှာ၊ ဘယ်သူ့ကို ဆက်သွယ်ရမလဲ။ Matching က အကောင့်မလိုပါ။",
+    supportHubGuideBody:
+      "Excel မှာ ဖွင့်ပုံ၊ matching အဆင့်များ၊ pane screenshot။",
+    supportHubFaqBody: "အကောင့်၊ ဖိုင်၊ Excel နှင့် add-in အကြောင်း အဖြေတို။",
+    supportHubContactBody: "Mailbox နှင့် form။ ထိုလိပ်စာများ live မဟုတ်သေးပါ။",
     supportContactTitle: "ဆက်သွယ်ရန်",
-    supportContactBody:
-      "ဤလိပ်စာများသည် live mailbox မဟုတ်။ Customer က လိပ်စာပေးသည်အထိ placeholder:",
-    supportGuideLink: "ဖွင့်ပုံနှင့် screenshot ကို လမ်းညွှန်မှာ ကြည့်ပါ။",
+    supportContactBody: "Customer က လိပ်စာပေးသည်အထိ ဤလိပ်စာများ live မဟုတ်ပါ။",
     supportFaqTitle: "အမေးအဖြေ",
     supportSeeFaq: "အမေးအဖြေ အပြည့်",
-    supportFaqOpen: "ဤမေးခွန်းကို ဖွင့်ရန်",
-    supportEmailLabel: "Support",
     privacyEmailLabel: "Privacy",
     privacyTitle: "ကိုယ်ရေးမူဝါဒ",
     privacyKicker: "Privacy",
@@ -162,14 +145,17 @@ export const copy = {
       "Studio Next Steps က ဤ site နှင့် add-in ကို ထုတ်သည်။ အုပ်ချုပ်တဲ့ ဥပဒေကို customer သဘောတူမှ သတ်မှတ်မည်။ ဤနေရာတွင် မဖော်ပြသေး။",
     terms3Title: "ဆက်သွယ်ရန်",
     terms3Body: "အထွေထွေမေးခွန်း။ ဤ mailbox က live မဟုတ်:",
-    guideTitle: "Getting started",
+    guideTitle: "စတင်အသုံးပြုရန်",
     guideKicker: "Guide",
     guideLead:
-      "DocTrace Excel add-in ကို ဖွင့်ပုံနှင့် သုံးပုံ။ Engagements၊ Matching၊ pane chrome၊ optional cloud။ Add-in သည် .exe မဟုတ်။ DataSnipper-identical မဟုတ်။ ISA-certified မဟုတ်။",
+      "DocTrace Excel add-in ကို ဖွင့်ပုံနှင့် သုံးပုံ။ Engagements, Matching, Trial Balance, Workpapers, Client Portal။ Engagement ဖန်တီး၊ sample ယူ၊ evidence တင်၊ Match၊ snip၊ mapped column ကို workbook ထဲ ပြန်ရေး၊ listing sample ပို့၊ ToD ကို Workpapers ထဲ snapshot၊ PBC ဖိုင် လမ်းကြောင်းခွဲ။ Pane chrome နှင့် optional cloud လည်း ပါသည်။ Add-in သည် .exe မဟုတ်။ DataSnipper-identical မဟုတ်။ ISA-certified မဟုတ်။",
     guideTocLabel: "ဤလမ်းညွှန်တွင်",
     guideTocExcel: "Excel ထဲ ဖွင့်ရန်",
     guideTocEngagements: "Engagements",
     guideTocMatching: "Matching",
+    guideTocTb: "Trial Balance",
+    guideTocWorkpapers: "Workpapers",
+    guideTocPortal: "Client Portal",
     guideTocChrome: "Pane chrome",
     guideTocCloud: "Optional cloud",
     guideTocAssist: "AI assist",
@@ -177,41 +163,80 @@ export const copy = {
     guideExcelTitle: "Excel ထဲ ရောက်ရန်",
     guideExcel1:
       "Excel Desktop ၏ Data tab က DocTrace ကို ဖွင့်ပါ။ Windows၊ Mac၊ Excel on the web (Office က ခွင့်ပြုသလောက်)။",
-    guideExcel2:
-      "Excel မဖွင့်ရင် Add-in preview: https://doctrace-one.vercel.app/taskpane.html",
+    guideExcel2: "Excel မဖွင့်ရင် Add-in preview:",
     guideExcel3:
       "ဤ add-in သည် Office.js manifest နှင့် hosted task pane ဖြစ်သည်။ Setup.exe မပေးပါ။ AppSource listing မရှိသေးပါ။",
     guideExcelNote:
       "Add-in preview မှာ Browser Preview တံဆိပ်နှင့် Website လင့် ပေါ်သည်။ Excel က တကယ့်ထုတ်ကုန်။",
     guideEngagementsTitle: "Engagements",
     guideEngagementsBody:
-      "Matching မလုပ်ခင် Engagement Dashboard မှာ engagement ဖန်တီး သို့မဟုတ် ရွေးပါ။ Client အမည်၊ နှစ်၊ framework၊ materiality ကို ထိုနေရာမှာ ထားသည်။ Matching က ရွေးထားသော engagement နှင့် ချိတ်သည်။",
-    guideShellAlt: "Engagements နှင့် Matching တက်ဘ်နှစ်ခုပါသော DocTrace pane",
+      "Matching မလုပ်ခင် Engagement Dashboard မှာ engagement ဖန်တီး သို့မဟုတ် ရွေးပါ။",
+    guideEngagements1: "Pane ထဲ Engagements တက်ဘ်ကို ဖွင့်ပါ။",
+    guideEngagements2:
+      "Engagement ဖန်တီးပါ: client အမည်၊ နှစ်၊ framework၊ materiality။",
+    guideEngagements3: "ထို engagement ကို ရွေးပြီး active ထားပါ။",
+    guideEngagements4:
+      "Matching သို့ ပြောင်းပါ။ Matching က ရွေးထားသော engagement နှင့် ချိတ်သည်။",
+    guideShellAlt:
+      "Engagements, Matching, Trial Balance, Workpapers, Client Portal တက်ဘ်ပါသော DocTrace pane",
     guideEngagementsAlt: "Engagement Dashboard",
     guideLocalTitle: "Local sideload",
     guideLocalBody:
-      "ဤစက်မှာသာ: manifest.xml ကို Excel Desktop မှာ တင်ပါ။ Local SupportUrl က https://127.0.0.1:3000/support.html မို့ npm run dev ဖွင့်ထားရမည်။",
+      "ဤစက်မှာသာ: manifest.xml ကို Excel Desktop မှာ တင်ပါ။ Local SupportUrl အတွက် npm run dev ဖွင့်ထားရမည်:",
     guideMatchTitle: "Matching",
     guideMatchLead:
       "Select၊ Import၊ Match၊ Review။ Snip ပြီး mapped column ကို workbook ထဲ ပြန်ရေးသည်။ ပုံများက Add-in preview မှ ဖြစ်သည်။",
     guideStep1Title: "Select",
-    guideStep1Body: "Excel က နမူနာအတန်းကို ရွေးပြီး ဤ pane မှာ ယူပါ။",
+    guideStep1Body:
+      "Excel က နမူနာအတန်းကို ရွေးပြီး ဤ pane မှာ Capture နှိပ်ပါ။ Capture ပြီးမှ Import နှင့် Match ကို ဆက်လုပ်နိုင်သည်။",
     guideStep1Alt: "Matching step 1 Select",
     guideStep2Title: "Import",
     guideStep2Body:
       "ပြေစာနှင့် ဘဏ်အထောက်အထားကို PDF၊ ပုံ၊ သို့မဟုတ် JSON အဖြစ် တင်ပါ။ Library ထဲမှာ ဖိုင်များကို ကြည့်ပါ။",
     guideStep2Alt: "Matching step 2 Import",
     guideStep3Title: "Match",
-    guideStep3Body: "အတန်းများကို အထောက်အထားနှင့် Match လုပ်ပါ။",
+    guideStep3Body:
+      "Preparer နှင့် reviewer ထည့်ပါ။ Suggested mapping နှိပ်ပြီး အတန်းများကို အထောက်အထားနှင့် Match လုပ်ပါ။",
     guideStep3Alt: "Matching step 3 Match",
     guideStep4Title: "Review",
     guideStep4Body:
-      "ရလဒ်ကို စစ်ပါ။ Mapped column နှင့် hidden log sheet က workbook ထဲ ပြန်ရေးသည်။ ဤလမ်းညွှန်၏ Matching အဆုံးသည် workbook writeback ဖြစ်သည်။",
+      "ရလဒ်ကို စစ်ပါ။ Mapped column နှင့် hidden log sheet က workbook ထဲ ပြန်ရေးသည်။ Send to Workpapers က Test of Details ကို Workpapers တက်ဘ်ပေါ် snapshot လုပ်သည်။",
     guideStep4Alt: "Matching step 4 Review",
     guideSnipTitle: "Snip နှင့် viewer",
     guideSnipBody:
-      "စာမျက်နှာပေါ်က စာ သို့မဟုတ် ဇယားကို snip ပါ။ Viewer မှာ စာမျက်နှာကို ကြည့်ပြီး reviewer က ချိတ်ကို မြင်အောင် ထားပါ။",
+      "စာမျက်နှာပေါ်က စာ သို့မဟုတ် ဇယားကို snip ပါ။ Viewer မှာ စာမျက်နှာကို ကြည့်ပြီး reviewer က ချိတ်ကို မြင်အောင် ထားပါ။ Matching အဆင့် 1-4 မဟုတ်။",
     guideSnipAlt: "Evidence viewer နှင့် snip",
+    guideTbTitle: "Trial Balance",
+    guideTbBody:
+      "Trial balance နှင့် listing တင်၊ F/S lead ချိတ်၊ tick လုပ်ထားသော အတန်းကို Matching Select ထဲ ပို့ပါ။ Tie-out က မြင်ရုံသာ။ Send ကို မပိတ်ပါ။",
+    guideTb1: "Trial Balance တက်ဘ်ကို ဖွင့်ပါ။",
+    guideTb2: "Trial balance workbook တင်ပြီး listing .xlsx ထပ်တင်ပါ။",
+    guideTb3: "Ledger account များကို F/S lead နှင့် ချိတ်ပါ။",
+    guideTb4:
+      "Listing အတန်းကို tick ပြီး Send to Matching နှိပ်ပါ။ Debit-equals-credit နှင့် tie-out က Send ကို မပိတ်ပါ။",
+    guideTbAlt: "Mapped account ပါသော Trial Balance တက်ဘ်",
+    guideWpTitle: "Workpapers",
+    guideWpBody:
+      "Matching Review မှ Send to Workpapers က Test of Details ကို engagement ပေါ် snapshot လုပ်သည်။ File Sign က open exception နှင့် partial အတန်း စောင့်သည်။ CaseWare workpaper OS မဟုတ်။",
+    guideWp1: "Workpapers တက်ဘ်ကို ဖွင့်ပါ။",
+    guideWp2:
+      "Matching Review မှာ Send to Workpapers နှိပ်ပါ။ ToD ရလဒ်ကို ဤ engagement ပေါ် snapshot လုပ်သည်။",
+    guideWp3:
+      "Exception နှင့် partial အတန်းကို လက်မှတ်ထိုးပြီး Sign workpaper နှိပ်ပါ။",
+    guideWp4:
+      "ထို open အတန်း မလက်မှတ်ထိုးသေးရင် File Sign ပိတ်ထားသည်။ ပထမ Send မတိုင်ခင် demo workpaper အတန်း ပေါ်နိုင်သည်။",
+    guideWpAlt: "Demo pack စာရင်းပါသော Workpapers တက်ဘ်",
+    guidePortalTitle: "Client Portal",
+    guidePortalBody:
+      "PBC request စာရင်းက ဤ pane ထဲမှာ။ Client login wall မဟုတ်။",
+    guidePortal1: "Client Portal တက်ဘ်ကို ဖွင့်ပါ။",
+    guidePortal2:
+      "Client ပေးသင့်သော ဖိုင်များအတွက် PBC request စာရင်းကို သုံးပါ။",
+    guidePortal3:
+      "Invoice နှင့် bank PDF၊ ပုံ၊ JSON ကို Matching Import သို့ ပို့နိုင်သည်။",
+    guidePortal4:
+      "Ledger၊ confirmation၊ minutes၊ trial balance၊ .xlsx က စာရင်းပေါ်မှာပဲ နေသည်။",
+    guidePortalAlt: "Client Portal PBC request စာရင်း",
     guideChromeTitle: "Pane chrome",
     guideChromeBody:
       "ဘာသာစကား၊ theme၊ activity feed၊ first-run cue က DocTrace pane ပိုင်သည်။ ညာဘက် Personality menu (Get Support, Reload, Attach Debugger, Security Info) က Excel ပိုင်သည်။ DocTrace က ပိတ်၊ ပြင်၊ ခလုတ်ထပ် မထည့်နိုင်ပါ။",
@@ -222,6 +247,7 @@ export const copy = {
     guideAssistBody:
       "AI assist မလှုပ်သေးပါ။ Matching ကို ဆက်သုံးနိုင်သည်။ LLM extractor မဟုတ်။",
     guideAccountAlt: "Account မီနူး။ OTP မလှုပ်သေး။ AI assist မလှုပ်သေး။",
+    guideAfterHome: "ပင်မ",
     faqTitle: "အမေးအဖြေ",
     faqKicker: "FAQ",
     faqLead: "DocTrace Excel add-in အကြောင်း မေးလေ့ရှိသော မေးခွန်း။",
@@ -281,6 +307,15 @@ export const copy = {
     contactFirmLabel: "Firm (optional)",
     contactMessageLabel: "စာ",
     contactSubmit: "ပို့မည်",
+    error404Kicker: "404",
+    error404Title: "စာမျက်နှာ မတွေ့ပါ",
+    error404Lead: "ဤ URL သည် DocTrace စာမျက်နှာ မဟုတ်ပါ။",
+    error404Home: "ပင်မ",
+    error500Kicker: "500",
+    error500Title: "တစ်ခုခု ပျက်သွားသည်",
+    error500Lead:
+      "ဤတောင်းဆိုမှုသည် host မှာ မအောင်မြင်ပါ။ ထပ်ကြိုးစားပါ။ Excel Matching က ဤစာမျက်နှာ မလိုပါ။",
+    error500Home: "ပင်မ",
     authSignInKicker: "Sign in",
     authSignInTitle: "အကောင့်ဝင်ရန်",
     authSignInLead:
@@ -354,7 +389,7 @@ export const copy = {
     notTitle: "What it is not",
     not1: "Not DataSnipper-identical.",
     not2: "Not ISA-certified. The IAASB does not certify software.",
-    not3: "Not a Trial Balance suite or LLM extractor.",
+    not3: "Not an LLM extractor.",
     not4: "No login wall. Matching works without an account.",
     not5: "Matching and logs assist tests of details (ISA 330). They are not an audit opinion. The auditor remains responsible for sufficient appropriate evidence (ISA 500) and documentation (ISA 230).",
     dataTitle: "Where your files stay",
@@ -370,33 +405,17 @@ export const copy = {
     supportTitle: "DocTrace support",
     supportKicker: "Get Support",
     supportLead:
-      "Excel Get Support in the personality menu opens this page in the OS default browser, not inside the task pane.",
-    supportWhatTitle: "Product",
-    supportWhatBody:
-      "DocTrace is an Excel Test of Details matching add-in. Local-first. Not DataSnipper-identical. Not ISA-certified.",
-    supportHowTitle: "How to open in Excel",
-    supportHow1:
-      "Open DocTrace from the Data tab in Excel Desktop. Production Get Support: https://doctrace-one.vercel.app/support.html",
-    supportHow2:
-      "If Excel is not open, use Add-in preview: https://doctrace-one.vercel.app/taskpane.html",
-    supportLocalTitle: "Local sideload",
-    supportHow3:
-      "On this machine only: load manifest.xml in Excel Desktop. Local SupportUrl is https://127.0.0.1:3000/support.html, so npm run dev must be running.",
-    supportDataTitle: "Data",
-    supportDataBody:
-      "Workbook and evidence files stay on the device. Optional cloud is account, backup, and mail. Matching still works if cloud is off.",
-    supportHostTitle: "Excel host chrome",
-    supportHostBody:
-      "The thin personality menu (Get Support, Reload, Attach Debugger, Security Info) belongs to Excel. DocTrace cannot hide, restyle, or add items.",
+      "How to open DocTrace in Excel, where workbook and evidence stay, and how to reach us. Matching works without an account.",
+    supportHubGuideBody: "Open in Excel, matching steps, and pane screenshots.",
+    supportHubFaqBody:
+      "Short answers about accounts, files, Excel, and the add-in.",
+    supportHubContactBody:
+      "Mailbox and form. Those addresses are not live yet.",
     supportContactTitle: "Contact",
     supportContactBody:
-      "These addresses are not live mailboxes. Placeholder until the customer provides live addresses:",
-    supportGuideLink:
-      "How to open it, with screenshots, is on Getting started.",
+      "These addresses are not live until the customer provides them.",
     supportFaqTitle: "FAQ",
     supportSeeFaq: "All questions",
-    supportFaqOpen: "Open this question",
-    supportEmailLabel: "Support",
     privacyEmailLabel: "Privacy",
     privacyTitle: "Privacy policy",
     privacyKicker: "Privacy",
@@ -473,11 +492,14 @@ export const copy = {
     guideTitle: "Getting started",
     guideKicker: "Guide",
     guideLead:
-      "How to open and use the DocTrace Excel add-in: Engagements, Matching, pane chrome, and optional cloud. This add-in is not an .exe. Not DataSnipper-identical. Not ISA-certified.",
+      "How to open the DocTrace Excel add-in and use Engagements, Matching, Trial Balance, Workpapers, and Client Portal: create an engagement, capture a sample, import evidence, match, snip, write mapped columns back, send a listing sample, snapshot ToD into workpapers, and route PBC files. Pane chrome and optional cloud are covered too. This add-in is not an .exe. Not DataSnipper-identical. Not ISA-certified.",
     guideTocLabel: "In this guide",
     guideTocExcel: "Open in Excel",
     guideTocEngagements: "Engagements",
     guideTocMatching: "Matching",
+    guideTocTb: "Trial Balance",
+    guideTocWorkpapers: "Workpapers",
+    guideTocPortal: "Client Portal",
     guideTocChrome: "Pane chrome",
     guideTocCloud: "Optional cloud",
     guideTocAssist: "AI assist",
@@ -485,42 +507,79 @@ export const copy = {
     guideExcelTitle: "Get it into Excel",
     guideExcel1:
       "Open DocTrace from the Data tab in Excel Desktop. Windows, Mac, and Excel on the web where Office allows.",
-    guideExcel2:
-      "If Excel is not open, use Add-in preview: https://doctrace-one.vercel.app/taskpane.html",
+    guideExcel2: "If Excel is not open, use Add-in preview:",
     guideExcel3:
       "This add-in is an Office.js manifest plus a hosted task pane. There is no Setup.exe. There is no AppSource listing yet.",
     guideExcelNote:
       "Add-in preview shows a Browser Preview badge and a Website link. Excel is the real product.",
     guideEngagementsTitle: "Engagements",
     guideEngagementsBody:
-      "Create or select an engagement on the Engagement Dashboard before Matching. Client name, year, framework, and materiality live there. Matching follows the engagement you selected.",
-    guideShellAlt: "DocTrace pane with Engagements and Matching tabs",
+      "Create or select an engagement on the Engagement Dashboard before Matching.",
+    guideEngagements1: "Open the Engagements tab in the pane.",
+    guideEngagements2:
+      "Create an engagement: client name, financial year, framework, and materiality.",
+    guideEngagements3: "Select that engagement so it is active.",
+    guideEngagements4:
+      "Switch to Matching. Matching follows the engagement you selected.",
+    guideShellAlt:
+      "DocTrace pane with Engagements, Matching, Trial Balance, Workpapers, and Client Portal tabs",
     guideEngagementsAlt: "Engagement Dashboard",
     guideLocalTitle: "Local sideload",
     guideLocalBody:
-      "On this machine only: load manifest.xml in Excel Desktop. Local SupportUrl is https://127.0.0.1:3000/support.html, so npm run dev must be running.",
+      "On this machine only: load manifest.xml in Excel Desktop. Local SupportUrl needs npm run dev running:",
     guideMatchTitle: "Matching",
     guideMatchLead:
       "Select, Import, Match, Review. Snip the page, then write mapped columns back to the workbook. Screenshots are from Add-in preview.",
     guideStep1Title: "Select",
     guideStep1Body:
-      "Select a sample range in Excel, then capture it in this pane.",
+      "Select a sample range in Excel, then capture it in this pane. Capture unlocks Import and Match.",
     guideStep1Alt: "Matching step 1 Select",
     guideStep2Title: "Import",
     guideStep2Body:
       "Import invoices and bank support as PDF, image, or JSON. Review files in the library.",
     guideStep2Alt: "Matching step 2 Import",
     guideStep3Title: "Match",
-    guideStep3Body: "Match rows to evidence.",
+    guideStep3Body:
+      "Enter preparer and reviewer. Click Suggested mapping, then Match rows to evidence.",
     guideStep3Alt: "Matching step 3 Match",
     guideStep4Title: "Review",
     guideStep4Body:
-      "Check results. Mapped columns and a hidden log sheet write back to the workbook. That writeback is the end of Matching in this guide.",
+      "Check results. Mapped columns and a hidden log sheet write back to the workbook. Send to Workpapers snapshots the Test of Details onto the Workpapers tab.",
     guideStep4Alt: "Matching step 4 Review",
     guideSnipTitle: "Snip and viewer",
     guideSnipBody:
-      "Snip text or a table on the page. Use the viewer so a reviewer can see the link.",
+      "Snip text or a table on the page. Use the viewer so a reviewer can see the link. Not a numbered Matching step.",
     guideSnipAlt: "Evidence viewer and snip",
+    guideTbTitle: "Trial Balance",
+    guideTbBody:
+      "Import a trial balance and a listing, map F/S leads, then send ticked rows into Matching Select. Tie-out is visible only.",
+    guideTb1: "Open the Trial Balance tab.",
+    guideTb2: "Import a trial balance workbook, then a listing .xlsx.",
+    guideTb3: "Map ledger accounts to F/S leads.",
+    guideTb4:
+      "Tick listing rows and click Send to Matching. Debit-equals-credit and tie-out do not block Send.",
+    guideTbAlt: "Trial Balance tab with mapped accounts",
+    guideWpTitle: "Workpapers",
+    guideWpBody:
+      "Matching Review Send to Workpapers snapshots Test of Details onto the engagement. File Sign waits on open exception and partial rows. This is not a CaseWare workpaper OS.",
+    guideWp1: "Open the Workpapers tab.",
+    guideWp2:
+      "On Matching Review, click Send to Workpapers. That snapshots ToD results onto this engagement.",
+    guideWp3: "Sign exception and partial rows, then Sign workpaper.",
+    guideWp4:
+      "File Sign stays blocked while those open rows are unsigned. Demo workpaper rows may show until the first Send.",
+    guideWpAlt: "Workpapers tab with the demo pack list",
+    guidePortalTitle: "Client Portal",
+    guidePortalBody:
+      "The PBC request list is in this pane. It is not a client login wall.",
+    guidePortal1: "Open the Client Portal tab.",
+    guidePortal2:
+      "Use the PBC request list for files the client should provide.",
+    guidePortal3:
+      "Invoice and bank PDF, image, or JSON can go to Matching Import.",
+    guidePortal4:
+      "Ledgers, confirmations, minutes, trial balance, and .xlsx stay on the list.",
+    guidePortalAlt: "Client Portal PBC request list",
     guideChromeTitle: "Pane chrome",
     guideChromeBody:
       "Language, theme, the activity feed, and the first-run cue belong to the DocTrace pane. The thin personality menu on the right (Get Support, Reload, Attach Debugger, Security Info) belongs to Excel. DocTrace cannot hide, restyle, or add items there.",
@@ -532,6 +591,7 @@ export const copy = {
       "AI assist is not live. Matching still works. DocTrace is not an LLM extractor.",
     guideAccountAlt:
       "Account menu. OTP mail is not live. AI assist is not live.",
+    guideAfterHome: "Home",
     faqTitle: "FAQ",
     faqKicker: "FAQ",
     faqLead: "Short answers about the DocTrace Excel add-in.",
@@ -591,6 +651,15 @@ export const copy = {
     contactFirmLabel: "Firm (optional)",
     contactMessageLabel: "Message",
     contactSubmit: "Submit",
+    error404Kicker: "404",
+    error404Title: "Page not found",
+    error404Lead: "This URL is not a DocTrace page.",
+    error404Home: "Home",
+    error500Kicker: "500",
+    error500Title: "Something went wrong",
+    error500Lead:
+      "This request failed on the host. Try again. Excel Matching does not need this page.",
+    error500Home: "Home",
     authSignInKicker: "Sign in",
     authSignInTitle: "Sign in",
     authSignInLead:

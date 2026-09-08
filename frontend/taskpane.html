@@ -10,10 +10,72 @@
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        height: 100%;
+        color: #f8fafc;
+      }
+      .dt-boot-splash {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-height: 100%;
+        padding: 24px 16px;
+        gap: 12px;
+        font-family: system-ui, sans-serif;
+        text-align: center;
+        background: #020617;
+      }
+      .dt-boot-splash svg {
+        display: block;
+      }
+      .dt-boot-splash-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .dt-boot-splash-line {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #94a3b8;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="dt-boot-splash" role="status" aria-live="polite">
+        <svg
+          aria-hidden="true"
+          fill="none"
+          height="32"
+          viewBox="0 0 96 96"
+          width="32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect fill="#0284c7" height="96" rx="28" width="96" />
+          <rect fill="#F8FAFC" height="20" rx="4" width="14" x="18" y="48" />
+          <rect fill="#DBEAFE" height="32" rx="4" width="14" x="36" y="36" />
+          <rect fill="#7DD3FC" height="44" rx="4" width="14" x="54" y="24" />
+          <path
+            d="M24 76H72"
+            stroke="#F59E0B"
+            stroke-linecap="round"
+            stroke-width="6"
+          />
+        </svg>
+        <p class="dt-boot-splash-title">DocTrace</p>
+        <p class="dt-boot-splash-line">Booting / စတင်နေသည်</p>
+      </div>
+    </div>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

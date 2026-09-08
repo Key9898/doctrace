@@ -190,10 +190,10 @@ describe("app store", () => {
       expect(useDocTraceStore.getState().activeEngagementId).toBe("test-eng-2");
     });
 
-    it("hides prep modules when the env flag is empty", () => {
+    it("keeps Trial Balance as a visible module", () => {
       const store = useDocTraceStore.getState();
       store.setModule("trial-balance");
-      expect(useDocTraceStore.getState().activeModule).toBe("engagements");
+      expect(useDocTraceStore.getState().activeModule).toBe("trial-balance");
     });
 
     it("should create new engagement", () => {
