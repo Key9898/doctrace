@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap");
 @import "tailwindcss";
 
 @source not "../src";
@@ -92,20 +91,80 @@
     @apply mt-6 text-lg leading-relaxed;
   }
 
-  .site-toc {
-    @apply border-rule bg-wash mt-10 border px-5 py-4;
+  .site-guide {
+    @apply px-6 py-16 sm:px-10;
   }
 
-  .site-toc ol {
-    @apply mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed;
+  .site-toc {
+    @apply border-rule bg-wash mb-10 border p-3;
+  }
+
+  .site-toc-label {
+    @apply px-2 pb-2 text-sm font-semibold;
+  }
+
+  .site-toc ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-toc li ul {
+    margin-top: 0.15rem;
+    padding-left: 1.75rem;
+  }
+
+  .site-toc li ul a {
+    @apply py-1.5 text-sm;
   }
 
   .site-toc a {
-    @apply text-tick underline;
+    @apply text-ink flex items-baseline gap-3 px-3 py-2.5 no-underline;
+  }
+
+  .site-toc a:hover {
+    @apply bg-paper;
+  }
+
+  .site-toc a[aria-current="true"] {
+    @apply bg-paper border-tick border-l-2;
+  }
+
+  header a[aria-current="page"] {
+    @apply font-semibold;
+  }
+
+  .site-hub {
+    @apply mt-10 grid gap-4 sm:grid-cols-3;
+  }
+
+  .site-hub-card {
+    @apply border-rule bg-wash text-ink block border p-5 no-underline;
+  }
+
+  .site-hub-card:hover {
+    @apply bg-paper;
+  }
+
+  .site-hub-card-title {
+    @apply text-lg font-semibold;
+  }
+
+  .site-hub-actions {
+    @apply mt-8;
+  }
+
+  .site-toc-index {
+    @apply text-tick shrink-0 font-mono text-[0.65rem] tracking-wider;
   }
 
   .site-section {
     @apply border-rule mt-12 border-t pt-10;
+    scroll-margin-top: 5.5rem;
+  }
+
+  .site-section-muted {
+    @apply text-sm;
   }
 
   .site-section-title {
@@ -116,18 +175,31 @@
     @apply mt-3 leading-relaxed;
   }
 
+  .site-guide-after {
+    @apply mt-10 flex flex-wrap gap-4 text-sm;
+  }
+
+  .site-guide-after a {
+    @apply text-tick underline;
+  }
+
   .site-figure {
-    @apply border-rule bg-wash mt-8 w-full max-w-[360px] border;
+    @apply border-rule mt-8 w-full max-w-md overflow-hidden border;
+    background: transparent;
+    line-height: 0;
+    padding: 0;
   }
 
   .site-figure img {
     display: block;
     height: auto;
+    vertical-align: bottom;
     width: 100%;
   }
 
   .site-figure figcaption {
     @apply border-rule border-t px-4 py-3;
+    line-height: 1.5;
   }
 
   .site-details {
@@ -164,6 +236,23 @@
   }
 
   @media (min-width: 48rem) {
+    .site-guide {
+      display: grid;
+      grid-template-columns: 14rem minmax(0, 1fr);
+      align-items: start;
+      gap: 2.5rem;
+      max-width: 72rem;
+      margin-inline: auto;
+    }
+
+    .site-toc {
+      position: sticky;
+      top: 5.5rem;
+      margin-bottom: 0;
+      max-height: calc(100svh - 7rem);
+      overflow: auto;
+    }
+
     [data-nav-rest] {
       display: flex;
     }

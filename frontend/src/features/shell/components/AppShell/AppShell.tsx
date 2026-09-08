@@ -179,7 +179,7 @@ function BrandMark() {
         y="36"
       />
       <rect
-        className="fill-white dark:fill-[#7DD3FC]"
+        className="fill-[#7DD3FC]"
         height="44"
         rx="4"
         width="14"

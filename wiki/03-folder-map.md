@@ -6,6 +6,8 @@ Current `frontend/src/` layout. Keep each component folder name (`ResultsPanel/R
 frontend/
   index.html            public landing (`/`)
   taskpane.html         Excel add-in (`/taskpane.html`)
+  404.html
+  500.html
   support.html
   privacy.html
   terms.html
@@ -94,6 +96,8 @@ frontend/
         services/viewer-zoom.ts
       shell/
         components/AppShell/
+        components/PaneSkeleton/
+        components/PaneErrorBoundary/
         components/CloudSessionPanel/
         components/ToastViewport/
         components/ActivityPanel/

@@ -38,6 +38,7 @@ import {
   downloadCsv,
 } from "@/features/matching/services/export";
 import { useI18n } from "@/lib/i18n/useI18n";
+import { PaneSkeleton } from "@/features/shell/components/PaneSkeleton/PaneSkeleton";
 import { VirtualList } from "@/features/shell/components/VirtualList/VirtualList";
 
 const INITIAL_RESULT_BATCH = 80;
@@ -169,7 +170,11 @@ export function ResultsPanel({
         </div>
       )}
 
-      {deferredResults.length ? (
+      {busyMessage ? (
+        <div className="mt-6 px-1">
+          <PaneSkeleton kind="cards" label={t("results.busySkeletonAria")} />
+        </div>
+      ) : deferredResults.length ? (
         <>
           <div className="mt-6 grid grid-cols-2 gap-3 px-1 sm:grid-cols-4">
             <div className="dt-stat group">

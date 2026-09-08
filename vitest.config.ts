@@ -5,13 +5,11 @@ import { resolve } from "node:path";
 export default defineConfig({
   define: {
     "import.meta.env.VITE_API_URL": JSON.stringify(""),
-    "import.meta.env.VITE_SHOW_PREP_MODULES": JSON.stringify(""),
   },
   plugins: [react()],
   test: {
     env: {
       VITE_API_URL: "",
-      VITE_SHOW_PREP_MODULES: "",
     },
     environment: "happy-dom",
     globals: true,

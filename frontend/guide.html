@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="User Guide for the DocTrace Excel add-in: Engagements, Matching, pane chrome, and optional cloud."
+      content="How to open the DocTrace Excel add-in and use Engagements, Matching, Trial Balance, Workpapers, and Client Portal: capture a sample, import evidence, match, snip, and write mapped columns back."
     />
     <title>Getting started</title>
     <link
@@ -13,6 +13,17 @@
       type="image/png"
       sizes="32x32"
       href="/assets/favicon-32.png"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
     />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -34,7 +46,7 @@
         href="/"
       >
         <img
-          alt=""
+          alt="DocTrace"
           class="h-8 w-8"
           height="32"
           src="/assets/logo-mark.svg"
@@ -43,7 +55,7 @@
         <span class="hidden sm:inline">DocTrace</span>
       </a>
       <nav data-nav-stuck aria-label="Site">
-        <a href="/guide.html" data-i18n="navGuide">Guide</a>
+        <a href="/guide.html" data-i18n="navGuide" aria-current="page">Guide</a>
         <a href="/support.html" data-i18n="navSupport">Support</a>
         <a href="/contact.html" data-i18n="navContact">Get in touch</a>
       </nav>
@@ -88,6 +100,7 @@
               data-i18n="navGuide"
               href="/guide.html"
               role="menuitem"
+              aria-current="page"
               >Guide</a
             >
             <a
@@ -121,7 +134,9 @@
           </div>
         </div>
         <nav data-nav-rest aria-label="Site">
-          <a href="/guide.html" data-i18n="navGuide">Guide</a>
+          <a href="/guide.html" data-i18n="navGuide" aria-current="page"
+            >Guide</a
+          >
           <a href="/support.html" data-i18n="navSupport">Support</a>
           <a href="/contact.html" data-i18n="navContact">Get in touch</a>
         </nav>
@@ -195,157 +210,473 @@
         </div>
       </div>
     </header>
-    <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="guideKicker"></p>
-      <h1 class="site-title" data-i18n="guideTitle"></h1>
-      <p class="site-lead" data-i18n="guideLead"></p>
+    <main id="content" class="site-page site-guide">
       <nav class="site-toc" aria-labelledby="guide-toc-label">
         <p
-          class="font-semibold"
+          class="site-toc-label"
           id="guide-toc-label"
           data-i18n="guideTocLabel"
-        ></p>
-        <ol>
+        >
+          In this guide
+        </p>
+        <ul>
           <li>
-            <a href="#guide-excel" data-i18n="guideTocExcel"></a>
+            <a href="#guide-excel"
+              ><span class="site-toc-index">01</span
+              ><span data-i18n="guideTocExcel">Open in Excel</span></a
+            >
           </li>
           <li>
-            <a href="#guide-engagements" data-i18n="guideTocEngagements"></a>
+            <a href="#guide-engagements"
+              ><span class="site-toc-index">02</span
+              ><span data-i18n="guideTocEngagements">Engagements</span></a
+            >
           </li>
           <li>
-            <a href="#guide-matching" data-i18n="guideTocMatching"></a>
+            <a href="#guide-matching"
+              ><span class="site-toc-index">03</span
+              ><span data-i18n="guideTocMatching">Matching</span></a
+            >
+            <ul>
+              <li>
+                <a href="#guide-select" data-i18n="guideStep1Title">Select</a>
+              </li>
+              <li>
+                <a href="#guide-import" data-i18n="guideStep2Title">Import</a>
+              </li>
+              <li>
+                <a href="#guide-match" data-i18n="guideStep3Title">Match</a>
+              </li>
+              <li>
+                <a href="#guide-snip" data-i18n="guideSnipTitle"
+                  >Snip and viewer</a
+                >
+              </li>
+              <li>
+                <a href="#guide-review" data-i18n="guideStep4Title">Review</a>
+              </li>
+            </ul>
           </li>
           <li>
-            <a href="#guide-chrome" data-i18n="guideTocChrome"></a>
+            <a href="#guide-tb"
+              ><span class="site-toc-index">04</span
+              ><span data-i18n="guideTocTb">Trial Balance</span></a
+            >
           </li>
           <li>
-            <a href="#guide-cloud" data-i18n="guideTocCloud"></a>
+            <a href="#guide-workpapers"
+              ><span class="site-toc-index">05</span
+              ><span data-i18n="guideTocWorkpapers">Workpapers</span></a
+            >
           </li>
           <li>
-            <a href="#guide-assist" data-i18n="guideTocAssist"></a>
+            <a href="#guide-portal"
+              ><span class="site-toc-index">06</span
+              ><span data-i18n="guideTocPortal">Client Portal</span></a
+            >
           </li>
           <li>
-            <a href="#guide-local" data-i18n="guideTocLocal"></a>
+            <a href="#guide-chrome"
+              ><span class="site-toc-index">07</span
+              ><span data-i18n="guideTocChrome">Pane chrome</span></a
+            >
           </li>
-        </ol>
+          <li>
+            <a href="#guide-cloud"
+              ><span class="site-toc-index">08</span
+              ><span data-i18n="guideTocCloud">Optional cloud</span></a
+            >
+          </li>
+          <li>
+            <a href="#guide-assist"
+              ><span class="site-toc-index">09</span
+              ><span data-i18n="guideTocAssist">AI assist</span></a
+            >
+          </li>
+          <li>
+            <a href="#guide-local"
+              ><span class="site-toc-index">10</span
+              ><span data-i18n="guideTocLocal">Local sideload</span></a
+            >
+          </li>
+        </ul>
       </nav>
-      <section class="site-section" id="guide-excel">
-        <h2 class="site-section-title" data-i18n="guideExcelTitle"></h2>
-        <ol class="site-prose list-decimal space-y-4 pl-5">
-          <li data-i18n="guideExcel1"></li>
-          <li data-i18n="guideExcel2"></li>
-          <li data-i18n="guideExcel3"></li>
-        </ol>
-        <p class="site-prose" data-i18n="guideExcelNote"></p>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideShellAlt"
-            height="640"
-            src="/assets/guide/shell.png"
-            width="360"
-          />
-        </figure>
-      </section>
-      <section class="site-section" id="guide-engagements">
-        <h2 class="site-section-title" data-i18n="guideEngagementsTitle"></h2>
-        <p class="site-prose" data-i18n="guideEngagementsBody"></p>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideEngagementsAlt"
-            height="640"
-            src="/assets/guide/engagements.png"
-            width="360"
-          />
-        </figure>
-      </section>
-      <section class="site-section" id="guide-matching">
-        <h2 class="site-section-title" data-i18n="guideMatchTitle"></h2>
-        <p class="site-prose" data-i18n="guideMatchLead"></p>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideStep1Alt"
-            height="640"
-            src="/assets/guide/select.png"
-            width="360"
-          />
-          <figcaption>
-            <h3 class="font-semibold" data-i18n="guideStep1Title"></h3>
-            <p class="mt-1 leading-relaxed" data-i18n="guideStep1Body"></p>
-          </figcaption>
-        </figure>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideStep2Alt"
-            height="640"
-            src="/assets/guide/import.png"
-            width="360"
-          />
-          <figcaption>
-            <h3 class="font-semibold" data-i18n="guideStep2Title"></h3>
-            <p class="mt-1 leading-relaxed" data-i18n="guideStep2Body"></p>
-          </figcaption>
-        </figure>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideStep3Alt"
-            height="640"
-            src="/assets/guide/match.png"
-            width="360"
-          />
-          <figcaption>
-            <h3 class="font-semibold" data-i18n="guideStep3Title"></h3>
-            <p class="mt-1 leading-relaxed" data-i18n="guideStep3Body"></p>
-          </figcaption>
-        </figure>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideSnipAlt"
-            height="640"
-            src="/assets/guide/snip.png"
-            width="360"
-          />
-          <figcaption>
-            <h3 class="font-semibold" data-i18n="guideSnipTitle"></h3>
-            <p class="mt-1 leading-relaxed" data-i18n="guideSnipBody"></p>
-          </figcaption>
-        </figure>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideStep4Alt"
-            height="640"
-            src="/assets/guide/review.png"
-            width="360"
-          />
-          <figcaption>
-            <h3 class="font-semibold" data-i18n="guideStep4Title"></h3>
-            <p class="mt-1 leading-relaxed" data-i18n="guideStep4Body"></p>
-          </figcaption>
-        </figure>
-      </section>
-      <section class="site-section" id="guide-chrome">
-        <h2 class="site-section-title" data-i18n="guideChromeTitle"></h2>
-        <p class="site-prose" data-i18n="guideChromeBody"></p>
-      </section>
-      <section class="site-section" id="guide-cloud">
-        <h2 class="site-section-title" data-i18n="guideCloudTitle"></h2>
-        <p class="site-prose" data-i18n="guideCloudBody"></p>
-        <figure class="site-figure">
-          <img
-            data-i18n-alt="guideAccountAlt"
-            height="640"
-            src="/assets/guide/account.png"
-            width="360"
-          />
-        </figure>
-      </section>
-      <section class="site-section" id="guide-assist">
-        <h2 class="site-section-title" data-i18n="guideAssistTitle"></h2>
-        <p class="site-prose" data-i18n="guideAssistBody"></p>
-      </section>
-      <section class="site-section" id="guide-local">
-        <h2 class="site-section-title" data-i18n="guideLocalTitle"></h2>
-        <p class="site-prose" data-i18n="guideLocalBody"></p>
-      </section>
+      <div class="site-guide-body">
+        <p class="site-kicker" data-i18n="guideKicker">Guide</p>
+        <h1 class="site-title" data-i18n="guideTitle">Getting started</h1>
+        <p class="site-lead" data-i18n="guideLead">
+          How to open the DocTrace Excel add-in and use Engagements, Matching,
+          Trial Balance, Workpapers, and Client Portal: create an engagement,
+          capture a sample, import evidence, match, snip, write mapped columns
+          back, send a listing sample, snapshot ToD into workpapers, and route
+          PBC files. Pane chrome and optional cloud are covered too. This add-in
+          is not an .exe. Not DataSnipper-identical. Not ISA-certified.
+        </p>
+        <section class="site-section" id="guide-excel">
+          <h2 class="site-section-title" data-i18n="guideExcelTitle">
+            Get it into Excel
+          </h2>
+          <ol class="site-prose list-decimal space-y-4 pl-5">
+            <li data-i18n="guideExcel1">
+              Open DocTrace from the Data tab in Excel Desktop. Windows, Mac,
+              and Excel on the web where Office allows.
+            </li>
+            <li>
+              <span data-i18n="guideExcel2"
+                >If Excel is not open, use Add-in preview:</span
+              >
+              <a href="https://doctrace-one.vercel.app/taskpane.html"
+                >https://doctrace-one.vercel.app/taskpane.html</a
+              >
+            </li>
+            <li data-i18n="guideExcel3">
+              This add-in is an Office.js manifest plus a hosted task pane.
+              There is no Setup.exe. There is no AppSource listing yet.
+            </li>
+          </ol>
+          <p class="site-prose" data-i18n="guideExcelNote">
+            Add-in preview shows a Browser Preview badge and a Website link.
+            Excel is the real product.
+          </p>
+          <figure class="site-figure">
+            <img
+              alt="DocTrace pane with Engagements, Matching, Trial Balance, Workpapers, and Client Portal tabs"
+              data-i18n-alt="guideShellAlt"
+              height="700"
+              loading="eager"
+              src="/assets/guide/shell.png"
+              width="375"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guideShellAlt">
+                DocTrace pane with Engagements, Matching, Trial Balance,
+                Workpapers, and Client Portal tabs
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-engagements">
+          <h2 class="site-section-title" data-i18n="guideEngagementsTitle">
+            Engagements
+          </h2>
+          <p class="site-prose" data-i18n="guideEngagementsBody">
+            Create or select an engagement on the Engagement Dashboard before
+            Matching.
+          </p>
+          <ol class="site-prose list-decimal space-y-4 pl-5">
+            <li data-i18n="guideEngagements1">
+              Open the Engagements tab in the pane.
+            </li>
+            <li data-i18n="guideEngagements2">
+              Create an engagement: client name, financial year, framework, and
+              materiality.
+            </li>
+            <li data-i18n="guideEngagements3">
+              Select that engagement so it is active.
+            </li>
+            <li data-i18n="guideEngagements4">
+              Switch to Matching. Matching follows the engagement you selected.
+            </li>
+          </ol>
+          <figure class="site-figure">
+            <img
+              alt="Engagement Dashboard"
+              data-i18n-alt="guideEngagementsAlt"
+              height="850"
+              src="/assets/guide/engagements.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guideEngagementsAlt">
+                Engagement Dashboard
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-matching">
+          <h2 class="site-section-title" data-i18n="guideMatchTitle">
+            Matching
+          </h2>
+          <p class="site-prose" data-i18n="guideMatchLead">
+            Select, Import, Match, Review. Snip the page, then write mapped
+            columns back to the workbook. Screenshots are from Add-in preview.
+          </p>
+        </section>
+        <section class="site-section" id="guide-select">
+          <figure class="site-figure">
+            <img
+              alt="Matching step 1 Select"
+              data-i18n-alt="guideStep1Alt"
+              height="850"
+              src="/assets/guide/select.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <h3 class="font-semibold" data-i18n="guideStep1Title">Select</h3>
+              <p class="mt-1 leading-relaxed" data-i18n="guideStep1Body">
+                Select a sample range in Excel, then capture it in this pane.
+                Capture unlocks Import and Match.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-import">
+          <figure class="site-figure">
+            <img
+              alt="Matching step 2 Import"
+              data-i18n-alt="guideStep2Alt"
+              height="850"
+              src="/assets/guide/import.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <h3 class="font-semibold" data-i18n="guideStep2Title">Import</h3>
+              <p class="mt-1 leading-relaxed" data-i18n="guideStep2Body">
+                Import invoices and bank support as PDF, image, or JSON. Review
+                files in the library.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-match">
+          <figure class="site-figure">
+            <img
+              alt="Matching step 3 Match"
+              data-i18n-alt="guideStep3Alt"
+              height="850"
+              src="/assets/guide/match.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <h3 class="font-semibold" data-i18n="guideStep3Title">Match</h3>
+              <p class="mt-1 leading-relaxed" data-i18n="guideStep3Body">
+                Enter preparer and reviewer. Click Suggested mapping, then Match
+                rows to evidence.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-snip">
+          <figure class="site-figure">
+            <img
+              alt="Evidence viewer and snip"
+              data-i18n-alt="guideSnipAlt"
+              height="850"
+              src="/assets/guide/snip.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <h3 class="font-semibold" data-i18n="guideSnipTitle">
+                Snip and viewer
+              </h3>
+              <p class="mt-1 leading-relaxed" data-i18n="guideSnipBody">
+                Snip text or a table on the page. Use the viewer so a reviewer
+                can see the link. Not a numbered Matching step.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-review">
+          <figure class="site-figure">
+            <img
+              alt="Matching step 4 Review"
+              data-i18n-alt="guideStep4Alt"
+              height="850"
+              src="/assets/guide/review.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <h3 class="font-semibold" data-i18n="guideStep4Title">Review</h3>
+              <p class="mt-1 leading-relaxed" data-i18n="guideStep4Body">
+                Check results. Mapped columns and a hidden log sheet write back
+                to the workbook. Send to Workpapers snapshots the Test of
+                Details onto the Workpapers tab.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-tb">
+          <h2 class="site-section-title" data-i18n="guideTbTitle">
+            Trial Balance
+          </h2>
+          <p class="site-prose" data-i18n="guideTbBody">
+            Import a trial balance and a listing, map F/S leads, then send
+            ticked rows into Matching Select. Tie-out is visible only.
+          </p>
+          <ol class="site-prose list-decimal space-y-4 pl-5">
+            <li data-i18n="guideTb1">Open the Trial Balance tab.</li>
+            <li data-i18n="guideTb2">
+              Import a trial balance workbook, then a listing .xlsx.
+            </li>
+            <li data-i18n="guideTb3">Map ledger accounts to F/S leads.</li>
+            <li data-i18n="guideTb4">
+              Tick listing rows and click Send to Matching. Debit-equals-credit
+              and tie-out do not block Send.
+            </li>
+          </ol>
+          <figure class="site-figure">
+            <img
+              alt="Trial Balance tab with mapped accounts"
+              data-i18n-alt="guideTbAlt"
+              height="850"
+              loading="lazy"
+              src="/assets/guide/tb.png"
+              width="375"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guideTbAlt">
+                Trial Balance tab with mapped accounts
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-workpapers">
+          <h2 class="site-section-title" data-i18n="guideWpTitle">
+            Workpapers
+          </h2>
+          <p class="site-prose" data-i18n="guideWpBody">
+            Matching Review Send to Workpapers snapshots Test of Details onto
+            the engagement. File Sign waits on open exception and partial rows.
+            This is not a CaseWare workpaper OS.
+          </p>
+          <ol class="site-prose list-decimal space-y-4 pl-5">
+            <li data-i18n="guideWp1">Open the Workpapers tab.</li>
+            <li data-i18n="guideWp2">
+              On Matching Review, click Send to Workpapers. That snapshots ToD
+              results onto this engagement.
+            </li>
+            <li data-i18n="guideWp3">
+              Sign exception and partial rows, then Sign workpaper.
+            </li>
+            <li data-i18n="guideWp4">
+              File Sign stays blocked while those open rows are unsigned. Demo
+              workpaper rows may show until the first Send.
+            </li>
+          </ol>
+          <figure class="site-figure">
+            <img
+              alt="Workpapers tab with the demo pack list"
+              data-i18n-alt="guideWpAlt"
+              height="850"
+              loading="lazy"
+              src="/assets/guide/workpapers.png"
+              width="375"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guideWpAlt">
+                Workpapers tab with the demo pack list
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-portal">
+          <h2 class="site-section-title" data-i18n="guidePortalTitle">
+            Client Portal
+          </h2>
+          <p class="site-prose" data-i18n="guidePortalBody">
+            The PBC request list is in this pane. It is not a client login wall.
+          </p>
+          <ol class="site-prose list-decimal space-y-4 pl-5">
+            <li data-i18n="guidePortal1">Open the Client Portal tab.</li>
+            <li data-i18n="guidePortal2">
+              Use the PBC request list for files the client should provide.
+            </li>
+            <li data-i18n="guidePortal3">
+              Invoice and bank PDF, image, or JSON can go to Matching Import.
+            </li>
+            <li data-i18n="guidePortal4">
+              Ledgers, confirmations, minutes, trial balance, and .xlsx stay on
+              the list.
+            </li>
+          </ol>
+          <figure class="site-figure">
+            <img
+              alt="Client Portal PBC request list"
+              data-i18n-alt="guidePortalAlt"
+              height="850"
+              loading="lazy"
+              src="/assets/guide/portal.png"
+              width="375"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guidePortalAlt">
+                Client Portal PBC request list
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-chrome">
+          <h2 class="site-section-title" data-i18n="guideChromeTitle">
+            Pane chrome
+          </h2>
+          <p class="site-prose" data-i18n="guideChromeBody">
+            Language, theme, the activity feed, and the first-run cue belong to
+            the DocTrace pane. The thin personality menu on the right (Get
+            Support, Reload, Attach Debugger, Security Info) belongs to Excel.
+            DocTrace cannot hide, restyle, or add items there.
+          </p>
+        </section>
+        <section class="site-section" id="guide-cloud">
+          <h2 class="site-section-title" data-i18n="guideCloudTitle">
+            Optional cloud and Account
+          </h2>
+          <p class="site-prose" data-i18n="guideCloudBody">
+            Matching has no login wall. You can use it without an account. The
+            Account menu appears only if the firm enables the optional API. OTP
+            mail is not live. Files stay on this computer or browser unless you
+            connect optional backup.
+          </p>
+          <figure class="site-figure">
+            <img
+              alt="Account menu. OTP mail is not live. AI assist is not live."
+              data-i18n-alt="guideAccountAlt"
+              height="520"
+              src="/assets/guide/account.png"
+              width="375"
+              loading="lazy"
+            />
+            <figcaption>
+              <p class="leading-relaxed" data-i18n="guideAccountAlt">
+                Account menu. OTP mail is not live. AI assist is not live.
+              </p>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="site-section" id="guide-assist">
+          <h2 class="site-section-title" data-i18n="guideAssistTitle">
+            AI assist
+          </h2>
+          <p class="site-prose" data-i18n="guideAssistBody">
+            AI assist is not live. Matching still works. DocTrace is not an LLM
+            extractor.
+          </p>
+        </section>
+        <section class="site-section site-section-muted" id="guide-local">
+          <h2 class="site-section-title" data-i18n="guideLocalTitle">
+            Local sideload
+          </h2>
+          <p class="site-prose">
+            <span data-i18n="guideLocalBody"
+              >On this machine only: load manifest.xml in Excel Desktop. Local
+              SupportUrl needs npm run dev running:</span
+            >
+            <a href="https://127.0.0.1:3000/support.html"
+              >https://127.0.0.1:3000/support.html</a
+            >
+          </p>
+          <p class="site-guide-after">
+            <a href="/" data-i18n="guideAfterHome">Home</a>
+            <a href="/support.html" data-i18n="navSupport">Support</a>
+            <a href="/taskpane.html" data-i18n="ctaPane">Add-in preview</a>
+          </p>
+        </section>
+      </div>
     </main>
     <footer
       class="border-rule mt-auto flex flex-col gap-3 border-t px-6 py-3 sm:px-10"
@@ -354,7 +685,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

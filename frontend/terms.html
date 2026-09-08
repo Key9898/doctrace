@@ -14,6 +14,17 @@
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
   <body
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -196,44 +208,88 @@
       </div>
     </header>
     <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="termsKicker"></p>
-      <h1 class="site-title" data-i18n="termsTitle"></h1>
-      <p class="site-lead" data-i18n="termsLead"></p>
+      <p class="site-kicker" data-i18n="termsKicker">Terms</p>
+      <h1 class="site-title" data-i18n="termsTitle">Terms of use</h1>
+      <p class="site-lead" data-i18n="termsLead">
+        DocTrace is an Excel Test of Details add-in. It is not legal advice. It
+        is not an audit opinion.
+      </p>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="terms1Title"></h2>
-        <p class="site-prose" data-i18n="terms1Body"></p>
+        <h2 class="site-section-title" data-i18n="terms1Title">
+          A tool, not an opinion
+        </h2>
+        <p class="site-prose" data-i18n="terms1Body">
+          Matching and logs assist work. They are not an audit opinion, ISA
+          certification, or a DataSnipper substitute.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsLicenseTitle"></h2>
-        <p class="site-prose" data-i18n="termsLicenseBody"></p>
+        <h2 class="site-section-title" data-i18n="termsLicenseTitle">
+          License
+        </h2>
+        <p class="site-prose" data-i18n="termsLicenseBody">
+          You may use the DocTrace Excel add-in for your audit work. You may not
+          present it as another vendor's product or as IAASB certification.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="terms2Title"></h2>
-        <p class="site-prose" data-i18n="terms2Body"></p>
+        <h2 class="site-section-title" data-i18n="terms2Title">Local-first</h2>
+        <p class="site-prose" data-i18n="terms2Body">
+          Your workbook and files stay in your environment. Cloud paths exist
+          only if you enable the optional API.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsUseTitle"></h2>
-        <p class="site-prose" data-i18n="termsUseBody"></p>
+        <h2 class="site-section-title" data-i18n="termsUseTitle">
+          Acceptable use
+        </h2>
+        <p class="site-prose" data-i18n="termsUseBody">
+          Use it for your audit work. Do not reverse-engineer the add-in or use
+          another person's account without permission. Do not present Matching
+          output as an audit opinion.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsWarrantyTitle"></h2>
-        <p class="site-prose" data-i18n="termsWarrantyBody"></p>
+        <h2 class="site-section-title" data-i18n="termsWarrantyTitle">
+          No warranty
+        </h2>
+        <p class="site-prose" data-i18n="termsWarrantyBody">
+          The add-in is provided without warranty. You keep workbook backups.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsLiabilityTitle"></h2>
-        <p class="site-prose" data-i18n="termsLiabilityBody"></p>
+        <h2 class="site-section-title" data-i18n="termsLiabilityTitle">
+          Limitation of liability
+        </h2>
+        <p class="site-prose" data-i18n="termsLiabilityBody">
+          To the extent the law allows, DocTrace is provided as-is. We are not
+          liable for lost workbooks, a wrong match, or host downtime. The
+          auditor remains responsible for evidence and documentation.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsPublisherTitle"></h2>
-        <p class="site-prose" data-i18n="termsPublisherBody"></p>
+        <h2 class="site-section-title" data-i18n="termsPublisherTitle">
+          Publisher
+        </h2>
+        <p class="site-prose" data-i18n="termsPublisherBody">
+          Studio Next Steps publishes this site and add-in. Governing law is not
+          stated until the customer agrees it.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="termsChangesTitle"></h2>
-        <p class="site-prose" data-i18n="termsChangesBody"></p>
+        <h2 class="site-section-title" data-i18n="termsChangesTitle">
+          Changes to these terms
+        </h2>
+        <p class="site-prose" data-i18n="termsChangesBody">
+          This page may be updated. Governing law or a signed contract will
+          replace this text when the customer agrees it.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="terms3Title"></h2>
-        <p class="site-prose" data-i18n="terms3Body"></p>
+        <h2 class="site-section-title" data-i18n="terms3Title">Contact</h2>
+        <p class="site-prose" data-i18n="terms3Body">
+          General questions. This mailbox is not live:
+        </p>
         <p class="mt-4 font-mono text-sm">
           <a class="text-tick underline" href="mailto:support@example.com"
             >support@example.com</a
@@ -248,7 +304,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

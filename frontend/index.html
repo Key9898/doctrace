@@ -14,6 +14,17 @@
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
   <body data-page="landing" class="bg-paper text-ink antialiased">
@@ -21,9 +32,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
+      >Skip to content</a
     >
-      Skip to content
-    </a>
     <div class="lg:grid lg:grid-cols-[3rem_minmax(0,1fr)]">
       <aside
         class="border-rule text-tick hidden items-center justify-center border-r font-mono text-[0.7rem] tracking-[0.35em] lg:sticky lg:top-0 lg:z-10 lg:flex lg:h-svh lg:self-start"
@@ -212,26 +222,39 @@
               <p
                 class="text-tick mb-4 font-mono text-xs tracking-[0.28em] uppercase"
                 data-i18n="kicker"
-              ></p>
+              >
+                Excel task pane · Test of Details
+              </p>
               <h1
                 class="max-w-xl text-4xl leading-[1.15] font-semibold tracking-tight sm:text-5xl"
                 data-i18n="heroLead"
-              ></h1>
+              >
+                Match sample rows to invoices and bank support in Excel.
+              </h1>
               <p
                 class="mt-6 max-w-prose text-lg leading-relaxed"
                 data-i18n="heroBody"
-              ></p>
+              >
+                An Excel add-in for auditors and associates doing tests of
+                details — commonly expense and accounts payable. Capture the
+                sample, import evidence, match, snip the source page, and write
+                the trail back to the workbook. Matching works with no account.
+                Files stay on this computer or browser unless you connect
+                optional cloud.
+              </p>
               <div class="mt-10 flex flex-wrap gap-3">
                 <a
                   class="bg-ink text-wash px-5 py-3 text-sm"
                   href="/guide.html"
                   data-i18n="ctaSupport"
-                ></a>
+                  >How to open in Excel</a
+                >
                 <a
                   class="border-ink border px-5 py-3 text-sm"
                   href="/taskpane.html"
                   data-i18n="ctaPane"
-                ></a>
+                  >Add-in preview</a
+                >
               </div>
             </div>
             <div
@@ -241,14 +264,14 @@
               <div
                 class="text-tick grid grid-cols-1 gap-2 border-b border-dashed pb-3 text-xs tracking-widest sm:grid-cols-3"
               >
-                <span data-i18n="colA"></span>
-                <span data-i18n="colB"></span>
-                <span data-i18n="colC"></span>
+                <span data-i18n="colA">A</span>
+                <span data-i18n="colB">B</span>
+                <span data-i18n="colC">C</span>
               </div>
               <div class="grid grid-cols-1 gap-2 pt-3 sm:grid-cols-3">
-                <span data-i18n="colSample"></span>
-                <span data-i18n="colEvidence"></span>
-                <span data-i18n="colTrace"></span>
+                <span data-i18n="colSample">Sample rows</span>
+                <span data-i18n="colEvidence">Evidence</span>
+                <span data-i18n="colTrace">Evidence trail</span>
               </div>
             </div>
           </section>
@@ -256,36 +279,54 @@
             <h2
               class="font-mono text-xs tracking-[0.28em] uppercase"
               data-i18n="doesTitle"
-            ></h2>
+            >
+              What it does
+            </h2>
             <ol class="divide-rule mt-8 divide-y">
               <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
                 <span class="text-tick font-mono text-sm">01</span>
                 <div>
-                  <h3 class="text-xl font-semibold" data-i18n="does1Title"></h3>
+                  <h3 class="text-xl font-semibold" data-i18n="does1Title">
+                    Sample and evidence
+                  </h3>
                   <p
                     class="mt-2 max-w-prose leading-relaxed"
                     data-i18n="does1Body"
-                  ></p>
+                  >
+                    Take a sample range from Excel. Import invoices and bank
+                    support as PDF, image, or JSON. If a PDF has no selectable
+                    text, the add-in can read the page on this device.
+                  </p>
                 </div>
               </li>
               <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
                 <span class="text-tick font-mono text-sm">02</span>
                 <div>
-                  <h3 class="text-xl font-semibold" data-i18n="does2Title"></h3>
+                  <h3 class="text-xl font-semibold" data-i18n="does2Title">
+                    Match and snip
+                  </h3>
                   <p
                     class="mt-2 max-w-prose leading-relaxed"
                     data-i18n="does2Body"
-                  ></p>
+                  >
+                    Match rows to evidence and snip the source page so a
+                    reviewer can see the link.
+                  </p>
                 </div>
               </li>
               <li class="grid gap-3 py-8 sm:grid-cols-[8rem_minmax(0,1fr)]">
                 <span class="text-tick font-mono text-sm">03</span>
                 <div>
-                  <h3 class="text-xl font-semibold" data-i18n="does3Title"></h3>
+                  <h3 class="text-xl font-semibold" data-i18n="does3Title">
+                    Write to the workbook
+                  </h3>
                   <p
                     class="mt-2 max-w-prose leading-relaxed"
                     data-i18n="does3Body"
-                  ></p>
+                  >
+                    Mapped columns and a hidden log sheet stay in the workbook.
+                    Windows, Mac, and Excel on the web where Office allows.
+                  </p>
                 </div>
               </li>
             </ol>
@@ -297,32 +338,52 @@
               <h2
                 class="font-mono text-xs tracking-[0.28em] uppercase"
                 data-i18n="notTitle"
-              ></h2>
+              >
+                What it is not
+              </h2>
               <ul class="mt-6 max-w-prose space-y-3 leading-relaxed">
-                <li data-i18n="not1"></li>
-                <li data-i18n="not2"></li>
-                <li data-i18n="not3"></li>
-                <li data-i18n="not4"></li>
-                <li data-i18n="not5"></li>
+                <li data-i18n="not1">Not DataSnipper-identical.</li>
+                <li data-i18n="not2">
+                  Not ISA-certified. The IAASB does not certify software.
+                </li>
+                <li data-i18n="not3">Not an LLM extractor.</li>
+                <li data-i18n="not4">
+                  No login wall. Matching works without an account.
+                </li>
+                <li data-i18n="not5">
+                  Matching and logs assist tests of details (ISA 330). They are
+                  not an audit opinion. The auditor remains responsible for
+                  sufficient appropriate evidence (ISA 500) and documentation
+                  (ISA 230).
+                </li>
               </ul>
             </div>
             <div class="lg:border-rule lg:border-l lg:pl-10">
               <h2
                 class="font-mono text-xs tracking-[0.28em] uppercase"
                 data-i18n="dataTitle"
-              ></h2>
-              <p
-                class="mt-6 max-w-prose leading-relaxed"
-                data-i18n="dataBody"
-              ></p>
+              >
+                Where your files stay
+              </h2>
+              <p class="mt-6 max-w-prose leading-relaxed" data-i18n="dataBody">
+                Workbook and evidence stay on this computer or browser unless
+                you connect optional cloud. Matching does not require an
+                account.
+              </p>
               <h2
                 class="mt-10 font-mono text-xs tracking-[0.28em] uppercase"
                 data-i18n="platformsTitle"
-              ></h2>
+              >
+                Where to run it
+              </h2>
               <p
                 class="mt-6 max-w-prose leading-relaxed"
                 data-i18n="platformsBody"
-              ></p>
+              >
+                Excel is the real product. When Excel is not open, Add-in
+                preview runs in the browser. How to open it is on Getting
+                started.
+              </p>
             </div>
           </section>
         </main>
@@ -333,10 +394,9 @@
             class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
           >
             <div class="text-center sm:text-left">
-              <p
-                class="font-mono text-xs tracking-wide"
-                data-i18n="footerNote"
-              ></p>
+              <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+                DocTrace · Excel-native Test of Details
+              </p>
               <p class="font-mono text-xs tracking-wide">
                 &copy; <span data-footer-year></span>
                 <span data-i18n="footerPowered"

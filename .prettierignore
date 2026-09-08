@@ -11,3 +11,4 @@ coverage/
 .office-addin-debugging/
 *.log
 lint_output.txt
+docs/sessions/

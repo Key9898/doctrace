@@ -14,6 +14,17 @@
       sizes="32x32"
       type="image/png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
     <link href="/site/site.css" rel="stylesheet" />
   </head>
   <body
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -203,17 +215,27 @@
         <p
           class="text-tick mb-4 font-mono text-xs tracking-[0.28em] uppercase"
           data-i18n="authSignInKicker"
-        ></p>
+        >
+          Sign in
+        </p>
         <h1
           class="text-3xl font-semibold tracking-tight"
           data-i18n="authSignInTitle"
-        ></h1>
-        <p class="mt-4 leading-relaxed" data-i18n="authSignInLead"></p>
+        >
+          Sign in
+        </h1>
+        <p class="mt-4 leading-relaxed" data-i18n="authSignInLead">
+          Enter your email to get a one-time code. Matching has no login wall.
+          Excel Desktop does not inherit a Chrome login.
+        </p>
         <p
           class="mt-6 hidden leading-relaxed"
           data-auth-off
           data-i18n="authCloudOff"
-        ></p>
+        >
+          The cloud API is off. This page does not fake a live login. Matching
+          still works.
+        </p>
         <form
           class="mt-8 grid gap-4"
           data-auth-on
@@ -221,7 +243,7 @@
           data-otp-intent="login"
         >
           <label class="grid gap-1 text-sm">
-            <span data-i18n="authEmail"></span>
+            <span data-i18n="authEmail">Email</span>
             <input
               autocomplete="email"
               class="border-rule bg-wash border px-3 py-2"
@@ -234,7 +256,9 @@
             class="bg-ink text-wash px-4 py-2 text-sm"
             data-i18n="authSendCode"
             type="submit"
-          ></button>
+          >
+            Send code
+          </button>
         </form>
         <p class="mt-4 text-sm" data-auth-status role="status"></p>
         <p class="mt-8 text-sm">
@@ -242,7 +266,8 @@
             class="text-tick underline"
             data-i18n="authNeedAccount"
             href="/sign-up.html"
-          ></a>
+            >Need an account? Sign up</a
+          >
         </p>
       </div>
     </main>
@@ -253,7 +278,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

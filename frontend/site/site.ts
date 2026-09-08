@@ -67,6 +67,10 @@ function apply(locale: SiteLocale): void {
     document.title = strings.faqTitle;
   } else if (page === "contact") {
     document.title = strings.contactTitle;
+  } else if (page === "not-found") {
+    document.title = strings.error404Title;
+  } else if (page === "server-error") {
+    document.title = strings.error500Title;
   }
 
   document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
@@ -503,6 +507,86 @@ function bindContactForm(): void {
   });
 }
 
+function bindGuideToc(): void {
+  if (document.body.dataset.page !== "guide") {
+    return;
+  }
+
+  const ids = [
+    "guide-excel",
+    "guide-engagements",
+    "guide-matching",
+    "guide-select",
+    "guide-import",
+    "guide-match",
+    "guide-snip",
+    "guide-review",
+    "guide-tb",
+    "guide-workpapers",
+    "guide-portal",
+    "guide-chrome",
+    "guide-cloud",
+    "guide-assist",
+    "guide-local",
+  ] as const;
+  const links = [
+    ...document.querySelectorAll<HTMLAnchorElement>(".site-toc a[href^='#']"),
+  ];
+  const sections = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el instanceof HTMLElement);
+  if (links.length === 0 || sections.length === 0) {
+    return;
+  }
+
+  const setCurrent = (id: string): void => {
+    links.forEach((link) => {
+      if (link.hash === `#${id}`) {
+        link.setAttribute("aria-current", "true");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      const top = visible[0];
+      if (top?.target.id) {
+        setCurrent(top.target.id);
+      }
+    },
+    { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5] },
+  );
+  sections.forEach((section) => observer.observe(section));
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => {
+      const id = link.hash.replace(/^#/, "");
+      if ((ids as readonly string[]).includes(id)) {
+        setCurrent(id);
+      }
+    });
+  });
+
+  window.addEventListener("hashchange", () => {
+    const id = window.location.hash.replace(/^#/, "");
+    if ((ids as readonly string[]).includes(id)) {
+      setCurrent(id);
+    }
+  });
+
+  const hashId = window.location.hash.replace(/^#/, "");
+  if ((ids as readonly string[]).includes(hashId)) {
+    setCurrent(hashId);
+  } else {
+    setCurrent("guide-excel");
+  }
+}
+
 const initial = readLocale();
 apply(initial);
 bindFooterYear();
@@ -514,6 +598,7 @@ bindRequestForm();
 bindVerifyForm();
 bindContactForm();
 bindFaqAccordion();
+bindGuideToc();
 
 document.querySelectorAll("[data-locale-toggle]").forEach((el) => {
   el.addEventListener("click", () => {

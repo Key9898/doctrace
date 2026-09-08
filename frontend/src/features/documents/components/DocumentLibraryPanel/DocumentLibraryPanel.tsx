@@ -33,6 +33,7 @@ import type {
 import { formatDate } from "@/lib/formatters";
 import type { TranslationKey } from "@/lib/i18n/translations";
 import { useI18n } from "@/lib/i18n/useI18n";
+import { PaneSkeleton } from "@/features/shell/components/PaneSkeleton/PaneSkeleton";
 import {
   canDownloadEvidence,
   isStoredCopyHint,
@@ -225,6 +226,12 @@ export function DocumentLibraryPanel({
           </div>
         </div>
       </div>
+
+      {importBusy ? (
+        <div className="mt-6">
+          <PaneSkeleton kind="rows" label={t("import.busySkeletonAria")} />
+        </div>
+      ) : null}
 
       <div className="mt-8 grid gap-6">
         <DocumentGroup

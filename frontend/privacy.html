@@ -14,6 +14,17 @@
       sizes="32x32"
       href="/assets/favicon-32.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap"
+    />
     <link rel="stylesheet" href="/site/site.css" />
   </head>
   <body
@@ -24,7 +35,8 @@
       class="bg-ink text-wash sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2"
       href="#content"
       data-i18n="skipToContent"
-    ></a>
+      >Skip to content</a
+    >
     <div class="h-px w-full" data-header-sentinel aria-hidden="true"></div>
     <header
       class="border-rule bg-paper sticky top-0 z-30 gap-4 border-b px-4 py-4 sm:px-10"
@@ -196,60 +208,129 @@
       </div>
     </header>
     <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="privacyKicker"></p>
-      <h1 class="site-title" data-i18n="privacyTitle"></h1>
-      <p class="site-lead" data-i18n="privacyLead"></p>
+      <p class="site-kicker" data-i18n="privacyKicker">Privacy</p>
+      <h1 class="site-title" data-i18n="privacyTitle">Privacy policy</h1>
+      <p class="site-lead" data-i18n="privacyLead">
+        This notice covers the DocTrace Excel add-in and these public pages. It
+        is separate from the terms of use. It is a data-flow notice, not a
+        counsel-reviewed policy.
+      </p>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyPublisherTitle"></h2>
-        <p class="site-prose" data-i18n="privacyPublisherBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyPublisherTitle">
+          Who publishes it
+        </h2>
+        <p class="site-prose" data-i18n="privacyPublisherBody">
+          Studio Next Steps publishes this site and the DocTrace add-in. The
+          customer firm's legal name will appear here when provided.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyCollectTitle"></h2>
-        <p class="site-prose" data-i18n="privacyCollectBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyCollectTitle">
+          What the public site stores
+        </h2>
+        <p class="site-prose" data-i18n="privacyCollectBody">
+          This site remembers your language in this browser. These pages do not
+          upload workbooks.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyCookiesTitle"></h2>
-        <p class="site-prose" data-i18n="privacyCookiesBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyCookiesTitle">
+          Cookies and this browser
+        </h2>
+        <p class="site-prose" data-i18n="privacyCookiesBody">
+          This site remembers your language choice in this browser (cookies or
+          localStorage). If optional cloud is on, a session token may also be
+          stored here. There is no advertising cookie stack. There is no
+          separate cookie page.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyUseTitle"></h2>
-        <p class="site-prose" data-i18n="privacyUseBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyUseTitle">
+          What the Excel add-in stores
+        </h2>
+        <p class="site-prose" data-i18n="privacyUseBody">
+          Workbook and evidence stay on this computer or browser unless you
+          connect optional cloud. The add-in does not send those files to a
+          DocTrace server by default.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyCloudTitle"></h2>
-        <p class="site-prose" data-i18n="privacyCloudBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyCloudTitle">
+          Optional cloud
+        </h2>
+        <p class="site-prose" data-i18n="privacyCloudBody">
+          If you enable it, this is account email plus fail-closed backup and
+          mail. OTP mail is not live.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyProcessorsTitle"></h2>
-        <p class="site-prose" data-i18n="privacyProcessorsBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyProcessorsTitle">
+          Who processes data
+        </h2>
+        <p class="site-prose" data-i18n="privacyProcessorsBody">
+          The public site is hosted on Vercel. If you enable optional cloud,
+          backup may use R2 and mail may use Brevo. Those paths exist only when
+          you turn them on.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyHostTitle"></h2>
-        <p class="site-prose" data-i18n="privacyHostBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyHostTitle">Hosting</h2>
+        <p class="site-prose" data-i18n="privacyHostBody">
+          The public host may process request logs such as IP addresses. This
+          page does not claim that nothing ever leaves the device.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyExcelHostTitle"></h2>
-        <p class="site-prose" data-i18n="privacyExcelHostBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyExcelHostTitle">
+          Microsoft and Excel
+        </h2>
+        <p class="site-prose" data-i18n="privacyExcelHostBody">
+          The Excel host (Windows, Mac, Excel on the web) belongs to Office.
+          DocTrace cannot hide or restyle the personality menu or host logs.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyRetentionTitle"></h2>
-        <p class="site-prose" data-i18n="privacyRetentionBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyRetentionTitle">
+          How long we keep it
+        </h2>
+        <p class="site-prose" data-i18n="privacyRetentionBody">
+          Local workbook and evidence stay on your device until you delete them.
+          Optional cloud backup stays until you delete it or the agreement ends.
+          Public host request logs follow the host's policy.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyChildrenTitle"></h2>
-        <p class="site-prose" data-i18n="privacyChildrenBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyChildrenTitle">
+          Children
+        </h2>
+        <p class="site-prose" data-i18n="privacyChildrenBody">
+          DocTrace is for audit teams. It is not directed at children.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyNotTitle"></h2>
-        <p class="site-prose" data-i18n="privacyNotBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyNotTitle">
+          What we do not do
+        </h2>
+        <p class="site-prose" data-i18n="privacyNotBody">
+          DocTrace is not an LLM product. Files are not used as training data.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyRightsTitle"></h2>
-        <p class="site-prose" data-i18n="privacyRightsBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyRightsTitle">
+          Your rights
+        </h2>
+        <p class="site-prose" data-i18n="privacyRightsBody">
+          You may ask to access, correct, or delete personal data we hold.
+          Requests will be handled when a live mailbox exists.
+        </p>
       </section>
       <section class="site-section">
-        <h2 class="site-section-title" data-i18n="privacyContactTitle"></h2>
-        <p class="site-prose" data-i18n="privacyContactBody"></p>
+        <h2 class="site-section-title" data-i18n="privacyContactTitle">
+          Contact
+        </h2>
+        <p class="site-prose" data-i18n="privacyContactBody">
+          Privacy questions. This mailbox is not live:
+        </p>
         <p class="mt-4 font-mono text-sm">
           <a class="text-tick underline" href="mailto:privacy@example.com"
             >privacy@example.com</a
@@ -264,7 +345,9 @@
         class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="text-center sm:text-left">
-          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote"></p>
+          <p class="font-mono text-xs tracking-wide" data-i18n="footerNote">
+            DocTrace · Excel-native Test of Details
+          </p>
           <p class="font-mono text-xs tracking-wide">
             &copy; <span data-footer-year></span>
             <span data-i18n="footerPowered"

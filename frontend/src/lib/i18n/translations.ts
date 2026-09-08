@@ -7,6 +7,11 @@ export type TranslationKey =
   | "app.browserPreview"
   | "app.website"
   | "app.booting"
+  | "app.bootSkeletonAria"
+  | "app.crashTitle"
+  | "app.crashLead"
+  | "app.crashReload"
+  | "app.crashAria"
   | "app.description"
   | "app.selection"
   | "app.documents"
@@ -180,6 +185,7 @@ export type TranslationKey =
   | "results.inspectTrace"
   | "results.noResults"
   | "results.noResultsDescription"
+  | "results.busySkeletonAria"
   | "results.clearlyTrivial"
   | "results.belowPerformance"
   | "results.materialException"
@@ -292,6 +298,7 @@ export type TranslationKey =
   | "import.browseBank"
   | "import.jsonSupportTitle"
   | "import.jsonSupportDesc"
+  | "import.busySkeletonAria"
   | "import.invoiceLibrary"
   | "import.bankLibrary"
   | "import.pageImported"
@@ -505,6 +512,7 @@ export type TranslationKey =
   | "app.next"
   | "viewer.liveInspection"
   | "viewer.renderingPdf"
+  | "viewer.busySkeletonAria"
   | "viewer.detectedMetadata"
   | "viewer.invoiceNum"
   | "viewer.amountVal"
@@ -758,6 +766,12 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.browserPreview": "Browser preview",
     "app.website": "Website",
     "app.booting": "စတင်နေသည်",
+    "app.bootSkeletonAria": "Office စတင်နေဆဲဖြစ်သည်",
+    "app.crashTitle": "တစ်ခုခု မှားယွင်းသွားသည်",
+    "app.crashLead":
+      "Workbook ထဲတွင် Matching ကျန်ရှိနိုင်သည်။ ဤ pane ကို reload လုပ်ပါ။",
+    "app.crashReload": "Pane ကို reload လုပ်ရန်",
+    "app.crashAria": "Task pane တွင် အမှား ဖြစ်ပွားသည်",
     "app.description":
       "Excel အတွင်း Substantive Test of Details စစ်ဆေးမှုများအတွက် အချက်အလက် တိုက်ဆိုင်စစ်ဆေးပေးသည့် စနစ် ဖြစ်သည်။",
     "app.selection": "စာရင်းရွေးချယ်မှု",
@@ -958,6 +972,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "results.noResults": "ရလဒ် မရှိသေးပါ",
     "results.noResultsDescription":
       "စာရင်းဇယား တိုက်ဆိုင်စစ်ဆေးမှုကို Step 3 တွင် လုပ်ဆောင်ပြီး စာရင်းစစ်ဆေးမှုမှတ်တမ်းများ ထုတ်ယူပါ။",
+    "results.busySkeletonAria": "တိုက်ဆိုင်စစ်ဆေးနေသည်",
     "results.clearlyTrivial": "ဂရုမပြုလောက်သော လွဲမှားမှု (Clearly Trivial)",
     "results.belowPerformance":
       "လုပ်ငန်းဆောင်ရွက်မှု အရေးကြီးမှုအဆင့်အောက် လွဲမှားမှု (Below Performance)",
@@ -1081,6 +1096,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "import.jsonSupportTitle": "JSON သက်သေခံချက် ပံ့ပိုးမှုစနစ်",
     "import.jsonSupportDesc":
       "DocTrace သည် သက်သေခံစာရွက်စာတမ်းမျိုးစုံ ပါဝင်သော JSON ဖိုင်များကို အလိုအလျောက် တင်သွင်းပေးနိုင်သည်။ စတင်ရန် Browse မှတဆင့် ရွေးချယ်ပါ။",
+    "import.busySkeletonAria": "စာရွက်စာတမ်းများ တင်သွင်းနေသည်",
     "import.invoiceLibrary": "ပြေစာ (Invoice) စာကြည့်တိုက်",
     "import.bankLibrary": "ဘဏ်ရှင်းတမ်း (Bank Statement) စာကြည့်တိုက်",
     "import.pageImported": "စာမျက်နှာ - တင်သွင်းပြီး",
@@ -1335,6 +1351,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.next": "ရှေ့သို့",
     "viewer.liveInspection": "တိုက်ရိုက်စစ်ဆေးဆဲ",
     "viewer.renderingPdf": "PDF ဖိုင်ကို ပြသရန် ပြင်ဆင်နေသည်...",
+    "viewer.busySkeletonAria": "PDF ပြသရန် ပြင်ဆင်နေသည်",
     "viewer.detectedMetadata": "အလိုအလျောက်ဖတ်ရှိထားသော Metadata",
     "viewer.invoiceNum": "ပြေစာနံပါတ်",
     "viewer.amountVal": "ပမာဏ",
@@ -1661,6 +1678,12 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.browserPreview": "Browser preview",
     "app.website": "Website",
     "app.booting": "Booting",
+    "app.bootSkeletonAria": "Office is still starting",
+    "app.crashTitle": "Something went wrong",
+    "app.crashLead":
+      "Matching in the workbook may still be there. Reload this pane.",
+    "app.crashReload": "Reload pane",
+    "app.crashAria": "The task pane hit an error",
     "app.description":
       "Deterministic document matching for Test of Details workflows, built for audit teams working directly in Excel.",
     "app.selection": "Selection",
@@ -1856,6 +1879,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "results.noResults": "No results yet",
     "results.noResultsDescription":
       "Run a document match in Step 3 to generate discrepancies and reviewable audit trails.",
+    "results.busySkeletonAria": "Matching in progress",
     "results.clearlyTrivial": "Clearly Trivial Discrepancy",
     "results.belowPerformance": "Below Performance Materiality",
     "results.materialException": "Material Exception",
@@ -1973,6 +1997,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "import.jsonSupportTitle": "JSON Evidence Support",
     "import.jsonSupportDesc":
       "DocTrace automatically imports multi-document JSON payloads into the matching workflow. Choose your JSON file via Browse to import.",
+    "import.busySkeletonAria": "Importing documents",
     "import.invoiceLibrary": "Invoices Library",
     "import.bankLibrary": "Bank statements Library",
     "import.pageImported": "page(s) - Imported",
@@ -2221,6 +2246,7 @@ const translations: Record<AppLocale, Record<TranslationKey, string>> = {
     "app.next": "Next",
     "viewer.liveInspection": "Live Inspection",
     "viewer.renderingPdf": "Rendering PDF...",
+    "viewer.busySkeletonAria": "Rendering PDF",
     "viewer.detectedMetadata": "Detected Metadata",
     "viewer.invoiceNum": "Invoice",
     "viewer.amountVal": "Amount",

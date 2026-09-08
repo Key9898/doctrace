@@ -102,64 +102,32 @@ export function SelectionPanel({
             </div>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-[2rem] border border-slate-200/60 bg-white/40 shadow-sm backdrop-blur-md dark:border-white/5 dark:bg-white/5">
-            <div className="max-w-full overflow-x-auto">
-              <table className="table-layout-fixed min-w-[950px] divide-y divide-slate-100 text-left text-sm dark:divide-white/5">
-                <thead className="bg-slate-50/50 text-slate-500 dark:bg-white/5 dark:text-slate-400">
-                  <tr>
-                    {selection.columns.map((column, colIdx) => {
-                      const isFirst = colIdx === 0;
-                      return (
-                        <th
-                          className={`px-4 py-4 font-bold tracking-wider whitespace-nowrap uppercase ${
-                            isFirst
-                              ? "sticky left-0 z-10 border-r border-slate-200/60 bg-slate-50/90 dark:border-slate-800 dark:bg-slate-900/95"
-                              : ""
-                          }`}
-                          key={column.id}
-                          scope="col"
-                        >
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-slate-900 dark:text-white">
-                              {column.header}
-                            </span>
-                            <span className="text-[0.65rem] font-bold opacity-60">
-                              {t("selection.col")} {column.letter}
-                            </span>
-                          </div>
-                        </th>
-                      );
-                    })}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                  {selection.rows.slice(0, 5).map((row) => (
-                    <tr
-                      className="group transition-colors hover:bg-slate-50/50 dark:hover:bg-white/5"
-                      key={row.rowNumber}
-                    >
-                      {selection.columns.map((column, colIdx) => {
-                        const isFirst = colIdx === 0;
-                        return (
-                          <td
-                            className={`px-4 py-3 font-medium text-slate-700 dark:text-slate-300 ${
-                              isFirst
-                                ? "sticky left-0 z-10 border-r border-slate-200/60 bg-white/95 group-hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950/95 dark:group-hover:bg-slate-900"
-                                : ""
-                            }`}
-                            key={column.id}
-                          >
-                            {formatCellValue(row.values[column.id])}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="mt-6 flex min-w-0 flex-col gap-2">
+            {selection.rows.slice(0, 5).map((row) => (
+              <article
+                className="flex min-w-0 flex-col gap-1 rounded-xl border border-slate-200/80 bg-white/60 p-3 dark:border-white/10 dark:bg-slate-950/40"
+                key={row.rowNumber}
+              >
+                {selection.columns.map((column) => (
+                  <div
+                    className="flex min-w-0 flex-col gap-0.5"
+                    key={column.id}
+                  >
+                    <span className="text-[0.65rem] font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400">
+                      {column.header}
+                    </span>
+                    <span className="text-[0.65rem] font-bold text-slate-400 opacity-60">
+                      {t("selection.col")} {column.letter}
+                    </span>
+                    <span className="min-w-0 text-sm font-medium break-words text-slate-700 dark:text-slate-300">
+                      {formatCellValue(row.values[column.id])}
+                    </span>
+                  </div>
+                ))}
+              </article>
+            ))}
             {selection.rowCount > 5 && (
-              <div className="border-t border-slate-100 bg-slate-50/30 px-4 py-2 text-center text-[0.65rem] font-bold tracking-widest text-slate-400 uppercase dark:border-white/5 dark:bg-white/5">
+              <div className="px-4 py-2 text-center text-[0.65rem] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">
                 {t("selection.showingSubset").replace(
                   "{rowCount}",
                   String(selection.rowCount),

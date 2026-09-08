@@ -8,7 +8,7 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   filterListingByLead,
@@ -165,6 +165,34 @@ export function TrialBalance({ onApplyTbSampleSelection }: TrialBalanceProps) {
   const [tickedIds, setTickedIds] = useState<Set<string>>(new Set());
   const tbInputRef = useRef<HTMLInputElement>(null);
   const listingInputRef = useRef<HTMLInputElement>(null);
+  const mappingRootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!activeMappingCode) {
+      return;
+    }
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (
+        mappingRootRef.current &&
+        !mappingRootRef.current.contains(event.target as Node)
+      ) {
+        setActiveMappingCode(null);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveMappingCode(null);
+      }
+    };
+
+    window.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [activeMappingCode]);
 
   const { totalDebits, totalCredits, isBalanced } = useMemo(() => {
     let debits = 0;
@@ -398,94 +426,85 @@ export function TrialBalance({ onApplyTbSampleSelection }: TrialBalanceProps) {
           </div>
         </div>
 
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border-collapse text-left text-xs">
-            <thead>
-              <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
-                <th className="px-3 py-2.5 font-bold">{t("tb.colCode")}</th>
-                <th className="px-3 py-2.5 font-bold">
-                  {t("tb.colDescription")}
-                </th>
-                <th className="px-3 py-2.5 text-right font-bold">
-                  {t("tb.colDebit")}
-                </th>
-                <th className="px-3 py-2.5 text-right font-bold">
-                  {t("tb.colCredit")}
-                </th>
-                <th className="px-3 py-2.5 text-center font-bold">
-                  {t("tb.colMapping")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
-              {filteredAccounts.map((account) => {
-                const isMappingActive = activeMappingCode === account.code;
+        <div className="mt-6 flex min-w-0 flex-col gap-2">
+          {filteredAccounts.map((account) => {
+            const isMappingActive = activeMappingCode === account.code;
 
-                return (
-                  <tr
-                    key={account.code}
-                    className="group hover:bg-slate-50/50 dark:hover:bg-slate-900/10"
+            return (
+              <article
+                key={account.code}
+                className="flex min-w-0 flex-col gap-2 rounded-xl border border-slate-200/80 bg-white/60 p-3 dark:border-white/10 dark:bg-slate-950/40"
+              >
+                <div className="flex min-w-0 items-baseline justify-between gap-2">
+                  <span className="shrink-0 font-mono text-[0.65rem] font-bold text-slate-500 dark:text-slate-400">
+                    {account.code}
+                  </span>
+                  <span className="min-w-0 truncate text-xs font-bold text-slate-900 dark:text-white">
+                    {account.description}
+                  </span>
+                </div>
+                <div className="flex min-w-0 justify-between gap-2 text-[0.65rem] font-medium text-slate-700 dark:text-slate-300">
+                  <span>
+                    {t("tb.colDebit")}{" "}
+                    {account.debit > 0 ? formatCurrency(account.debit) : "-"}
+                  </span>
+                  <span>
+                    {t("tb.colCredit")}{" "}
+                    {account.credit > 0 ? formatCurrency(account.credit) : "-"}
+                  </span>
+                </div>
+                <div
+                  className="relative min-w-0"
+                  ref={isMappingActive ? mappingRootRef : undefined}
+                >
+                  <button
+                    aria-expanded={isMappingActive}
+                    aria-haspopup="listbox"
+                    aria-label={t("tb.colMapping")}
+                    className="flex w-full min-w-0 items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-left text-[0.65rem] font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900"
+                    onClick={() =>
+                      setActiveMappingCode(
+                        isMappingActive ? null : account.code,
+                      )
+                    }
+                    type="button"
                   >
-                    <td className="px-3 py-3 font-mono font-bold text-slate-500 dark:text-slate-400">
-                      {account.code}
-                    </td>
-                    <td className="px-3 py-3 font-bold text-slate-900 dark:text-white">
-                      {account.description}
-                    </td>
-                    <td className="px-3 py-3 text-right font-mono font-medium text-slate-700 dark:text-slate-300">
-                      {account.debit > 0 ? formatCurrency(account.debit) : "-"}
-                    </td>
-                    <td className="px-3 py-3 text-right font-mono font-medium text-slate-700 dark:text-slate-300">
-                      {account.credit > 0
-                        ? formatCurrency(account.credit)
-                        : "-"}
-                    </td>
-                    <td className="px-3 py-2 text-center">
-                      <div className="relative inline-block text-left">
-                        <button
-                          onClick={() =>
-                            setActiveMappingCode(
-                              isMappingActive ? null : account.code,
-                            )
-                          }
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-[0.65rem] font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900"
-                          type="button"
-                        >
-                          <ArrowRightLeft className="h-3 w-3 text-sky-500" />
-                          <span>{account.mapping}</span>
-                          <ChevronDown className="h-3 w-3 text-slate-400" />
-                        </button>
-
-                        {isMappingActive && (
-                          <div className="absolute right-0 bottom-full z-20 mb-2 w-48 rounded-xl border border-white/80 bg-white/95 p-1 shadow-xl backdrop-blur-md dark:border-white/5 dark:bg-slate-900/95">
-                            <ul className="max-h-40 overflow-y-auto py-1 text-[0.7rem] font-bold">
-                              {TB_STANDARD_GROUPS.map((group) => (
-                                <li key={group}>
-                                  <button
-                                    onClick={() =>
-                                      handleUpdateMapping(account.code, group)
-                                    }
-                                    className={`w-full rounded-lg px-2.5 py-1.5 text-left transition-colors ${
-                                      account.mapping === group
-                                        ? "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400"
-                                        : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
-                                    }`}
-                                    type="button"
-                                  >
-                                    {group}
-                                  </button>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    <ArrowRightLeft className="h-3 w-3 shrink-0 text-sky-500" />
+                    <span className="min-w-0 flex-1 truncate">
+                      {account.mapping}
+                    </span>
+                    <ChevronDown className="h-3 w-3 shrink-0 text-slate-400" />
+                  </button>
+                  {isMappingActive ? (
+                    <div className="absolute top-full right-0 left-0 z-20 mt-1 rounded-xl border border-white/80 bg-white/95 p-1 shadow-xl dark:border-white/5 dark:bg-slate-900/95">
+                      <ul
+                        className="max-h-40 overflow-y-auto py-1 text-[0.7rem] font-bold"
+                        role="listbox"
+                      >
+                        {TB_STANDARD_GROUPS.map((group) => (
+                          <li key={group}>
+                            <button
+                              onClick={() =>
+                                handleUpdateMapping(account.code, group)
+                              }
+                              className={`w-full rounded-lg px-2.5 py-1.5 text-left ${
+                                account.mapping === group
+                                  ? "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400"
+                                  : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
+                              }`}
+                              type="button"
+                            >
+                              {group}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -541,43 +560,32 @@ export function TrialBalance({ onApplyTbSampleSelection }: TrialBalanceProps) {
                 {t("tb.sendToMatching")}
               </button>
             </div>
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full border-collapse text-left text-xs">
-                <thead>
-                  <tr className="border-b border-slate-200 text-slate-500 dark:border-slate-800">
-                    <th className="px-3 py-2.5 font-bold"> </th>
-                    <th className="px-3 py-2.5 font-bold">
-                      {t("tb.colInvoice")}
-                    </th>
-                    <th className="px-3 py-2.5 font-bold">{t("tb.colDate")}</th>
-                    <th className="px-3 py-2.5 text-right font-bold">
-                      {t("tb.colAmount")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
-                  {population.map((row) => (
-                    <tr key={row.id}>
-                      <td className="px-3 py-2">
-                        <input
-                          checked={tickedIds.has(row.id)}
-                          onChange={() => toggleTick(row.id)}
-                          type="checkbox"
-                        />
-                      </td>
-                      <td className="px-3 py-2 font-mono font-bold text-slate-900 dark:text-white">
-                        {row.invoice}
-                      </td>
-                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
-                        {row.date}
-                      </td>
-                      <td className="px-3 py-2 text-right font-mono text-slate-700 dark:text-slate-300">
-                        {formatCurrency(row.amount)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="mt-4 flex min-w-0 flex-col gap-2">
+              {population.map((row) => (
+                <article
+                  key={row.id}
+                  className="flex min-w-0 flex-col gap-1 rounded-xl border border-slate-200/80 bg-white/60 p-3 dark:border-white/10 dark:bg-slate-950/40"
+                >
+                  <div className="flex min-w-0 items-center gap-2">
+                    <input
+                      aria-label={row.invoice}
+                      checked={tickedIds.has(row.id)}
+                      className="shrink-0"
+                      onChange={() => toggleTick(row.id)}
+                      type="checkbox"
+                    />
+                    <span className="min-w-0 truncate font-mono text-xs font-bold text-slate-900 dark:text-white">
+                      {row.invoice}
+                    </span>
+                  </div>
+                  <div className="flex min-w-0 justify-between gap-2 text-[0.65rem] text-slate-700 dark:text-slate-300">
+                    <span>{row.date}</span>
+                    <span className="font-mono">
+                      {formatCurrency(row.amount)}
+                    </span>
+                  </div>
+                </article>
+              ))}
             </div>
           </>
         )}

@@ -14,7 +14,6 @@ import {
 import {
   ChevronLeft,
   ChevronRight,
-  Loader2,
   Search,
   Eye,
   FileText,
@@ -46,6 +45,7 @@ import {
 import { SnipToolbar } from "./SnipToolbar";
 import { jsonDocumentPreviewText } from "@/features/documents/services/json-preview";
 import { useI18n } from "@/lib/i18n/useI18n";
+import { PaneSkeleton } from "@/features/shell/components/PaneSkeleton/PaneSkeleton";
 
 const PdfTextLayer = lazy(() =>
   import("./PdfTextLayer").then((module) => ({
@@ -467,13 +467,11 @@ export function ViewerPane({
         ) : activeDocument.sourceKind === "pdf" ? (
           <div className="relative min-h-[300px] bg-slate-200/50 p-4">
             {isLoading && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/40 backdrop-blur-md">
-                <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="h-8 w-8 animate-spin text-sky-600" />
-                  <span className="text-xs font-bold tracking-widest text-slate-600 uppercase">
-                    {t("viewer.renderingPdf")}
-                  </span>
-                </div>
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/70 p-4">
+                <PaneSkeleton
+                  kind="viewer"
+                  label={t("viewer.busySkeletonAria")}
+                />
               </div>
             )}
             <div

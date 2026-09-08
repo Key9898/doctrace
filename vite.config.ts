@@ -107,6 +107,8 @@ export default defineConfig(async ({ command }) => {
           guide: path.resolve(__dirname, "frontend/guide.html"),
           faq: path.resolve(__dirname, "frontend/faq.html"),
           contact: path.resolve(__dirname, "frontend/contact.html"),
+          notFound: path.resolve(__dirname, "frontend/404.html"),
+          serverError: path.resolve(__dirname, "frontend/500.html"),
         },
       },
     },
