@@ -97,6 +97,12 @@
 
   .site-toc {
     @apply border-rule bg-wash mb-10 border p-3;
+    scrollbar-width: none;
+  }
+
+  .site-toc::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 
   .site-toc-label {
@@ -147,7 +153,17 @@
   }
 
   .site-hub-card-title {
-    @apply text-lg font-semibold;
+    @apply flex items-baseline gap-3 text-lg font-semibold;
+  }
+
+  .site-hub-card-title::after {
+    content: "\2192";
+    @apply text-ink shrink-0 font-mono text-sm font-normal;
+  }
+
+  .site-hub-card:hover .site-hub-card-title > span,
+  .site-hub-card:focus-visible .site-hub-card-title > span {
+    @apply underline;
   }
 
   .site-hub-actions {
@@ -175,12 +191,37 @@
     @apply mt-3 leading-relaxed;
   }
 
+  .site-link {
+    @apply text-ink no-underline;
+  }
+
+  .site-link:hover,
+  .site-link:focus-visible {
+    @apply underline;
+  }
+
+  .site-cta-primary {
+    @apply bg-ink text-wash no-underline;
+  }
+
   .site-guide-after {
-    @apply mt-10 flex flex-wrap gap-4 text-sm;
+    @apply mt-10 flex flex-wrap gap-3;
   }
 
   .site-guide-after a {
-    @apply text-tick underline;
+    @apply border-ink text-ink border px-5 py-3 text-sm no-underline;
+  }
+
+  .site-guide-after a.site-cta-primary {
+    @apply border-ink bg-ink text-wash;
+  }
+
+  .site-jump {
+    @apply mt-3 flex flex-wrap gap-3;
+  }
+
+  .site-jump a {
+    @apply border-ink text-ink border px-3 py-2 text-sm no-underline;
   }
 
   .site-figure {
@@ -206,8 +247,51 @@
     @apply border-rule mt-8 border-t pt-8;
   }
 
+  .site-section > .site-details {
+    @apply mt-6 pt-6;
+  }
+
+  .site-section > .site-details:first-of-type {
+    @apply mt-4 border-t-0 pt-0;
+  }
+
   .site-details summary {
-    @apply cursor-pointer text-xl font-semibold;
+    @apply cursor-pointer text-lg font-semibold;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    list-style: none;
+  }
+
+  .site-details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-details summary::marker {
+    content: none;
+  }
+
+  .site-details summary::before {
+    content: "";
+    box-sizing: border-box;
+    width: 0.55rem;
+    height: 0.55rem;
+    flex-shrink: 0;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transform-origin: center;
+    transition: transform 0.15s ease;
+  }
+
+  .site-details[open] summary::before {
+    transform: rotate(225deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-details summary::before {
+      transition: none;
+    }
   }
 
   .site-teaser {
@@ -235,14 +319,62 @@
     @apply bg-ink text-wash px-4 py-2 text-sm;
   }
 
+  .site-form button.site-cta-primary {
+    @apply border px-5 py-3 text-sm;
+  }
+
+  .site-contact-grid {
+    @apply mt-10 grid gap-10;
+  }
+
+  .site-contact-grid .site-form {
+    @apply border-rule bg-wash mt-0 border p-5;
+  }
+
+  .site-contact-grid .site-form button.site-cta-primary {
+    @apply w-full;
+  }
+
+  .site-contact-grid .site-form button.site-cta-primary:active {
+    transform: scale(0.98);
+  }
+
+  .site-contact-details {
+    @apply border-rule bg-wash border p-5;
+  }
+
+  .site-contact-details > div {
+    @apply border-rule border-t pt-4;
+  }
+
+  .site-contact-details > div:first-child {
+    @apply border-t-0 pt-0;
+  }
+
+  .site-contact-details dt {
+    @apply text-sm;
+    display: block;
+  }
+
+  .site-contact-details dd {
+    @apply mt-2;
+    display: block;
+  }
+
   @media (min-width: 48rem) {
     .site-guide {
       display: grid;
-      grid-template-columns: 14rem minmax(0, 1fr);
+      grid-template-columns: 16rem minmax(0, 1fr);
       align-items: start;
       gap: 2.5rem;
-      max-width: 72rem;
+      max-width: 80rem;
       margin-inline: auto;
+    }
+
+    .site-contact-grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+      align-items: start;
+      gap: 2.5rem;
     }
 
     .site-toc {
@@ -273,6 +405,12 @@
 
     header[data-stuck] [data-header-utils] {
       justify-self: end;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-contact-grid .site-form button.site-cta-primary:active {
+      transform: none;
     }
   }
 }

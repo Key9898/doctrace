@@ -30,9 +30,9 @@ Keep both long-lived branches. Solo: merge only when asked. Do not open a GitHub
 1. Daily work is `development`. After any `main` edit, check out `development` again.
 2. Client drop path is `main` plus a version tag at drop time. Do not tag until a client drop is requested. `v0.1.0` is not tagged yet.
 3. Never name a git branch `phase-N`. Wiki phases are not git branches. Do not recreate `phase-2` or `legacy-saas-mocks`.
-4. Do not merge the `development` tip into `main`. That merge would put `samples/` and `scripts/` on `main`. Copy or cherry-pick public product files instead.
+4. Do not merge the `development` tip into `main`. Git history stays split. A merge of old history could still reintroduce previously tracked `samples/` or `scripts/`. Copy or cherry-pick public product files instead.
 5. Public DocTrace on `main` and `development` matches: local-first add-in, public site, OTP/cloud scaffold, and five always-visible pane tabs (Engagements, Matching, Trial Balance, Workpapers, Client Portal). Git history stays split.
-6. `samples/` and `scripts/` stay on `development` only. Do not copy them onto `main`.
+6. `samples/` and `scripts/` are gitignored local folders. Never commit them on `main` or `development`. Do not copy them onto `main`. Do not `git add -f`.
 7. Trial Balance, Workpapers, and Client Portal stay visible on the public pane. Empty `VITE_API_URL` keeps the task pane local-first.
 8. Vercel production must deploy `main`. Do not point production at `development`.
 

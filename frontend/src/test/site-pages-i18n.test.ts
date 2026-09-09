@@ -24,6 +24,10 @@ const PAGE_KEYS: CopyKey[] = [
   "faqTitle",
   "faqKicker",
   "faqLead",
+  "faqGroupUsing",
+  "faqGroupProduct",
+  "faqGroupHost",
+  "faqJumpLabel",
   "faq1Q",
   "faq1A",
   "faq2Q",
@@ -48,12 +52,37 @@ const PAGE_KEYS: CopyKey[] = [
   "faq11A",
   "faq12Q",
   "faq12A",
+  "faq13Q",
+  "faq13A",
+  "faq14Q",
+  "faq14A",
+  "faq15Q",
+  "faq15A",
+  "faq16Q",
+  "faq16A",
+  "faq17Q",
+  "faq17A",
+  "faq18Q",
+  "faq18A",
+  "faq19Q",
+  "faq19A",
+  "faq20Q",
+  "faq20A",
+  "faq21Q",
+  "faq21A",
+  "faq22Q",
+  "faq22A",
+  "faq23Q",
+  "faq23A",
+  "faq24Q",
+  "faq24A",
   "contactTitle",
   "contactKicker",
   "contactLead",
   "contactNotLive",
   "contactPhoneValue",
   "contactAddressValue",
+  "contactSubmit",
 ];
 
 const FAQ_BODY_KEYS: CopyKey[] = [
@@ -69,6 +98,18 @@ const FAQ_BODY_KEYS: CopyKey[] = [
   "faq10A",
   "faq11A",
   "faq12A",
+  "faq13A",
+  "faq14A",
+  "faq15A",
+  "faq16A",
+  "faq17A",
+  "faq18A",
+  "faq19A",
+  "faq20A",
+  "faq21A",
+  "faq22A",
+  "faq23A",
+  "faq24A",
 ];
 
 const FAQ_FORBIDDEN = /123456|IndexedDB|Tesseract|VITE_API_URL/;
@@ -101,7 +142,13 @@ describe("public site guide FAQ contact pages", () => {
     expect(copy.en.navPrivacy).toBe("Privacy Policy");
     expect(copy.en.navTerms).toBe("Terms of use");
     expect(copy.en.contactTitle).toBe("Get in touch");
+    expect(copy.en.contactKicker).toBe("Contact");
+    expect(copy.en.contactSubmit).toBe("Cannot send yet");
     expect(copy.en.faqSeeContact).toBe("Get in touch");
+    expect(copy.en.faqTitle).toBe("Common questions");
+    expect(copy.en.faqKicker).toBe("FAQ");
+    expect(copy.en.faqSeePrivacy).toBe("Privacy Policy");
+    expect(copy.my.faq11Q).not.toBe("ဘာသာစကား။");
     expect(copy.en.supportFaqTitle.trim().length).toBeGreaterThan(0);
     expect(copy.my.supportFaqTitle.trim().length).toBeGreaterThan(0);
     expect(copy.en.supportSeeFaq.trim().length).toBeGreaterThan(0);
@@ -122,6 +169,13 @@ describe("public site guide FAQ contact pages", () => {
       /href="([^"]+)"\s+data-i18n="ctaSupport"|data-i18n="ctaSupport"[\s\S]{0,80}href="([^"]+)"/,
     );
     expect(cta?.[1] ?? cta?.[2]).toBe("/guide.html");
+    const doc = parseSiteHtml(landing);
+    expect(doc.querySelector("main figure.site-figure")).toBeNull();
+    expect(landing).not.toContain("colA");
+    expect(landing).not.toContain("colSample");
+    expect(landing).not.toContain("lg:grid-cols-[minmax(0,1.2fr)");
+    expect("colA" in copy.en).toBe(false);
+    expect("colA" in copy.my).toBe(false);
   });
 
   it("keeps localhost only on the local sideload guide line", () => {
@@ -214,12 +268,47 @@ describe("public site guide FAQ contact pages", () => {
     "privacyRetentionBody",
     "privacyChildrenTitle",
     "privacyChildrenBody",
+    "privacyScopeTitle",
+    "privacyScopeBody",
+    "privacyRolesTitle",
+    "privacyRolesBody",
+    "privacyDeleteTitle",
+    "privacyDeleteBody",
+    "privacyTransfersTitle",
+    "privacyTransfersBody",
+    "privacySecurityTitle",
+    "privacySecurityBody",
+    "privacyChangesTitle",
+    "privacyChangesBody",
+    "privacyEffective",
+    "privacyTocLabel",
+    "entityLegalNameValue",
+    "entityRegNoValue",
+    "entityAddressValue",
     "termsUseTitle",
     "termsUseBody",
     "termsLiabilityTitle",
     "termsLiabilityBody",
     "termsChangesTitle",
     "termsChangesBody",
+    "termsAgreementTitle",
+    "termsAgreementBody",
+    "termsDataTitle",
+    "termsDataBody",
+    "termsConfidentialityTitle",
+    "termsConfidentialityBody",
+    "termsAccountsTitle",
+    "termsAccountsBody",
+    "termsAuditorTitle",
+    "termsAuditorBody",
+    "termsThirdTitle",
+    "termsThirdBody",
+    "termsTerminationTitle",
+    "termsTerminationBody",
+    "termsLawTitle",
+    "termsLawBody",
+    "termsEffective",
+    "termsTocLabel",
   ];
 
   const GUIDE_COPY_KEYS: CopyKey[] = [
@@ -245,11 +334,36 @@ describe("public site guide FAQ contact pages", () => {
     expect(copy.en.privacyProcessorsBody).toContain("Vercel");
     expect(copy.en.privacyProcessorsBody).toContain("R2");
     expect(copy.en.privacyProcessorsBody).toContain("Brevo");
+    expect(copy.en.privacyProcessorsBody).toContain("Google Fonts");
     expect(copy.en.termsTitle).toBe("Terms of use");
+    expect(copy.en.privacyLead).toContain("DocTrace");
+    expect(copy.en.privacyLead).toContain(
+      "may be updated when counsel reviews",
+    );
+    expect(copy.en.privacyLead).not.toContain("data-flow notice");
+    expect(copy.en.privacyLead).not.toContain("not a counsel-reviewed");
+    expect(copy.en.termsLawBody).toContain("Republic of the Union of Myanmar");
+    expect(copy.en.termsLawBody).toContain("Yangon");
+    expect(copy.en.privacyCookiesBody).toContain("localStorage");
+    expect(copy.en.privacyCookiesBody).not.toContain("cookies or localStorage");
   });
 
   it("keeps Guide copy free of local-dev jargon", () => {
     for (const key of GUIDE_COPY_KEYS) {
+      expect(copy.en[key], `en.${key}`).not.toMatch(GUIDE_JARGON);
+      expect(copy.my[key], `my.${key}`).not.toMatch(GUIDE_JARGON);
+    }
+  });
+
+  it("keeps Privacy and Terms copy free of local-dev jargon", () => {
+    const keys = Object.keys(copy.en).filter(
+      (key) =>
+        key.startsWith("privacy") ||
+        key.startsWith("terms") ||
+        key.startsWith("entity"),
+    ) as CopyKey[];
+    expect(keys.length).toBeGreaterThan(40);
+    for (const key of keys) {
       expect(copy.en[key], `en.${key}`).not.toMatch(GUIDE_JARGON);
       expect(copy.my[key], `my.${key}`).not.toMatch(GUIDE_JARGON);
     }
@@ -336,6 +450,42 @@ describe("public site guide FAQ contact pages", () => {
     expect(readFrontend("faq.html")).toContain('class="site-details"');
   });
 
+  it("ships Privacy and Terms as Guide-style documents with footer current", () => {
+    for (const file of ["privacy.html", "terms.html"] as const) {
+      const html = readFrontend(file);
+      const doc = parseSiteHtml(html);
+      const main = doc.querySelector("main");
+      expect(main?.className, file).toContain("site-guide");
+      expect(main?.className, file).not.toContain("max-w-3xl");
+      expect(doc.querySelector("nav.site-toc"), file).toBeTruthy();
+      expect(doc.querySelector("main details"), file).toBeNull();
+      expect(html, file).not.toContain("cookie.html");
+      const href = file === "privacy.html" ? "/privacy.html" : "/terms.html";
+      expect(
+        doc
+          .querySelector(`footer a[href="${href}"]`)
+          ?.getAttribute("aria-current"),
+        file,
+      ).toBe("page");
+      expect(
+        doc
+          .querySelector(`[data-more-menu] a[href="${href}"]`)
+          ?.getAttribute("aria-current"),
+        file,
+      ).toBe("page");
+      const stuck = html.match(/<nav data-nav-stuck[\s\S]*?<\/nav>/)?.[0];
+      const rest = html.match(/<nav data-nav-rest[\s\S]*?<\/nav>/)?.[0];
+      expect(stuck, file).not.toContain('href="/privacy.html"');
+      expect(stuck, file).not.toContain('href="/terms.html"');
+      expect(rest, file).not.toContain('href="/privacy.html"');
+      expect(rest, file).not.toContain('href="/terms.html"');
+    }
+    expect(copy.en.privacyPublisherBody).toContain("Studio Next Steps");
+    expect(copy.en.privacyPublisherBody).toContain("DocTrace");
+    expect(copy.en.entityAddressValue).toContain("Yangon");
+    expect(copy.en.entityRegNoValue.toLowerCase()).toContain("to be provided");
+  });
+
   it("marks contact placeholders as not live", () => {
     expect(copy.en.contactNotLive.toLowerCase()).toContain("not live");
     expect(copy.en.contactLead.toLowerCase()).toContain("placeholder");
@@ -345,7 +495,49 @@ describe("public site guide FAQ contact pages", () => {
     expect(copy.en.contactAddressValue).toContain(
       "street address to be provided",
     );
-    expect(readFrontend("contact.html")).toContain("support@example.com");
+    const contact = readFrontend("contact.html");
+    expect(contact).toContain("support@example.com");
+    expect(contact).toContain('id="contact-status"');
+    expect(contact.match(/data-i18n="contactNotLive"/g)?.length).toBe(1);
+    expect(contact).toContain("site-contact-grid");
+    const doc = parseSiteHtml(contact);
+    expect(doc.querySelector("title")?.textContent).toContain("Get in touch");
+    expect(doc.querySelector("header img")?.getAttribute("alt")).toBe(
+      "DocTrace",
+    );
+    const headerContact = [
+      ...doc.querySelectorAll('header a[href="/contact.html"]'),
+    ];
+    expect(headerContact).toHaveLength(3);
+    headerContact.forEach((el) => {
+      expect(el.getAttribute("aria-current")).toBe("page");
+    });
+    const main = doc.querySelector("main");
+    expect(main?.className).toContain("max-w-5xl");
+    expect(main?.className).not.toContain("max-w-3xl");
+    const grid = doc.querySelector(".site-contact-grid");
+    expect(grid?.firstElementChild?.tagName).toBe("FORM");
+    expect(grid?.lastElementChild?.tagName).toBe("DL");
+    expect(
+      grid?.lastElementChild?.classList.contains("site-contact-details"),
+    ).toBe(true);
+    expect(doc.querySelector(".site-guide-after")).toBeNull();
+    expect(
+      doc
+        .querySelector('[data-i18n="contactLead"]')
+        ?.classList.contains("site-prose"),
+    ).toBe(true);
+    expect(doc.querySelector(".site-lead")).toBeNull();
+    expect(readFrontend("site/site.css")).toContain("1.4fr");
+    expect(readFrontend("site/site.css")).not.toContain(
+      "minmax(0, 1fr) minmax(0, 1fr)",
+    );
+    const formRule = readFrontend("site/site.css")
+      .split(".site-contact-grid .site-form")[1]
+      ?.split("}")[0];
+    expect(formRule).toContain("bg-wash");
+    expect(formRule).toContain("border-rule");
+    expect(formRule).toContain("p-5");
   });
 
   it("points the dock mail icon at the contact page", () => {
@@ -384,9 +576,57 @@ describe("public site guide FAQ contact pages", () => {
   it("ships FAQ as a hashable details accordion", () => {
     const faq = readFrontend("faq.html");
     expect(faq).toContain("<details");
-    for (let n = 1; n <= 12; n += 1) {
+    for (let n = 1; n <= 24; n += 1) {
       expect(faq).toContain(`id="faq-${n}"`);
     }
+    expect(faq).toContain('id="faq-16" open');
+    expect(faq.match(/class="site-section"/g)?.length).toBe(3);
+    expect(faq).toContain('id="faq-using"');
+    expect(faq).toContain('id="faq-product"');
+    expect(faq).toContain('id="faq-host"');
+    expect(faq).toContain('class="site-page mx-auto max-w-3xl');
+    expect(faq).toContain("site-guide-after");
+    expect(faq).toContain("site-jump");
+    expect(faq).not.toContain("127.0.0.1");
+    expect(faq).not.toContain("doctrace-one.vercel.app");
+    const doc = parseSiteHtml(faq);
+    const footerFaq = doc.querySelector('footer a[href="/faq.html"]');
+    expect(footerFaq?.getAttribute("aria-current")).toBe("page");
+    const moreFaq = doc.querySelector('[data-more-menu] a[href="/faq.html"]');
+    expect(moreFaq?.getAttribute("aria-current")).toBe("page");
+    const jump = [
+      ...doc.querySelectorAll(".site-jump a"),
+    ] as HTMLAnchorElement[];
+    expect(jump.map((el) => el.getAttribute("href"))).toEqual([
+      "#faq-using",
+      "#faq-product",
+      "#faq-host",
+    ]);
+    const see = [
+      ...doc.querySelectorAll("details .site-link"),
+    ] as HTMLAnchorElement[];
+    expect(
+      see.map((el) => [el.getAttribute("href"), el.getAttribute("data-i18n")]),
+    ).toEqual([
+      ["/guide.html", "faqSeeGuide"],
+      ["/contact.html", "faqSeeContact"],
+      ["/privacy.html", "faqSeePrivacy"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/guide.html", "faqSeeGuide"],
+      ["/support.html", "faqSeeSupport"],
+    ]);
+    expect(
+      doc
+        .querySelector(".site-guide-after a.site-cta-primary")
+        ?.getAttribute("href"),
+    ).toBe("/guide.html");
   });
 
   it("keeps Support FAQ teasers without FAQ hash links", () => {
@@ -409,11 +649,22 @@ describe("public site guide FAQ contact pages", () => {
     const cards = [
       ...(main?.querySelectorAll("a.site-hub-card") ?? []),
     ] as HTMLAnchorElement[];
+    expect(main?.className).toContain("max-w-3xl");
     expect(cards.map((el) => el.getAttribute("href"))).toEqual([
       "/guide.html",
       "/faq.html",
       "/contact.html",
     ]);
+    cards.forEach((card) => {
+      expect(
+        card.querySelector("h2.site-hub-card-title > span[data-i18n]"),
+      ).toBeTruthy();
+      expect(card.querySelector("h2[data-i18n]")).toBeNull();
+    });
+    expect(
+      cards[1]?.querySelector("[data-i18n]")?.getAttribute("data-i18n"),
+    ).toBe("navFaq");
+    expect(support).not.toMatch(/<details[^>]*\sopen/);
     expect(
       main?.querySelector(".site-hub-actions a[href='/taskpane.html']"),
     ).toBeTruthy();
@@ -449,6 +700,25 @@ describe("public site guide FAQ contact pages", () => {
     "404.html",
     "500.html",
   ] as const;
+
+  it("keeps tick color off body links", () => {
+    for (const file of SITE_HTML_FILES) {
+      expect(readFrontend(file), file).not.toContain("text-tick underline");
+    }
+    expect(readFrontend("site/site.css")).not.toContain("text-tick underline");
+    const faq = parseSiteHtml(readFrontend("faq.html"));
+    expect(
+      faq
+        .querySelector(".site-guide-after a.site-cta-primary")
+        ?.getAttribute("href"),
+    ).toBe("/guide.html");
+    const guide = parseSiteHtml(readFrontend("guide.html"));
+    expect(
+      guide
+        .querySelector(".site-guide-after a.site-cta-primary")
+        ?.getAttribute("href"),
+    ).toBe("/support.html");
+  });
 
   const FONT_CSS =
     "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@500;600;700&display=swap";
@@ -615,6 +885,20 @@ describe("public site guide FAQ contact pages", () => {
     expect(guide).toContain('class="site-page site-guide');
     expect(doc.querySelector("nav.site-toc ul")).toBeTruthy();
     expect(doc.querySelector("nav.site-toc ol")).toBeNull();
+    const tocRule = css.split(".site-toc {")[1]?.split("}")[0] ?? "";
+    expect(tocRule).toContain("scrollbar-width: none");
+    expect(css).toContain(".site-toc::-webkit-scrollbar");
+    expect(css).toContain("overflow: auto");
+    expect(css).toContain("max-height: calc(100svh - 7rem)");
+    expect(css).toContain("grid-template-columns: 16rem minmax(0, 1fr)");
+    expect(css).toContain("max-width: 80rem");
+    expect(css).not.toContain("grid-template-columns: 14rem minmax(0, 1fr)");
+    expect(css).not.toContain("max-width: 72rem");
+    expect(css).toContain(".site-hub-card-title::after");
+    const hubArrow =
+      css.split(".site-hub-card-title::after")[1]?.split("}")[0] ?? "";
+    expect(hubArrow).toContain("\\2192");
+    expect(hubArrow).not.toContain("text-tick");
     expect(css).not.toContain("max-w-[360px]");
     expect(css).toContain(".site-figure");
     const preview = doc.querySelector(

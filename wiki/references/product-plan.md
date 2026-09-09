@@ -130,7 +130,7 @@ This is leftover integration, not Phase 2 team cloud. Firm roles, MFA, and a pub
 
 ### Prep modules (always visible; not Phase 2 cloud)
 
-Mock Trial Balance, Audit Workpapers, and Client PBC Portal live on `main` and `development` and are always visible on the public pane (Impl 109). Empty `VITE_API_URL` stays local-first. These mocks are not wiki Phase 2 (host, templates, firm auth, GET-restore) and not a git `phase-2` branch. This is not DocTrace Phase 4. EZAI Phase 4 stays regional SaaS. `samples/` and `scripts/` stay on `development` only.
+Mock Trial Balance, Audit Workpapers, and Client PBC Portal live on `main` and `development` and are always visible on the public pane (Impl 109). Empty `VITE_API_URL` stays local-first. These mocks are not wiki Phase 2 (host, templates, firm auth, GET-restore) and not a git `phase-2` branch. This is not DocTrace Phase 4. EZAI Phase 4 stays regional SaaS. `samples/` and `scripts/` are local-only and never committed.
 
 ISA-oriented flow (not ISA-certified): PBC intake, then trial-balance sample selection, then Matching Test of Details, then workpaper documentation (ISA 230-oriented). Human review before file sign-off. PBC is client evidence intake (ISA 500), not external confirmations (ISA 505) and not written representations (ISA 580). Do not build a CaseWare-class workpaper OS. No DataSnipper-identical claim.
 

@@ -37,4 +37,4 @@ Notes and PBC dashboard tiles stay mock (Scaffold Engagements placeholders). The
 - Phase 3 live LLM: [phase3-remaining.md](phase3-remaining.md). Account not-live chrome is Impl 58 / 94.
 - ISA 505 confirmation portal. ISA 580 representation letters.
 - CaseWare-class workpaper OS.
-- Merge of the `development` tip into `main` (would bring `samples/` and `scripts/`).
+- Merge of the `development` tip into `main` (history split; do not reintroduce `samples/` / `scripts/`).

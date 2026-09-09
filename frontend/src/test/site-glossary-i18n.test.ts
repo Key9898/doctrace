@@ -47,6 +47,11 @@ describe("public site glossary i18n", () => {
     expect(copy.my.not2).toContain("ISA");
   });
 
+  it("asks the FAQ language question in my instead of a clipped label", () => {
+    expect(copy.my.faq11Q).not.toBe("ဘာသာစကား။");
+    expect(copy.my.faq11Q.length).toBeGreaterThan(8);
+  });
+
   it("keeps the mock OTP digits and OTP label in the code hint", () => {
     expect(copy.my.authOtpHint).toContain("123456");
     expect(copy.my.authOtpHint).toContain("OTP");

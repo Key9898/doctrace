@@ -29,12 +29,6 @@ export const copy = {
       "Excel ထဲမှာ နမူနာအတန်းများကို ပြေစာနှင့် ဘဏ်အထောက်အထားနှင့် ချိတ်ပါ။",
     heroBody:
       "Tests of details လုပ်သော စာရင်းစစ်နှင့် associate များအတွက် Excel add-in။ အများအားဖြင့် expense နှင့် accounts payable။ နမူနာယူ၊ အထောက်အထားထည့်၊ Match၊ စာမျက်နှာကို snip၊ workbook ထဲ ပြန်ရေး။ အကောင့်မရှိလည်း Matching သုံးနိုင်သည်။ Optional cloud မချိတ်ရင် ဖိုင်က ဤကွန်ပျူတာ သို့မဟုတ် browser ထဲမှာပဲ။",
-    colA: "A",
-    colB: "B",
-    colC: "C",
-    colSample: "နမူနာအတန်း",
-    colEvidence: "အထောက်အထား",
-    colTrace: "အထောက်အထား မှတ်တမ်း",
     doesTitle: "ဘာလုပ်သလဲ",
     does1Title: "နမူနာနှင့် အထောက်အထား",
     does1Body:
@@ -77,72 +71,161 @@ export const copy = {
     privacyTitle: "ကိုယ်ရေးမူဝါဒ",
     privacyKicker: "Privacy",
     privacyLead:
-      "ဤအသိပေးချက်သည် DocTrace Excel add-in နှင့် ဤ public စာမျက်နှာများအတွက် ဖြစ်သည်။ Terms နှင့် မရောပါ။ Data-flow အသိပေးချက်။ Lawyer ပြန်ကြည့်ပြီးသော မူဝါဒ မဟုတ်။",
-    privacyPublisherTitle: "ဘယ်သူထုတ်သလဲ",
+      "ဤမူဝါဒသည် DocTrace Excel add-in နှင့် ဤ public စာမျက်နှာများတွင် ကိုယ်ရေးအချက်အလက်ကို ဘယ်လို ကိုင်သည်ကို ဖော်ပြသည်။ Terms of use နှင့် သီးခြား။ ဤအသိပေးချက်ကို counsel ပြန်ကြည့်သောအခါ ပြင်နိုင်သည်။",
+    privacyEffective: "သက်ရောက်သည့်နေ့ 10 September 2026",
+    privacyTocLabel: "ဤမူဝါဒတွင်",
+    entityLegalNameLabel: "တရားဝင်အမည်",
+    entityLegalNameValue: "ပေးရန် ကျန်",
+    entityRegNoLabel: "မှတ်ပုံတင်နံပါတ်",
+    entityRegNoValue: "ပေးရန် ကျန်",
+    entityAddressLabel: "လိပ်စာ",
+    entityAddressValue: "Studio Next Steps, Yangon — လမ်းလိပ်စာ ပေးရန် ကျန်",
+    privacyTocWho: "ဘယ်သူလဲ",
+    privacyTocScope: "အကျုံးဝင်မှု",
+    privacyTocRoles: "ဘယ်သူတာဝန်",
+    privacyTocSite: "Public site",
+    privacyTocCookies: "Browser",
+    privacyTocAddin: "Excel add-in",
+    privacyTocCloud: "Optional cloud",
+    privacyTocProcessors: "ကိုင်သူများ",
+    privacyTocHost: "Hosting",
+    privacyTocExcel: "Microsoft",
+    privacyTocRetention: "သိမ်းချိန်",
+    privacyTocDelete: "ဖျက်ပုံ",
+    privacyTocNot: "မလုပ်သည်များ",
+    privacyTocChildren: "ကလေး",
+    privacyTocRights: "အခွင့်အရေး",
+    privacyTocTransfers: "နိုင်ငံခြား",
+    privacyTocSecurity: "လုံခြုံရေး",
+    privacyTocChanges: "ပြင်ဆင်မှု",
+    privacyTocContact: "ဆက်သွယ်ရန်",
+    privacyPublisherTitle: "ဘယ်သူလဲ",
     privacyPublisherBody:
-      "Studio Next Steps က ဤ site နှင့် DocTrace add-in ကို ထုတ်သည်။ Customer ၏ တရားဝင်အမည် ရလာမှ ဤနေရာတွင် ထည့်မည်။",
-    privacyCollectTitle: "ဤ site ဘာမှတ်သလဲ",
+      "Studio Next Steps က ဤ site နှင့် DocTrace Excel add-in ကို ထုတ်သည်။ တရားဝင်ကုမ္ပဏီအမည်၊ မှတ်ပုံတင်နံပါတ်၊ လမ်းလိပ်စာကို ရလာမှ ဤနေရာတွင် ထည့်မည်။",
+    privacyScopeTitle: "ဘာကို အကျုံးဝင်သလဲ",
+    privacyScopeBody:
+      "ဤမူဝါဒသည် DocTrace Excel add-in နှင့် ဤ public စာမျက်နှာများကို အကျုံးဝင်သည်။ Terms of use နှင့် မရောပါ။ စာရင်းစစ်အဖွဲ့၊ associate၊ နှင့် ဤ site လာကြည့်သူများအတွက် ဖြစ်သည်။",
+    privacyRolesTitle: "ဘယ်သူက ကိုင်သလဲ",
+    privacyRolesBody:
+      "Workbook နှင့် evidence က သင့် firm ၏ ပတ်ဝန်းကျင်တွင် ရှိသည်။ Studio Next Steps က public site request နှင့် သင်ဖွင့်သော optional cloud လမ်းကြောင်းမှသာ ကိုင်သည်။ Local-first တွင် client ဖိုင်များကို DocTrace server သို့ default မပို့ပါ။",
+    privacyCollectTitle: "Public site ဘာမှတ်သလဲ",
     privacyCollectBody:
-      "ဤ site က ဘာသာစကားကို ဤ browser မှာ မှတ်သည်။ ဤစာမျက်နှာများပေါ် workbook မတင်ပါ။",
+      "ဤ site က ဘာသာစကားရွေးချယ်မှုကို ဤ browser ၏ localStorage မှာ မှတ်သည်။ ဤစာမျက်နှာများပေါ် workbook မတင်ပါ။ Contact form က ယခု မပို့သေးပါ။ Live ဖြစ်ရင် အမည်၊ အီးမေးလ်၊ ဖုန်း၊ firm၊ စာ တို့ကို လက်ခံမည်။",
+    privacyCookiesTitle: "Cookies နှင့် ဤ browser",
+    privacyCookiesBody:
+      "ဘာသာစကားရွေးချယ်မှုကို ဤ browser ၏ localStorage မှာ မှတ်သည်။ Cookie မသုံးပါ။ Optional cloud ဖွင့်မှ session token ကို ဤ browser မှာ မှတ်နိုင်သည်။ Tracking သို့မဟုတ် ads cookie ခင်းကျင်း မထားပါ။ Cookie သီးခြားစာမျက်နှာ မရှိ။",
     privacyUseTitle: "Excel add-in ဘာသိမ်းသလဲ",
     privacyUseBody:
-      "Optional cloud မချိတ်ရင် workbook နှင့် evidence က ဤကွန်ပျူတာ သို့မဟုတ် browser ထဲမှာပဲ။ Add-in က ထိုဖိုင်များကို DocTrace server သို့ default မပို့ပါ။",
+      "Workbook၊ evidence၊ match နှင့် log က ဤကွန်ပျူတာ သို့မဟုတ် browser ထဲမှာပဲ။ Optional cloud မချိတ်ရင် DocTrace server သို့ ထိုဖိုင်များကို default မပို့ပါ။ PDF နှင့် ပုံမှ စာဖတ်ခြင်းက ဤစက်ပေါ်တွင် ဖြစ်သည်။",
     privacyCloudTitle: "Optional cloud",
     privacyCloudBody:
-      "ဖွင့်မှ အကောင့်အီးမေးလ်၊ fail-closed backup နှင့် mail။ OTP မေးလ် မလှုပ်သေးပါ။",
+      "သင်ဖွင့်မှ အကောင့်အီးမေးလ်၊ fail-closed backup နှင့် mail။ OTP မေးလ် မလှုပ်သေးပါ။ ဖွင့်ခြင်း မရှိရင် cloud လမ်းကြောင်း မရှိ။",
+    privacyProcessorsTitle: "ဘယ်သူက ကိုင်သလဲ",
+    privacyProcessorsBody:
+      "Public site နှင့် production add-in host က Vercel။ စာလုံးအတွက် Google Fonts။ Optional cloud ဖွင့်မှ backup က R2၊ mail က Brevo။ Excel host က Microsoft။ အဲဒီ optional လမ်းကြောင်းများကို သင်ကိုယ်တိုင် ဖွင့်မှ ရှိသည်။",
     privacyHostTitle: "Hosting",
     privacyHostBody:
       "Public host က IP ကဲ့သို့ request log ကို ကိုင်နိုင်သည်။ ဖိုင် ဘယ်မှ မထွက်ဟု အပြည့် မပြောပါ။",
-    privacyNotTitle: "ဘာမလုပ်သလဲ",
-    privacyNotBody:
-      "LLM product မဟုတ်။ ဖိုင်များကို training data အဖြစ် မသုံးပါ။",
-    privacyCookiesTitle: "Cookies နှင့် ဤ browser",
-    privacyCookiesBody:
-      "ဤ site က ဘာသာစကားရွေးချယ်မှုကို ဤ browser ၏ cookies သို့မဟုတ် localStorage မှာ မှတ်သည်။ Optional cloud ဖွင့်မှ session token ကို ဤ browser မှာ မှတ်နိုင်သည်။ Tracking cookie ခင်းကျင်း မထားပါ။ Cookie သီးခြားစာမျက်နှာ မရှိ။",
-    privacyProcessorsTitle: "ဘယ်သူက ကိုင်သလဲ",
-    privacyProcessorsBody:
-      "Public site က Vercel မှာ တင်သည်။ Optional cloud ဖွင့်မှ backup က R2၊ mail က Brevo ကို သုံးနိုင်သည်။ အဲဒီလမ်းကြောင်းများကို သင်ကိုယ်တိုင် ဖွင့်မှ ရှိသည်။",
     privacyExcelHostTitle: "Microsoft နှင့် Excel",
     privacyExcelHostBody:
-      "Excel host (Windows၊ Mac၊ Excel on the web) က Office ပိုင်သည်။ Personality menu နှင့် host log ကို DocTrace က ပိတ် သို့မဟုတ် ပြင်၍ မရပါ။",
+      "Excel host (Windows၊ Mac၊ Excel on the web) က Office ပိုင်သည်။ Personality menu နှင့် host log ကို DocTrace က ပိတ် သို့မဟုတ် ပြင်၍ မရပါ။ Microsoft ၏ ကိုယ်ရေးမူဝါဒက Excel host ကို သီးခြား အကျုံးဝင်သည်။",
     privacyRetentionTitle: "ဘယ်လောက်ကြာ သိမ်းသလဲ",
     privacyRetentionBody:
       "Local workbook နှင့် evidence က သင့်စက်ထဲမှာ သင်ဖျက်သည်အထိ။ Optional cloud backup က သင်ဖျက် သို့မဟုတ် စာချုပ်ကုန်သည်အထိ။ Public host request log က host မူဝါဒအတိုင်း။",
+    privacyDeleteTitle: "Local ဒေတာ ဖျက်ပုံ",
+    privacyDeleteBody:
+      "Add-in ကို Excel က ဖြုတ်ပါ။ ဤ browser ၏ site ဒေတာကို ရှင်းပါ။ Workbook ဖိုင်ကို ဖျက် သို့မဟုတ် backup မထားပါနှင့်။ Optional cloud ဖွင့်ထားရင် backup ကို သင်ဖျက်ရမည်။",
+    privacyNotTitle: "ဘာမလုပ်သလဲ",
+    privacyNotBody:
+      "DocTrace က LLM product မဟုတ်။ ဖိုင်များကို training data အဖြစ် မသုံးပါ။ Analytics သို့မဟုတ် ads မခင်းပါ။",
     privacyChildrenTitle: "ကလေး",
     privacyChildrenBody:
       "DocTrace က စာရင်းစစ်အဖွဲ့အတွက် ဖြစ်သည်။ ကလေးများအတွက် ရည်ရွယ် မထားပါ။",
     privacyRightsTitle: "အခွင့်အရေး",
     privacyRightsBody:
-      "ကြည့်ရန်၊ ပြင်ရန်၊ ဖျက်ရန် တောင်းခံနိုင်သည်။ Live mailbox ရှိမှ ကိုင်တွယ်မည်။",
+      "ကျွန်တော်တို့ ကိုင်သော ကိုယ်ရေးအချက်အလက်ကို ကြည့်ရန်၊ ပြင်ရန်၊ ဖျက်ရန် တောင်းခံနိုင်သည်။ Live mailbox ရှိမှ ကိုင်တွယ်မည်။ ဤစာမျက်နှာက GDPR compliant ဟု မပြောပါ။",
+    privacyTransfersTitle: "နိုင်ငံခြားသို့ ပို့ခြင်း",
+    privacyTransfersBody:
+      "Vercel၊ Google Fonts၊ နှင့် optional R2 သို့မဟုတ် Brevo က Myanmar အပြင်မှာ ရှိနိုင်သည်။ Site လာကြည့်ခြင်း သို့မဟုတ် optional cloud ဖွင့်မှ ဤလမ်းကြောင်းရှိသည်။",
+    privacySecurityTitle: "လုံခြုံရေး",
+    privacySecurityBody:
+      "Local-first နှင့် fail-closed cloud ကို သုံးသည်။ လုံခြုံရေး အပြည့်အာမခံ မပေးပါ။ Workbook backup က သုံးသူတာဝန်။",
+    privacyChangesTitle: "ဤမူဝါဒ ပြင်ခြင်း",
+    privacyChangesBody:
+      "ဤစာမျက်နှာကို ပြင်နိုင်သည်။ ပြင်ပြီး စာသားက ဤနေရာတွင် ပေါ်မည်။",
     privacyContactTitle: "ဆက်သွယ်ရန်",
     privacyContactBody: "ကိုယ်ရေးမေးခွန်း။ ဤ mailbox က live မဟုတ်:",
     termsTitle: "အသုံးပြုမှု စည်းကမ်း",
     termsKicker: "Terms",
     termsLead:
-      "DocTrace သည် Excel Test of Details add-in။ ဥပဒေရေးရာ အကြံ မဟုတ်။ စာရင်းစစ်အမြင် မဟုတ်။",
+      "ဤစည်းကမ်းသည် DocTrace Excel add-in နှင့် ဤ public စာမျက်နှာများကို အကျုံးဝင်သည်။ Privacy policy နှင့် သီးခြား။ ဤအသိပေးချက်ကို counsel ပြန်ကြည့်သောအခါ ပြင်နိုင်သည်။",
+    termsEffective: "သက်ရောက်သည့်နေ့ 10 September 2026",
+    termsTocLabel: "ဤစည်းကမ်းတွင်",
+    termsTocAgreement: "သဘောတူမှု",
+    termsTocTool: "ကိရိယာ",
+    termsTocLicense: "သုံးခွင့်",
+    termsTocData: "သင့်ဒေတာ",
+    termsTocConfidentiality: "လျှို့ဝှက်မှု",
+    termsTocLocal: "Local-first",
+    termsTocUse: "သုံးပုံ",
+    termsTocAccounts: "အကောင့်",
+    termsTocWarranty: "အာမခံ",
+    termsTocLiability: "တာဝန်ကန့်သတ်",
+    termsTocAuditor: "Auditor",
+    termsTocThird: "Third party",
+    termsTocChanges: "ပြင်ဆင်မှု",
+    termsTocTermination: "ရပ်ဆိုင်း",
+    termsTocLaw: "ဥပဒေ",
+    termsTocPublisher: "ထုတ်သူ",
+    termsTocContact: "ဆက်သွယ်ရန်",
+    termsAgreementTitle: "သဘောတူမှု",
+    termsAgreementBody:
+      "ဤ site သို့မဟုတ် DocTrace Excel add-in ကို သုံးခြင်းသည် ဤစည်းကမ်းကို လက်ခံခြင်း ဖြစ်သည်။ Privacy policy နှင့် သီးခြား။",
     terms1Title: "ကိရိယာ၊ အမြင် မဟုတ်",
     terms1Body:
-      "Matching နှင့် log သည် ကူညီရန် ဖြစ်သည်။ စာရင်းစစ်အမြင်၊ ISA ထောက်ခံချက်၊ DataSnipper အစားထိုးဟု မယူဆပါ။",
+      "Matching နှင့် log သည် စာရင်းစစ်အလုပ်ကို ကူညီရန် ဖြစ်သည်။ စာရင်းစစ်အမြင်၊ ISA ထောက်ခံချက်၊ သို့မဟုတ် DataSnipper အစားထိုးဟု မယူဆပါ။ ဥပဒေရေးရာ အကြံ မဟုတ်။",
     termsLicenseTitle: "သုံးခွင့်",
     termsLicenseBody:
-      "စာရင်းစစ်အလုပ်အတွက် DocTrace Excel add-in ကို သုံးနိုင်သည်။ အခြား vendor ထုတ်ကုန် သို့မဟုတ် IAASB certification အဖြစ် မတင်ပြရ။",
+      "စာရင်းစစ်အလုပ်အတွက် DocTrace Excel add-in ကို သုံးနိုင်သည်။ ဤခွင့်သည် exclusive မဟုတ်။ အခြား vendor ထုတ်ကုန် သို့မဟုတ် IAASB certification အဖြစ် မတင်ပြရ။ Add-in ကို ပြောင်း သို့မဟုတ် ပြန်ထုပ်၍ မရ။",
+    termsDataTitle: "သင့်ဒေတာ",
+    termsDataBody:
+      "Workbook နှင့် evidence က သင့် firm ပိုင်သည်။ DocTrace က ထိုဖိုင်များကို မပိုင်ပါ။",
+    termsConfidentialityTitle: "လျှို့ဝှက်မှု",
+    termsConfidentialityBody:
+      "Local-first တွင် ဖိုင်က သင့်ပတ်ဝန်းကျင်။ Optional cloud ကို သင်ဖွင့်မှသာ ကျွန်တော်တို့ လမ်းကြောင်းရှိသည်။",
     terms2Title: "Local-first",
     terms2Body:
-      "သင့် workbook နဲ့ ဖိုင်က သင့်ပတ်ဝန်းကျင်။ Optional API ကို သင်ကိုယ်တိုင် ဖွင့်မှ cloud လမ်းကြောင်းရှိသည်။",
-    termsWarrantyTitle: "အာမခံ မရှိ",
-    termsWarrantyBody: "အာမခံ မပေး။ Workbook backup က သုံးသူတာဝန်။",
+      "သင့် workbook နဲ့ ဖိုင်က သင့်ပတ်ဝန်းကျင်။ Optional cloud ကို သင်ကိုယ်တိုင် ဖွင့်မှ cloud လမ်းကြောင်းရှိသည်။ OTP မလှုပ်သေးပါ။",
     termsUseTitle: "သုံးပုံ",
     termsUseBody:
       "စာရင်းစစ်အလုပ်အတွက် သုံးပါ။ Add-in ကို ပြောင်း၊ ပြန်ထုပ်၊ အခြားသူ၏အကောင့်ကို ခွင့်မရှိဘဲ မသုံးရ။ Matching ရလဒ်ကို audit opinion အဖြစ် မတင်ပြရ။",
+    termsAccountsTitle: "အကောင့်",
+    termsAccountsBody:
+      "Add-in တွင် login wall မရှိ။ Engagements၊ Matching၊ Trial Balance၊ Workpapers၊ Client Portal က အကောင့်မလိုပါ။ Optional account က မ live သေးပါ။",
+    termsWarrantyTitle: "အာမခံ မရှိ",
+    termsWarrantyBody:
+      "Add-in ကို အာမခံမဲ့ ပေးသည်။ Workbook backup က သုံးသူတာဝန်။",
     termsLiabilityTitle: "တာဝန်ကန့်သတ်ချက်",
     termsLiabilityBody:
-      "ဥပဒေက ခွင့်ပြုသလောက် DocTrace ကို အာမခံမဲ့ ပေးသည်။ Workbook ဆုံးရှုံးမှု၊ မှားယွင်းသော match၊ သို့မဟုတ် host ပြတ်တောက်မှုအတွက် တာဝန်မယူပါ။ Auditor က evidence နှင့် documentation တာဝန်ရှိသည်။",
-    termsChangesTitle: "ဤစည်းကမ်း ပြောင်းခြင်း",
+      "ဥပဒေက ခွင့်ပြုသလောက် DocTrace ကို အာမခံမဲ့ ပေးသည်။ Workbook ဆုံးရှုံးမှု၊ မှားယွင်းသော match၊ သို့မဟုတ် host ပြတ်တောက်မှုအတွက် တာဝန်မယူပါ။",
+    termsAuditorTitle: "Auditor တာဝန်",
+    termsAuditorBody:
+      "Evidence၊ documentation၊ နှင့် professional standards က auditor တာဝန်။ Matching က စာရင်းစစ်အမြင် မဟုတ်။",
+    termsThirdTitle: "Microsoft နှင့် အခြားသူ",
+    termsThirdBody:
+      "Excel host၊ Vercel၊ နှင့် စာလုံး host က သူတို့၏ စည်းကမ်းအတိုင်း။ DocTrace က Excel personality menu ကို မပိတ်နိုင်။",
+    termsChangesTitle: "ဤစည်းကမ်း ပြင်ခြင်း",
     termsChangesBody:
-      "ဤစာမျက်နှာကို ပြင်နိုင်သည်။ အုပ်ချုပ်တဲ့ ဥပဒေ သို့မဟုတ် စာချုပ် စာသားကို customer သဘောတူမှ အစားထိုးမည်။",
+      "ဤစာမျက်နှာကို ပြင်နိုင်သည်။ ပြင်ပြီး စာသားက ဤနေရာတွင် ပေါ်မည်။",
+    termsTerminationTitle: "ရပ်ဆိုင်းခြင်း",
+    termsTerminationBody:
+      "သုံးခြင်းကို ရပ်နိုင်သည်။ Add-in ကို Excel က ဖြုတ်ပါ။ Local ဖိုင်က သင့်စက်တွင် ကျန်နိုင်သည်။",
+    termsLawTitle: "အုပ်ချုပ်သော ဥပဒေ",
+    termsLawBody:
+      "ဤစည်းကမ်းကို Republic of the Union of Myanmar ဥပဒေက အုပ်ချုပ်သည်။ အငြင်းပွားမှုကို Yangon တွင် ဖြေရှင်းသည်။",
     termsPublisherTitle: "ထုတ်သူ",
     termsPublisherBody:
-      "Studio Next Steps က ဤ site နှင့် add-in ကို ထုတ်သည်။ အုပ်ချုပ်တဲ့ ဥပဒေကို customer သဘောတူမှ သတ်မှတ်မည်။ ဤနေရာတွင် မဖော်ပြသေး။",
+      "Studio Next Steps က ဤ site နှင့် DocTrace Excel add-in ကို ထုတ်သည်။ တရားဝင်ကုမ္ပဏီအမည်၊ မှတ်ပုံတင်နံပါတ်၊ လမ်းလိပ်စာကို ရလာမှ ဤနေရာတွင် ထည့်မည်။",
     terms3Title: "ဆက်သွယ်ရန်",
     terms3Body: "အထွေထွေမေးခွန်း။ ဤ mailbox က live မဟုတ်:",
     guideTitle: "စတင်အသုံးပြုရန်",
@@ -250,14 +333,19 @@ export const copy = {
     guideAfterHome: "ပင်မ",
     faqTitle: "အမေးအဖြေ",
     faqKicker: "FAQ",
-    faqLead: "DocTrace Excel add-in အကြောင်း မေးလေ့ရှိသော မေးခွန်း။",
+    faqLead:
+      "အကောင့်၊ ဖိုင်၊ pane tab ၅ ခု၊ Excel အကြောင်း။ Add-in ကို အကောင့်မလိုဘဲ သုံးနိုင်သည်။ Optional cloud မလှုပ်သေးပါ။",
     faqSeeGuide: "လမ်းညွှန်",
     faqSeeSupport: "အကူအညီ",
     faqSeePrivacy: "ကိုယ်ရေးမူဝါဒ",
     faqSeeContact: "ဆက်သွယ်ရန်",
+    faqGroupUsing: "DocTrace သုံးရန်",
+    faqGroupProduct: "ထုတ်ကုန်",
+    faqGroupHost: "Excel host",
+    faqJumpLabel: "ဤစာမျက်နှာတွင်",
     faq1Q: "အကောင့်လိုသလား။",
     faq1A:
-      "Matching က login wall မဟုတ်။ အကောင့်မရှိလည်း သုံးနိုင်သည်။ Optional cloud က အကောင့်၊ backup၊ mail အတွက်သာ။",
+      "Add-in က login wall မဟုတ်။ Engagements, Matching, Trial Balance, Workpapers, Client Portal ကို အကောင့်မလိုဘဲ သုံးနိုင်သည်။ Optional cloud က အကောင့်၊ backup၊ mail အတွက်သာ၊ မလှုပ်သေးပါ။",
     faq2Q: "ဖိုင်တွေ ဘယ်မှာလဲ။",
     faq2A:
       "Optional cloud မချိတ်ရင် workbook နှင့် အထောက်အထားသည် ဤကွန်ပျူတာ သို့မဟုတ် browser ထဲမှာပဲ။ Add-in က ထိုဖိုင်များကို DocTrace server သို့ default မပို့ပါ။",
@@ -276,21 +364,57 @@ export const copy = {
     faq7A:
       "PDF၊ ပုံ၊ JSON။ PDF မှာ ရွေးလို့ရသော စာမရှိရင် add-in က ဤစက်ထဲမှာ စာမျက်နှာကို ဖတ်နိုင်သည်။",
     faq8Q: "Sign-in ကုဒ် မရရင်။",
-    faq8A: "OTP မေးလ် မလှုပ်သေးပါ။ Matching ကို အကောင့်မလိုဘဲ ဆက်သုံးနိုင်သည်။",
+    faq8A: "OTP မေးလ် မလှုပ်သေးပါ။ Add-in ကို အကောင့်မလိုဘဲ ဆက်သုံးနိုင်သည်။",
     faq9Q: "Download .exe ရှိသလား။",
     faq9A:
       "မရှိ။ DocTrace သည် Office add-in ဖြစ်သည်။ manifest နှင့် hosted task pane။",
     faq10Q: "Microsoft AppSource မှာ ရှာလို့ရသလား။",
     faq10A:
       "AppSource listing မရှိသေးပါ။ Excel ထဲ ဖွင့်ပုံကို လမ်းညွှန်မှာ ကြည့်ပါ။",
-    faq11Q: "ဘာသာစကား။",
+    faq11Q: "ဘာသာစကား ဘာတွေ ထောက်ပံ့သလဲ။",
     faq11A:
       "English နှင့် မြန်မာ။ ဝေါဟာရ (Matching, Test of Details) က English။",
     faq12Q: "ညာဘက် Personality menu ကို ပြင်လို့ရသလား။",
     faq12A:
       "မရပါ။ Get Support, Reload, Attach Debugger, Security Info က Excel ပိုင်သည်။ DocTrace က ပိတ်၊ ပြင်၊ ခလုတ်ထပ် မထည့်နိုင်ပါ။",
+    faq13Q: "Excel pane မှာ ဘာရှိလဲ။",
+    faq13A:
+      "Tab ၅ ခု: Engagements, Matching, Trial Balance, Workpapers, Client Portal။ တစ်ခုချင်း သုံးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq14Q: "Excel ထဲ DocTrace ဘယ်လို ဖွင့်မလဲ။",
+    faq14A:
+      "Office add-in အဖြစ် Excel ထဲ ဖွင့်ပါ။ အဆင့်များကို စတင်အသုံးပြုရန် မှာ ပြထားသည်။ Browser ထဲ Add-in preview က Excel မဟုတ်။",
+    faq15Q: "Optional cloud, backup, mail live လား။",
+    faq15A:
+      "မလှုပ်ပါ။ OTP မေးလ်နှင့် cloud backup မလှုပ်သေးပါ။ Workbook နှင့် အထောက်အထားသည် ဤစက်ထဲမှာပဲ။",
+    faq16Q: "DocTrace က ဘာလဲ။",
+    faq16A:
+      "Excel add-in ဖြစ်သည်။ Auditor နှင့် associate များ tests of details (အများအားဖြင့် expense နှင့် accounts payable) အတွက်။ Pane သုံးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq17Q: "Matching က ဘာလဲ။",
+    faq17A:
+      "Sample ယူ၊ evidence တင်၊ row ချိတ်၊ source page snip၊ trail ကို workbook သို့ ရေးသည်။ ၎င်းက Test of Details လမ်းကြောင်း။ အဆင့်များကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq18Q: "Client Portal က client login လား။",
+    faq18A:
+      "မဟုတ်။ Pane ထဲ PBC request စာရင်း။ Client login wall မဟုတ်။ သုံးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq19Q: "Matching က ဤ website လိုသလား။",
+    faq19A:
+      "မလို။ Matching က ဤစက်ထဲ Excel pane မှာ လည်သည်။ Optional cloud မချိတ်ရင် workbook နှင့် အထောက်အထားသည် ဤတွင်ပဲ။",
+    faq20Q: "Workbook ထဲ ဘာရေးသလဲ။",
+    faq20A:
+      "Mapped column နှင့် hidden log sheet။ ရေးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq21Q: "Trial Balance က ဘာလဲ။",
+    faq21A:
+      "Trial balance နှင့် listing တင်၊ F/S lead ချိတ်၊ ticked row များကို Matching သို့ ပို့သည်။ Tie-out က မြင်ရုံ။ သုံးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq22Q: "Workpapers က ဘာလဲ။",
+    faq22A:
+      "Matching Review က Test of Details ကို engagement ပေါ် snapshot ရိုက်နိုင်သည်။ File Sign က open exception နှင့် partial row အတွက် စောင့်သည်။ CaseWare workpaper OS မဟုတ်။ သုံးပုံကို စတင်အသုံးပြုရန် မှာ ကြည့်ပါ။",
+    faq23Q: "AI assist live လား။",
+    faq23A:
+      "မလှုပ်ပါ။ Matching ကို ဆက်သုံးနိုင်သည်။ DocTrace သည် LLM extractor မဟုတ်။",
+    faq24Q: "ဤသည် audit opinion လား။",
+    faq24A:
+      "မဟုတ်။ Matching နှင့် log က tests of details (ISA 330) ကို ကူညီသည်။ Sufficient appropriate evidence (ISA 500) နှင့် documentation (ISA 230) က auditor တာဝန်။",
     contactTitle: "ဆက်သွယ်ရန်",
-    contactKicker: "ဆက်သွယ်ရန်",
+    contactKicker: "Contact",
     contactLead:
       "ဖောင်ပို့လို့ live inbox မရောက်သေးပါ။ ဤလိပ်စာများသည် placeholder။",
     contactNotLive:
@@ -306,7 +430,7 @@ export const copy = {
     contactPhoneFieldLabel: "ဖုန်း (optional)",
     contactFirmLabel: "Firm (optional)",
     contactMessageLabel: "စာ",
-    contactSubmit: "ပို့မည်",
+    contactSubmit: "ပို့လို့ မရသေးပါ",
     error404Kicker: "404",
     error404Title: "စာမျက်နှာ မတွေ့ပါ",
     error404Lead: "ဤ URL သည် DocTrace စာမျက်နှာ မဟုတ်ပါ။",
@@ -370,12 +494,6 @@ export const copy = {
     heroLead: "Match sample rows to invoices and bank support in Excel.",
     heroBody:
       "An Excel add-in for auditors and associates doing tests of details — commonly expense and accounts payable. Capture the sample, import evidence, match, snip the source page, and write the trail back to the workbook. Matching works with no account. Files stay on this computer or browser unless you connect optional cloud.",
-    colA: "A",
-    colB: "B",
-    colC: "C",
-    colSample: "Sample rows",
-    colEvidence: "Evidence",
-    colTrace: "Evidence trail",
     doesTitle: "What it does",
     does1Title: "Sample and evidence",
     does1Body:
@@ -420,73 +538,162 @@ export const copy = {
     privacyTitle: "Privacy policy",
     privacyKicker: "Privacy",
     privacyLead:
-      "This notice covers the DocTrace Excel add-in and these public pages. It is separate from the terms of use. It is a data-flow notice, not a counsel-reviewed policy.",
-    privacyPublisherTitle: "Who publishes it",
+      "This privacy policy describes how Studio Next Steps handles personal information for the DocTrace Excel add-in and these public pages. It is separate from the terms of use. This notice may be updated when counsel reviews it.",
+    privacyEffective: "Effective 10 September 2026",
+    privacyTocLabel: "In this policy",
+    entityLegalNameLabel: "Legal name",
+    entityLegalNameValue: "To be provided",
+    entityRegNoLabel: "Registration number",
+    entityRegNoValue: "To be provided",
+    entityAddressLabel: "Address",
+    entityAddressValue:
+      "Studio Next Steps, Yangon — street address to be provided",
+    privacyTocWho: "Who we are",
+    privacyTocScope: "Scope",
+    privacyTocRoles: "Who is responsible",
+    privacyTocSite: "Public site",
+    privacyTocCookies: "This browser",
+    privacyTocAddin: "Excel add-in",
+    privacyTocCloud: "Optional cloud",
+    privacyTocProcessors: "Processors",
+    privacyTocHost: "Hosting",
+    privacyTocExcel: "Microsoft",
+    privacyTocRetention: "Retention",
+    privacyTocDelete: "Delete local data",
+    privacyTocNot: "What we do not do",
+    privacyTocChildren: "Children",
+    privacyTocRights: "Your rights",
+    privacyTocTransfers: "Transfers",
+    privacyTocSecurity: "Security",
+    privacyTocChanges: "Changes",
+    privacyTocContact: "Contact",
+    privacyPublisherTitle: "Who we are",
     privacyPublisherBody:
-      "Studio Next Steps publishes this site and the DocTrace add-in. The customer firm's legal name will appear here when provided.",
+      "Studio Next Steps publishes this site and the DocTrace Excel add-in. The full legal name, registration number, and street address will appear here when provided.",
+    privacyScopeTitle: "What this policy covers",
+    privacyScopeBody:
+      "This policy covers the DocTrace Excel add-in and these public pages. It is separate from the terms of use. It applies to audit teams, associates, and visitors to this site.",
+    privacyRolesTitle: "Who is responsible",
+    privacyRolesBody:
+      "Workbook and evidence stay in your firm's environment. Studio Next Steps handles personal information only for public-site requests and for optional cloud paths you enable. In the local-first default, those files are not sent to a DocTrace server.",
     privacyCollectTitle: "What the public site stores",
     privacyCollectBody:
-      "This site remembers your language in this browser. These pages do not upload workbooks.",
+      "This site remembers your language in this browser's localStorage. These pages do not upload workbooks. The contact form does not send yet. If it becomes live, it would hold name, email, phone, firm, and message.",
+    privacyCookiesTitle: "Cookies and this browser",
+    privacyCookiesBody:
+      "Language choice is stored in this browser's localStorage. This site does not set a language cookie. If optional cloud is on, a session token may also be stored here. There is no advertising cookie stack. There is no separate cookie page.",
     privacyUseTitle: "What the Excel add-in stores",
     privacyUseBody:
-      "Workbook and evidence stay on this computer or browser unless you connect optional cloud. The add-in does not send those files to a DocTrace server by default.",
+      "Workbook, evidence, match results, and logs stay on this computer or browser. Unless you connect optional cloud, the add-in does not send those files to a DocTrace server by default. Text read from PDFs and images runs on this device.",
     privacyCloudTitle: "Optional cloud",
     privacyCloudBody:
-      "If you enable it, this is account email plus fail-closed backup and mail. OTP mail is not live.",
+      "If you enable it, this is account email plus fail-closed backup and mail. OTP mail is not live. Cloud paths exist only when you turn them on.",
+    privacyProcessorsTitle: "Who processes data",
+    privacyProcessorsBody:
+      "The public site and the production add-in host run on Vercel. Type is loaded from Google Fonts. If you enable optional cloud, backup may use R2 and mail may use Brevo. The Excel host belongs to Microsoft. Those optional paths exist only when you turn them on.",
     privacyHostTitle: "Hosting",
     privacyHostBody:
       "The public host may process request logs such as IP addresses. This page does not claim that nothing ever leaves the device.",
-    privacyNotTitle: "What we do not do",
-    privacyNotBody:
-      "DocTrace is not an LLM product. Files are not used as training data.",
-    privacyCookiesTitle: "Cookies and this browser",
-    privacyCookiesBody:
-      "This site remembers your language choice in this browser (cookies or localStorage). If optional cloud is on, a session token may also be stored here. There is no advertising cookie stack. There is no separate cookie page.",
-    privacyProcessorsTitle: "Who processes data",
-    privacyProcessorsBody:
-      "The public site is hosted on Vercel. If you enable optional cloud, backup may use R2 and mail may use Brevo. Those paths exist only when you turn them on.",
     privacyExcelHostTitle: "Microsoft and Excel",
     privacyExcelHostBody:
-      "The Excel host (Windows, Mac, Excel on the web) belongs to Office. DocTrace cannot hide or restyle the personality menu or host logs.",
+      "The Excel host (Windows, Mac, Excel on the web) belongs to Office. DocTrace cannot hide or restyle the personality menu or host logs. Microsoft's privacy terms apply to the Excel host separately.",
     privacyRetentionTitle: "How long we keep it",
     privacyRetentionBody:
       "Local workbook and evidence stay on your device until you delete them. Optional cloud backup stays until you delete it or the agreement ends. Public host request logs follow the host's policy.",
+    privacyDeleteTitle: "How to delete local data",
+    privacyDeleteBody:
+      "Remove the add-in from Excel. Clear this site's data in the browser. Delete the workbook file, or do not keep a copy. If optional cloud is on, delete that backup as well.",
+    privacyNotTitle: "What we do not do",
+    privacyNotBody:
+      "DocTrace is not an LLM product. Files are not used as training data. There is no analytics or advertising stack.",
     privacyChildrenTitle: "Children",
     privacyChildrenBody:
       "DocTrace is for audit teams. It is not directed at children.",
     privacyRightsTitle: "Your rights",
     privacyRightsBody:
-      "You may ask to access, correct, or delete personal data we hold. Requests will be handled when a live mailbox exists.",
+      "You may ask to access, correct, or delete personal data we hold. Requests will be handled when a live mailbox exists. This page does not claim GDPR certification.",
+    privacyTransfersTitle: "International transfers",
+    privacyTransfersBody:
+      "Vercel, Google Fonts, and optional R2 or Brevo may process data outside Myanmar. Those paths exist when you visit this site or when you enable optional cloud.",
+    privacySecurityTitle: "Security",
+    privacySecurityBody:
+      "DocTrace is local-first, with fail-closed optional cloud. This is not an absolute security guarantee. You keep workbook backups.",
+    privacyChangesTitle: "Changes to this policy",
+    privacyChangesBody:
+      "This page may be updated. The current text is the text on this page.",
     privacyContactTitle: "Contact",
     privacyContactBody: "Privacy questions. This mailbox is not live:",
     termsTitle: "Terms of use",
     termsKicker: "Terms",
     termsLead:
-      "DocTrace is an Excel Test of Details add-in. It is not legal advice. It is not an audit opinion.",
+      "These terms govern use of the DocTrace Excel add-in and these public pages. They are separate from the privacy policy. This notice may be updated when counsel reviews it.",
+    termsEffective: "Effective 10 September 2026",
+    termsTocLabel: "In these terms",
+    termsTocAgreement: "Agreement",
+    termsTocTool: "A tool",
+    termsTocLicense: "License",
+    termsTocData: "Your data",
+    termsTocConfidentiality: "Confidentiality",
+    termsTocLocal: "Local-first",
+    termsTocUse: "Acceptable use",
+    termsTocAccounts: "Accounts",
+    termsTocWarranty: "No warranty",
+    termsTocLiability: "Liability",
+    termsTocAuditor: "Auditor duty",
+    termsTocThird: "Third parties",
+    termsTocChanges: "Changes",
+    termsTocTermination: "Termination",
+    termsTocLaw: "Governing law",
+    termsTocPublisher: "Publisher",
+    termsTocContact: "Contact",
+    termsAgreementTitle: "Agreement",
+    termsAgreementBody:
+      "By using this site or the DocTrace Excel add-in, you accept these terms. They are separate from the privacy policy.",
     terms1Title: "A tool, not an opinion",
     terms1Body:
-      "Matching and logs assist work. They are not an audit opinion, ISA certification, or a DataSnipper substitute.",
+      "Matching and logs assist audit work. They are not an audit opinion, ISA certification, or a DataSnipper substitute. They are not legal advice.",
     termsLicenseTitle: "License",
     termsLicenseBody:
-      "You may use the DocTrace Excel add-in for your audit work. You may not present it as another vendor's product or as IAASB certification.",
+      "You may use the DocTrace Excel add-in for your audit work. The license is not exclusive. You may not present it as another vendor's product or as IAASB certification. You may not reverse-engineer or repackage the add-in.",
+    termsDataTitle: "Your data",
+    termsDataBody:
+      "Workbook and evidence belong to your firm. DocTrace does not own those files.",
+    termsConfidentialityTitle: "Confidentiality",
+    termsConfidentialityBody:
+      "In the local-first default, files stay in your environment. Cloud paths exist only if you enable optional cloud.",
     terms2Title: "Local-first",
     terms2Body:
-      "Your workbook and files stay in your environment. Cloud paths exist only if you enable the optional API.",
-    termsWarrantyTitle: "No warranty",
-    termsWarrantyBody:
-      "The add-in is provided without warranty. You keep workbook backups.",
+      "Your workbook and files stay in your environment. Cloud paths exist only if you enable optional cloud. OTP mail is not live.",
     termsUseTitle: "Acceptable use",
     termsUseBody:
       "Use it for your audit work. Do not reverse-engineer the add-in or use another person's account without permission. Do not present Matching output as an audit opinion.",
+    termsAccountsTitle: "Accounts",
+    termsAccountsBody:
+      "The add-in has no login wall. Engagements, Matching, Trial Balance, Workpapers, and Client Portal work without an account. Optional accounts are not live.",
+    termsWarrantyTitle: "No warranty",
+    termsWarrantyBody:
+      "The add-in is provided without warranty. You keep workbook backups.",
     termsLiabilityTitle: "Limitation of liability",
     termsLiabilityBody:
-      "To the extent the law allows, DocTrace is provided as-is. We are not liable for lost workbooks, a wrong match, or host downtime. The auditor remains responsible for evidence and documentation.",
+      "To the extent the law allows, DocTrace is provided as-is. We are not liable for lost workbooks, a wrong match, or host downtime.",
+    termsAuditorTitle: "Auditor responsibility",
+    termsAuditorBody:
+      "Evidence, documentation, and professional standards remain the auditor's duty. Matching is not an audit opinion.",
+    termsThirdTitle: "Microsoft and third parties",
+    termsThirdBody:
+      "The Excel host, Vercel, and font hosts follow their own terms. DocTrace cannot hide the Excel personality menu.",
     termsChangesTitle: "Changes to these terms",
     termsChangesBody:
-      "This page may be updated. Governing law or a signed contract will replace this text when the customer agrees it.",
+      "This page may be updated. The current text is the text on this page.",
+    termsTerminationTitle: "Termination",
+    termsTerminationBody:
+      "You may stop using DocTrace. Remove the add-in from Excel. Local files may remain on your device until you delete them.",
+    termsLawTitle: "Governing law",
+    termsLawBody:
+      "These terms are governed by the laws of the Republic of the Union of Myanmar. Venue is Yangon.",
     termsPublisherTitle: "Publisher",
     termsPublisherBody:
-      "Studio Next Steps publishes this site and add-in. Governing law is not stated until the customer agrees it.",
+      "Studio Next Steps publishes this site and the DocTrace Excel add-in. The full legal name, registration number, and street address will appear here when provided.",
     terms3Title: "Contact",
     terms3Body: "General questions. This mailbox is not live:",
     guideTitle: "Getting started",
@@ -592,16 +799,21 @@ export const copy = {
     guideAccountAlt:
       "Account menu. OTP mail is not live. AI assist is not live.",
     guideAfterHome: "Home",
-    faqTitle: "FAQ",
+    faqTitle: "Common questions",
     faqKicker: "FAQ",
-    faqLead: "Short answers about the DocTrace Excel add-in.",
+    faqLead:
+      "Answers about accounts, where files stay, the five pane tabs, and Excel. The add-in works without an account. Optional cloud is not live.",
     faqSeeGuide: "Getting started",
     faqSeeSupport: "Support",
-    faqSeePrivacy: "Privacy",
+    faqSeePrivacy: "Privacy Policy",
     faqSeeContact: "Get in touch",
+    faqGroupUsing: "Using DocTrace",
+    faqGroupProduct: "Product",
+    faqGroupHost: "Excel host",
+    faqJumpLabel: "In this page",
     faq1Q: "Do I need an account?",
     faq1A:
-      "Matching has no login wall. You can use it without an account. Optional cloud is only for account, backup, and mail.",
+      "The add-in has no login wall. Engagements, Matching, Trial Balance, Workpapers, and Client Portal work without an account. Optional cloud is only for account, backup, and mail, and it is not live.",
     faq2Q: "Where do my files stay?",
     faq2A:
       "Workbook and evidence stay on this computer or browser unless you connect optional cloud. The add-in does not send those files to a DocTrace server by default.",
@@ -620,7 +832,7 @@ export const copy = {
     faq7A:
       "PDF, image, or JSON. If a PDF has no selectable text, the add-in can read the page on this device.",
     faq8Q: "I did not get a sign-in code.",
-    faq8A: "OTP mail is not live. Matching still works without an account.",
+    faq8A: "OTP mail is not live. The add-in still works without an account.",
     faq9Q: "Is there an .exe download?",
     faq9A:
       "No. DocTrace is an Office add-in: a manifest plus a hosted task pane.",
@@ -633,8 +845,43 @@ export const copy = {
     faq12Q: "Can you change the personality menu on the right?",
     faq12A:
       "No. Get Support, Reload, Attach Debugger, and Security Info belong to Excel. DocTrace cannot hide, restyle, or add items.",
+    faq13Q: "What is in the Excel pane?",
+    faq13A:
+      "Five tabs: Engagements, Matching, Trial Balance, Workpapers, and Client Portal. How to use each module is on Getting started.",
+    faq14Q: "How do I open DocTrace in Excel?",
+    faq14A:
+      "Open it as an Office add-in in Excel. Getting started shows the steps. Add-in preview in the browser is not Excel.",
+    faq15Q: "Is optional cloud, backup, or mail live?",
+    faq15A:
+      "No. OTP mail and cloud backup are not live. Workbook and evidence stay on this device.",
+    faq16Q: "What is DocTrace?",
+    faq16A:
+      "An Excel add-in for auditors and associates doing tests of details, commonly expense and accounts payable. How to use the pane is on Getting started.",
+    faq17Q: "What is Matching?",
+    faq17A:
+      "Capture a sample, import evidence, match rows, snip the source page, and write the trail back to the workbook. That is the Test of Details path. Steps are on Getting started.",
+    faq18Q: "Is Client Portal a client login?",
+    faq18A:
+      "No. It is a PBC request list in the pane, not a client login wall. How to use it is on Getting started.",
+    faq19Q: "Does Matching need this website?",
+    faq19A:
+      "No. Matching runs in the Excel pane on this device. Workbook and evidence stay here unless you connect optional cloud.",
+    faq20Q: "What gets written to the workbook?",
+    faq20A:
+      "Mapped columns and a hidden log sheet. How to write back is on Getting started.",
+    faq21Q: "What is Trial Balance?",
+    faq21A:
+      "Import a trial balance and a listing, map F/S leads, and send ticked rows into Matching. Tie-out is visible only. How to use it is on Getting started.",
+    faq22Q: "What is Workpapers?",
+    faq22A:
+      "Matching Review can snapshot Test of Details onto the engagement. File Sign waits on open exception and partial rows. Not a CaseWare workpaper OS. How to use it is on Getting started.",
+    faq23Q: "Is AI assist live?",
+    faq23A: "No. Matching still works. DocTrace is not an LLM extractor.",
+    faq24Q: "Is this an audit opinion?",
+    faq24A:
+      "No. Matching and logs assist tests of details (ISA 330). The auditor remains responsible for sufficient appropriate evidence (ISA 500) and documentation (ISA 230).",
     contactTitle: "Get in touch",
-    contactKicker: "Get in touch",
+    contactKicker: "Contact",
     contactLead:
       "This form does not reach a live inbox yet. The details below are placeholders.",
     contactNotLive:
@@ -650,7 +897,7 @@ export const copy = {
     contactPhoneFieldLabel: "Phone (optional)",
     contactFirmLabel: "Firm (optional)",
     contactMessageLabel: "Message",
-    contactSubmit: "Submit",
+    contactSubmit: "Cannot send yet",
     error404Kicker: "404",
     error404Title: "Page not found",
     error404Lead: "This URL is not a DocTrace page.",

@@ -39,4 +39,14 @@ describe("site dock chrome", () => {
     );
     expect(source).not.toMatch(/site\/dock/);
   });
+
+  it("uses the official Viber brand mark, not a hollow chat bubble", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "frontend/site/social-icons.tsx"),
+      "utf8",
+    );
+    expect(source).toContain("function ViberIcon");
+    expect(source).toContain("1.328.733 2.126 1.07 2.604 1.206");
+    expect(source).not.toContain("8.59-9.4z");
+  });
 });

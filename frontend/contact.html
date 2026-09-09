@@ -7,7 +7,7 @@
       name="description"
       content="Contact DocTrace. Placeholder mailbox is not live."
     />
-    <title>Contact</title>
+    <title>Get in touch</title>
     <link
       rel="icon"
       type="image/png"
@@ -46,7 +46,7 @@
         href="/"
       >
         <img
-          alt=""
+          alt="DocTrace"
           class="h-8 w-8"
           height="32"
           src="/assets/logo-mark.svg"
@@ -57,7 +57,9 @@
       <nav data-nav-stuck aria-label="Site">
         <a href="/guide.html" data-i18n="navGuide">Guide</a>
         <a href="/support.html" data-i18n="navSupport">Support</a>
-        <a href="/contact.html" data-i18n="navContact">Get in touch</a>
+        <a href="/contact.html" data-i18n="navContact" aria-current="page"
+          >Get in touch</a
+        >
       </nav>
       <div
         class="flex min-w-0 items-center justify-end gap-3 text-sm md:gap-5"
@@ -107,6 +109,7 @@
               data-i18n="navContact"
               href="/contact.html"
               role="menuitem"
+              aria-current="page"
               >Get in touch</a
             >
             <a
@@ -135,7 +138,9 @@
         <nav data-nav-rest aria-label="Site">
           <a href="/guide.html" data-i18n="navGuide">Guide</a>
           <a href="/support.html" data-i18n="navSupport">Support</a>
-          <a href="/contact.html" data-i18n="navContact">Get in touch</a>
+          <a href="/contact.html" data-i18n="navContact" aria-current="page"
+            >Get in touch</a
+          >
         </nav>
         <button
           type="button"
@@ -207,72 +212,86 @@
         </div>
       </div>
     </header>
-    <main id="content" class="site-page mx-auto max-w-3xl px-6 py-16 sm:px-10">
-      <p class="site-kicker" data-i18n="contactKicker">Get in touch</p>
+    <main id="content" class="site-page mx-auto max-w-5xl px-6 py-16 sm:px-10">
+      <p class="site-kicker" data-i18n="contactKicker">Contact</p>
       <h1 class="site-title" data-i18n="contactTitle">Get in touch</h1>
-      <p class="site-lead" data-i18n="contactLead">
+      <p class="site-prose" data-i18n="contactLead">
         This form does not reach a live inbox yet. The details below are
         placeholders.
       </p>
-      <p class="site-prose" data-i18n="contactNotLive">
-        This mailbox is not live. The form will not send until the customer
-        provides an address.
-      </p>
-      <dl class="mt-10 space-y-3 font-mono text-sm">
-        <div>
-          <dt class="inline" data-i18n="contactEmailLabel">Email</dt>
-          <dd class="ml-2 inline">
-            <a class="text-tick underline" href="mailto:support@example.com"
-              >support@example.com</a
-            >
-          </dd>
-        </div>
-        <div>
-          <dt class="inline" data-i18n="contactPhoneLabel">Phone</dt>
-          <dd class="ml-2 inline" data-i18n="contactPhoneValue">
-            +95 00 000 0000
-          </dd>
-        </div>
-        <div>
-          <dt class="inline" data-i18n="contactAddressLabel">Address</dt>
-          <dd class="ml-2 inline" data-i18n="contactAddressValue">
-            Studio Next Steps · Yangon · street address to be provided
-          </dd>
-        </div>
-      </dl>
-      <form class="site-form" data-contact-form>
-        <label>
-          <span data-i18n="contactNameLabel">Name</span>
-          <input name="name" required type="text" />
-        </label>
-        <label>
-          <span data-i18n="contactEmailFieldLabel">Email</span>
-          <input name="email" required type="email" />
-        </label>
-        <label>
-          <span data-i18n="contactPhoneFieldLabel">Phone (optional)</span>
-          <input name="phone" type="tel" />
-        </label>
-        <label>
-          <span data-i18n="contactFirmLabel">Firm (optional)</span>
-          <input name="firm" type="text" />
-        </label>
-        <label>
-          <span data-i18n="contactMessageLabel">Message</span>
-          <textarea name="message" required rows="6"></textarea>
-        </label>
-        <button data-i18n="contactSubmit" type="submit">Submit</button>
-        <p
-          class="hidden leading-relaxed"
-          aria-hidden="true"
-          data-contact-status
-          data-i18n="contactNotLive"
-          role="status"
+      <div class="site-contact-grid">
+        <form
+          aria-describedby="contact-status"
+          class="site-form"
+          data-contact-form
         >
-          This mailbox is not live. The form will not send until the customer
-          provides an address.
-        </p>
-      </form>
+          <label>
+            <span data-i18n="contactNameLabel">Name</span>
+            <input autocomplete="name" name="name" required type="text" />
+          </label>
+          <label>
+            <span data-i18n="contactEmailFieldLabel">Email</span>
+            <input autocomplete="email" name="email" required type="email" />
+          </label>
+          <label>
+            <span data-i18n="contactPhoneFieldLabel">Phone (optional)</span>
+            <input autocomplete="tel" name="phone" type="tel" />
+          </label>
+          <label>
+            <span data-i18n="contactFirmLabel">Firm (optional)</span>
+            <input autocomplete="organization" name="firm" type="text" />
+          </label>
+          <label>
+            <span data-i18n="contactMessageLabel">Message</span>
+            <textarea name="message" required rows="6"></textarea>
+          </label>
+          <button
+            class="site-cta-primary"
+            data-i18n="contactSubmit"
+            type="submit"
+          >
+            Cannot send yet
+          </button>
+          <p
+            class="hidden leading-relaxed"
+            aria-hidden="true"
+            data-contact-status
+            data-i18n="contactNotLive"
+            id="contact-status"
+            role="status"
+          >
+            This mailbox is not live. The form will not send until the customer
+            provides an address.
+          </p>
+        </form>
+        <dl class="site-contact-details">
+          <div>
+            <dt data-i18n="contactEmailLabel">Email</dt>
+            <dd>
+              <a class="site-link font-mono" href="mailto:support@example.com"
+                >support@example.com</a
+              >
+            </dd>
+          </div>
+          <div>
+            <dt data-i18n="contactPhoneLabel">Phone</dt>
+            <dd>
+              <a
+                class="site-link font-mono"
+                href="tel:+95000000000"
+                data-i18n="contactPhoneValue"
+                >+95 00 000 0000</a
+              >
+            </dd>
+          </div>
+          <div>
+            <dt data-i18n="contactAddressLabel">Address</dt>
+            <dd data-i18n="contactAddressValue">
+              Studio Next Steps · Yangon · street address to be provided
+            </dd>
+          </div>
+        </dl>
+      </div>
     </main>
     <footer
       class="border-rule mt-auto flex flex-col gap-3 border-t px-6 py-3 sm:px-10"
