@@ -68,7 +68,7 @@ workers/matching.worker -> features/matching/services/matching.service
 - `stores/`: Zustand app state (`useDocTraceStore`).
 - `app/`: composition root (`useDocTraceController`). Not split further.
 - `layouts/`: `AppLayout` holds the former App body (controller hook, locale effect, engagements vs matching).
-- `features/trial-balance`, `workpapers`, and `pbc-portal` are mock prep modules (Impl 44) on `main` and `development`. They are always visible on the public pane (Impl 109). They are not wiki Phase 2. `samples/` and `scripts/` stay on `development` only.
+- `features/trial-balance`, `workpapers`, and `pbc-portal` are mock prep modules (Impl 44) on `main` and `development`. They are always visible on the public pane (Impl 109). They are not wiki Phase 2. `samples/` and `scripts/` are local-only and never committed.
 - `frontend/src/App.tsx`: thin wrapper that only renders `AppLayout`.
 - `wiki/`: committed Impl history and architecture.
 - `docs/sessions/`: gitignored local session drafts.

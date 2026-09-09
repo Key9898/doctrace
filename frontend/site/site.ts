@@ -11,6 +11,8 @@ import {
 } from "@/lib/cloud/cloud-session";
 
 import { copy, SITE_LANG_KEY, type CopyKey, type SiteLocale } from "./copy";
+import { GUIDE_SECTION_IDS, pickGuideSectionId } from "./guide-toc";
+import { PRIVACY_SECTION_IDS, TERMS_SECTION_IDS } from "./legal-toc";
 
 const OTP_CHALLENGE_KEY = "doctrace.site.otp";
 
@@ -457,13 +459,14 @@ function bindFaqAccordion(): void {
 
   const openFromHash = (): void => {
     const id = window.location.hash.replace(/^#/, "");
-    if (!/^faq-(?:[1-9]|1[0-2])$/.test(id)) {
+    if (!/^faq-(?:[1-9]|1[0-9]|2[0-4])$/.test(id)) {
       return;
     }
-    const el = document.getElementById(id);
-    if (el instanceof HTMLDetailsElement) {
-      el.open = true;
-    }
+    document.querySelectorAll("details[id^='faq-']").forEach((node) => {
+      if (node instanceof HTMLDetailsElement) {
+        node.open = node.id === id;
+      }
+    });
   };
 
   openFromHash();
@@ -507,28 +510,12 @@ function bindContactForm(): void {
   });
 }
 
-function bindGuideToc(): void {
-  if (document.body.dataset.page !== "guide") {
+function bindPageToc(page: string, ids: readonly string[]): void {
+  if (document.body.dataset.page !== page) {
     return;
   }
 
-  const ids = [
-    "guide-excel",
-    "guide-engagements",
-    "guide-matching",
-    "guide-select",
-    "guide-import",
-    "guide-match",
-    "guide-snip",
-    "guide-review",
-    "guide-tb",
-    "guide-workpapers",
-    "guide-portal",
-    "guide-chrome",
-    "guide-cloud",
-    "guide-assist",
-    "guide-local",
-  ] as const;
+  const toc = document.querySelector("nav.site-toc");
   const links = [
     ...document.querySelectorAll<HTMLAnchorElement>(".site-toc a[href^='#']"),
   ];
@@ -539,34 +526,80 @@ function bindGuideToc(): void {
     return;
   }
 
+  const isSectionId = (id: string): boolean => ids.includes(id);
+  const firstId = ids[0] ?? "";
+  let currentId = "";
+
+  const revealTocLink = (link: HTMLAnchorElement): void => {
+    if (!(toc instanceof HTMLElement)) {
+      return;
+    }
+    const tocRect = toc.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+    if (linkRect.top < tocRect.top || linkRect.bottom > tocRect.bottom) {
+      toc.scrollTop +=
+        linkRect.top - tocRect.top - (tocRect.height - linkRect.height) / 2;
+    }
+  };
+
   const setCurrent = (id: string): void => {
+    if (id === currentId) {
+      return;
+    }
+    currentId = id;
     links.forEach((link) => {
       if (link.hash === `#${id}`) {
         link.setAttribute("aria-current", "true");
+        revealTocLink(link);
       } else {
         link.removeAttribute("aria-current");
       }
     });
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      const top = visible[0];
-      if (top?.target.id) {
-        setCurrent(top.target.id);
-      }
-    },
-    { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5] },
-  );
-  sections.forEach((section) => observer.observe(section));
+  const markerY = (): number => {
+    const first = sections[0];
+    if (!first) {
+      return 88;
+    }
+    const parsed = parseFloat(getComputedStyle(first).scrollMarginTop);
+    return Number.isFinite(parsed) ? parsed : 88;
+  };
+
+  const spy = (): void => {
+    const marker = markerY();
+    const last = sections[sections.length - 1];
+    const lastTop = last?.getBoundingClientRect().top ?? 0;
+    const scrollHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight,
+    );
+    const pinLast =
+      window.scrollY > 0 &&
+      window.scrollY + window.innerHeight >= scrollHeight - 2 &&
+      lastTop > marker;
+    const tops = sections.map((section) => section.getBoundingClientRect().top);
+    setCurrent(pickGuideSectionId(tops, ids, marker, pinLast));
+  };
+
+  let frame = 0;
+  const scheduleSpy = (): void => {
+    if (frame !== 0) {
+      return;
+    }
+    frame = window.requestAnimationFrame(() => {
+      frame = 0;
+      spy();
+    });
+  };
+
+  window.addEventListener("scroll", scheduleSpy, { passive: true });
+  window.addEventListener("resize", scheduleSpy, { passive: true });
 
   links.forEach((link) => {
     link.addEventListener("click", () => {
       const id = link.hash.replace(/^#/, "");
-      if ((ids as readonly string[]).includes(id)) {
+      if (isSectionId(id)) {
         setCurrent(id);
       }
     });
@@ -574,17 +607,25 @@ function bindGuideToc(): void {
 
   window.addEventListener("hashchange", () => {
     const id = window.location.hash.replace(/^#/, "");
-    if ((ids as readonly string[]).includes(id)) {
+    if (isSectionId(id)) {
       setCurrent(id);
     }
+    window.requestAnimationFrame(spy);
   });
 
   const hashId = window.location.hash.replace(/^#/, "");
-  if ((ids as readonly string[]).includes(hashId)) {
+  if (isSectionId(hashId)) {
     setCurrent(hashId);
   } else {
-    setCurrent("guide-excel");
+    setCurrent(firstId);
   }
+  window.requestAnimationFrame(spy);
+}
+
+function bindGuideToc(): void {
+  bindPageToc("guide", GUIDE_SECTION_IDS);
+  bindPageToc("privacy", PRIVACY_SECTION_IDS);
+  bindPageToc("terms", TERMS_SECTION_IDS);
 }
 
 const initial = readLocale();
